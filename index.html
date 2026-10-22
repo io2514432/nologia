@@ -252,6 +252,9 @@ button{touch-action:manipulation;}
 .modal{position:relative;}
 .modal-x{position:absolute;top:10px;right:10px;width:34px;height:34px;display:flex;align-items:center;justify-content:center;color:var(--text-sub);background:var(--card2);border-radius:8px;font-size:17px;transition:.15s;}
 .modal-x:hover{color:var(--text-strong);background:var(--card-hover);}
+
+/* ===== 출처 표기 푸터 ===== */
+.site-foot{max-width:560px; margin:0 auto; padding:0 14px calc(84px + env(safe-area-inset-bottom)); text-align:center; font-size:11px; color:var(--text-dim);}
 </style>
 </head>
 <body data-board="green">
@@ -263,6 +266,7 @@ button{touch-action:manipulation;}
   </div>
 </header>
 <main id="app" class="container"></main>
+<footer class="site-foot">체스 기물(Chess pieces): cburnett (Colin M.L. Burnett) · 기보 출처(Game source): pgnmentor.com</footer>
 <nav class="bottnav">
   <button class="tab-btn" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h5v-6h4v6h5V9.5"/></svg><span data-i18n="tab.home">홈</span></button>
   <button class="tab-btn" data-nav="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span data-i18n="tab.library">기보</span></button>
@@ -3770,6 +3774,15 @@ function pickDaily(games, dateKey){
 }
 
 export { computeAccuracy, gradeOf, fmtTime, todayKey, hashStr, pickDaily, movesToString, moveStats, hardestMoves };
+/* 체스놀로지아 온라인 연결 설정 — 운영자(사이트 주인) 전용 파일
+ *
+ * SUPABASE_SETUP.md 의 '3단계'에서 복사한 값을 따옴표 안에 붙여넣으세요.
+ * 예시) url:'https://abcd1234.supabase.co', key:'eyJhbGciOi...'
+ *
+ * 이 값은 공개해도 되는 값입니다(anon key). 진짜 보안은 Supabase의
+ * 데이터베이스 규칙(RLS)이 담당합니다. 빈 값('')이면 오프라인 모드로 동작합니다.
+ */
+const SUPA_CONFIG = { url:'', key:'' };
 // 유명 명경기 데이터 (출처: pgnmentor.com PGN 아카이브 · 라스커 경기는 Wikipedia 교차확인 · python-chess로 전 기보 타당성 검증)
 const GAMES = [
  {
@@ -5086,7 +5099,7 @@ const QUOTES = [
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='1.3.0';
+const APP_VERSION='1.4.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, challengeHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5356,7 +5369,7 @@ ko:{
  'ch.end':'종료','ch.desc':'양쪽 기물을 모두 <b>내가 직접</b> 둡니다. 첫 수부터 기억을 더뎌 보세요.','ch.fbOff':'(즉시 피드백 꺼짐 — 틀려도 알려주지 않아요!)','ch.mylist':'내가 둔 수','ch.empty':'아직 둔 수가 없어요','ch.progress':'{a}수 둠 · 목표 {b}수','ch.transpo':'우회 도달! 기보에 다시 합류했어요','ch.mode.normal':'일반 모드','ch.mode.extreme':'극한 모드','ch.cut':'엔드게임 {n}수까지','ch.daily':'오늘의 게임',
  'ch.reason.mate':'체크메이트!','ch.reason.stalemate':'스테일메이트','ch.reason.draw':'무승부 (규칙 종료)','ch.reason.cutoff':'엔드게임 컷오프 도달','ch.reason.complete':'기보의 마지막 수 도달','ch.reason.manual':'직접 종료',
  'res.newbest':'신기록!','res.hintUsed':'힌트 사용','res.used':'사용함','res.time':'걸린 시간','res.streak':'연속 일치','res.streakPerfect':'처음부터 끝까지 완벽 일치!','res.streakFirst':'첫 수부터 어긋났어요','res.streakN':'{n}수까지 일치했습니다','res.played':'총 둔 수','res.accline':'정확도 — {a}/{b}수 일치','res.cutNote':' (엔드게임 제외 · 전체 {n}수)','res.closeTitle':'기보 검토로 넘어가기','ch.hintGrade':'힌트 사용 — P 등급은 힌트 없이 100%일 때만 부여돼요',
- 'rv.badge':'기보 검토','rv.matched':'맞춘 수 {a}/{b}','rv.legend':'초록 = 맞춘 수 · 빨강 = 놓친 수','rv.legendCut':' · 회색 = 엔드게임(미채점)','rv.status':'{a}/{b}수', 'set.online':'온라인 (전체 통계·랭킹)','set.onlineDesc':'Supabase 주소와 anon 키를 붙여넣으면 전 세계 통계·랭킹이 켜집니다. 설정 방법은 SUPABASE_SETUP.md 를 참고하세요.','set.url':'Supabase URL','set.key':'anon key','set.connect':'연결','set.connected':'연결됨','set.disconnect':'연결 해제','set.account':'계정','set.email':'이메일','set.pw':'비밀번호 (6자 이상)','set.name':'표시 이름','set.login':'로그인','set.signup':'회원가입','set.logout':'로그아웃','set.uploadAll':'지금까지 기록 올리기','set.uploadDone':'{n}개 기록을 올렸어요','set.needInput':'값을 입력해 주세요','set.pwShort':'비밀번호는 6자 이상이어야 해요','set.welcome':'{name} 님, 환영해요!','set.checkEmail':'확인 메일을 보냈어요 — 메일함에서 확인 후 로그인해 주세요','set.global':'전체','set.based':'전체 사용자 기준','set.mine':'내 기록 기준','set.hardest':'가장 많이 틀리는 수','set.pct':'성공률 {n}%','set.data':'데이터 백업','set.export':'내보내기','set.exportD':'기록·북마크·설정을 파일로 저장합니다. 기기를 바꾸기 전에 꼭 해두세요.','set.exportDone':'백업 파일을 내려받았어요','set.import':'가져오기','set.importD':'백업 파일로 기록을 되돌립니다 (현재 기록을 대체).','set.importDone':'기록을 복원했어요 — 새로고침합니다','set.importFail':'파일을 읽지 못했어요','set.version':'버전','toast.updated':'새 버전으로 업데이트했어요'
+ 'rv.badge':'기보 검토','rv.matched':'맞춘 수 {a}/{b}','rv.legend':'초록 = 맞춘 수 · 빨강 = 놓친 수','rv.legendCut':' · 회색 = 엔드게임(미채점)','rv.status':'{a}/{b}수', 'set.online':'온라인 (전체 통계·랭킹)','set.onlineDesc':'Supabase 주소와 anon 키를 붙여넣으면 전 세계 통계·랭킹이 켜집니다. 설정 방법은 SUPABASE_SETUP.md 를 참고하세요.','set.url':'Supabase URL','set.key':'anon key','set.connect':'연결','set.connected':'연결됨','set.disconnect':'연결 해제','set.account':'계정','set.email':'이메일','set.pw':'비밀번호 (6자 이상)','set.name':'표시 이름','set.login':'로그인','set.signup':'회원가입','set.logout':'로그아웃','set.uploadAll':'지금까지 기록 올리기','set.uploadDone':'{n}개 기록을 올렸어요','set.needInput':'값을 입력해 주세요','set.pwShort':'비밀번호는 6자 이상이어야 해요','set.welcome':'{name} 님, 환영해요!','set.checkEmail':'확인 메일을 보냈어요 — 메일함에서 확인 후 로그인해 주세요','set.global':'전체','set.based':'전체 사용자 기준','set.mine':'내 기록 기준','set.hardest':'가장 많이 틀리는 수','set.pct':'성공률 {n}%','err.urlWrong':'주소가 올바르지 않아요 — Settings → API의 Project URL(https://xxxx.supabase.co 형태)을 다시 복사해 주세요','err.dashUrl':'그건 대시보드 주소예요 — Project URL(https://xxxx.supabase.co)을 넣어주세요','err.keyWrong':'anon key가 올바르지 않아요 — Settings → API의 anon public 키를 다시 복사해 주세요','err.badLogin':'이메일 또는 비밀번호가 틀렸어요','err.confirm':'이메일 확인이 아직 안 됐어요 — 메일함(스팸함 포함)에서 링크를 눌러주세요','err.exists':'이미 가입된 이메일이에요 — 로그인을 눌러주세요','err.network':'서버에 연결할 수 없어요 — 인터넷 상태와 주소를 확인해 주세요','set.offline':'오프라인 모드','set.offlineDesc':'온라인 통계·랭킹은 운영자가 연결하면 켜져요. 지금은 내 기록으로 즐기세요!','set.data':'데이터 백업','set.export':'내보내기','set.exportD':'기록·북마크·설정을 파일로 저장합니다. 기기를 바꾸기 전에 꼭 해두세요.','set.exportDone':'백업 파일을 내려받았어요','set.import':'가져오기','set.importD':'백업 파일로 기록을 되돌립니다 (현재 기록을 대체).','set.importDone':'기록을 복원했어요 — 새로고침합니다','set.importFail':'파일을 읽지 못했어요','set.version':'버전','toast.updated':'새 버전으로 업데이트했어요'
 },
 en:{
  'tab.home':'Home','tab.library':'Games','tab.collection':'Collection','tab.ranking':'Ranking','tab.puzzle':'Puzzle','tab.settings':'Settings',
@@ -5384,7 +5397,7 @@ en:{
  'ch.end':'End','ch.desc':'You move <b>both sides yourself</b>. Recall the game from move one.','ch.fbOff':'(Instant feedback off — no warnings!)','ch.mylist':'My moves','ch.empty':'No moves yet','ch.progress':'{a} plies · target {b}','ch.transpo':'Back on track! You re-joined the game.','ch.mode.normal':'Normal mode','ch.mode.extreme':'Extreme mode','ch.cut':'up to move {n}','ch.daily':'Daily Game',
  'ch.reason.mate':'Checkmate!','ch.reason.stalemate':'Stalemate','ch.reason.draw':'Draw (rule finish)','ch.reason.cutoff':'Endgame cutoff reached','ch.reason.complete':'Reached the final move','ch.reason.manual':'Ended manually',
  'res.newbest':'New best!','res.hintUsed':'Hint used','res.used':'used','res.time':'Time','res.streak':'Matching streak','res.streakPerfect':'Perfect from the first move to the last!','res.streakFirst':'First move already differs','res.streakN':'Matched through move {n}','res.played':'Total moves played','res.accline':'Accuracy — {a}/{b} moves matched','res.cutNote':' (endgame excluded · {n} total)','res.closeTitle':'Go to review','ch.hintGrade':'Hints used — P grades require a hint-free 100%',
- 'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.online':'Online (global stats & ranking)','set.onlineDesc':'Paste your Supabase URL and anon key to enable global stats and rankings. See SUPABASE_SETUP.md.','set.url':'Supabase URL','set.key':'anon key','set.connect':'Connect','set.connected':'Connected','set.disconnect':'Disconnect','set.account':'Account','set.email':'Email','set.pw':'Password (6+ chars)','set.name':'Display name','set.login':'Log in','set.signup':'Sign up','set.logout':'Log out','set.uploadAll':'Upload my past records','set.uploadDone':'Uploaded {n} records','set.needInput':'Please fill in the fields','set.pwShort':'Password must be at least 6 characters','set.welcome':'Welcome, {name}!','set.checkEmail':'Confirmation email sent — check your inbox, then log in','set.global':'Global','set.based':'All players','set.mine':'My records','set.hardest':'Moves missed the most','set.pct':'{n}% success','set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
+ 'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.online':'Online (global stats & ranking)','set.onlineDesc':'Paste your Supabase URL and anon key to enable global stats and rankings. See SUPABASE_SETUP.md.','set.url':'Supabase URL','set.key':'anon key','set.connect':'Connect','set.connected':'Connected','set.disconnect':'Disconnect','set.account':'Account','set.email':'Email','set.pw':'Password (6+ chars)','set.name':'Display name','set.login':'Log in','set.signup':'Sign up','set.logout':'Log out','set.uploadAll':'Upload my past records','set.uploadDone':'Uploaded {n} records','set.needInput':'Please fill in the fields','set.pwShort':'Password must be at least 6 characters','set.welcome':'Welcome, {name}!','set.checkEmail':'Confirmation email sent — check your inbox, then log in','set.global':'Global','set.based':'All players','set.mine':'My records','set.hardest':'Moves missed the most','set.pct':'{n}% success','err.urlWrong':'That URL does not look right — copy the Project URL (https://xxxx.supabase.co) from Settings → API again','err.dashUrl':"That's the dashboard address — use the Project URL (https://xxxx.supabase.co)",'err.keyWrong':'That anon key does not look right — copy the anon public key from Settings → API again','err.badLogin':'Wrong email or password','err.confirm':'Email not confirmed yet — click the link in your inbox (check spam)','err.exists':'That email is already registered — use Log in','err.network':'Cannot reach the server — check your internet and the URL','set.offline':'Offline mode','set.offlineDesc':'Global stats turn on once the site owner connects Supabase. For now, enjoy with your own records!','set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
 }};
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
@@ -5412,9 +5425,19 @@ function labelOpening(v){ return LANG==='en' ? (OPENING_EN[v]||v) : v; }
 // Cloud — Supabase REST 클라이언트 (SDK 없이 fetch, 오프라인 우선 유지)
 // ============================================================
 const Cloud = {
-  cfg(){ return store.data.server || null; },
+  cfg(){
+    if (typeof SUPA_CONFIG !== 'undefined' && SUPA_CONFIG && SUPA_CONFIG.url && SUPA_CONFIG.key)
+      return { url: SUPA_CONFIG.url, key: SUPA_CONFIG.key };
+    return store.data.server || null;
+  },
   enabled(){ const s=this.cfg(); return !!(s && s.url && s.key); },
-  saveCfg(url, key){ store.data.server={url:url.replace(/\/+$/,''), key:key.trim()}; store.save(); },
+  saveCfg(url, key){
+    const u=url.trim().replace(/\/+$/,'');
+    if(u.includes('supabase.com/dashboard') || u.includes('supabase.com/')) throw new Error('DASHBOARD_URL');
+    let pu=null; try{ pu=new URL(u); }catch(e){ throw new Error('BAD_URL'); }
+    if(!pu || pu.protocol!=='https:' || !/(\.)?supabase\.(co|in|red)$/.test(pu.hostname)) throw new Error('BAD_URL');
+    store.data.server={url:u, key:key.trim()}; store.save();
+  },
   sessKey:'chessnologia.auth',
   session(){ try{ return JSON.parse(localStorage.getItem(this.sessKey)); }catch(e){ return null; } },
   saveSession(s){ s? localStorage.setItem(this.sessKey, JSON.stringify(s)) : localStorage.removeItem(this.sessKey); },
@@ -5427,7 +5450,7 @@ const Cloud = {
       headers:{'apikey':c.key, 'Content-Type':'application/json'},
       body: JSON.stringify(body)
     });
-    const j=await res.json();
+    let j=null; try{ j=await res.json(); }catch(e2){ throw new Error('HTML_RESPONSE'); }
     if(!res.ok) throw new Error(j.msg||j.error_description||j.message||('HTTP '+res.status));
     return j;
   },
@@ -5459,7 +5482,8 @@ const Cloud = {
     });
     if(!res.ok){ const t2=await res.text(); throw new Error(t2.slice(0,140)); }
     const txt=await res.text();
-    return txt? JSON.parse(txt) : null;
+    let out=null; try{ out= txt? JSON.parse(txt):null; }catch(e2){ throw new Error('HTML_RESPONSE'); }
+    return out;
   },
 
   async uploadAttempt(gameId, rec, userId){
@@ -5504,6 +5528,20 @@ const Cloud = {
     store.save(); return n;
   }
 };
+
+// Supabase 오류를 사람 말로 바꿔주는 변환기
+function friendlyCloudError(e){
+  const m=String((e && e.message)||e);
+  if(/HTML_RESPONSE|Unexpected token|<html|is not valid JSON/i.test(m)) return t('err.urlWrong');
+  if(/DASHBOARD_URL/.test(m)) return t('err.dashUrl');
+  if(/BAD_URL/.test(m)) return t('err.urlWrong');
+  if(/Invalid API key/i.test(m)) return t('err.keyWrong');
+  if(/Invalid login credentials/i.test(m)) return t('err.badLogin');
+  if(/Email not confirmed/i.test(m)) return t('err.confirm');
+  if(/already registered|already exists/i.test(m)) return t('err.exists');
+  if(/Failed to fetch|NetworkError|network/i.test(m)) return t('err.network');
+  return m;
+}
 // ============================================================
 // app2.js — 기보 파싱 · 학습 모드 · 도전 모드 · 기보 검토 (i18n 적용)
 // ============================================================
@@ -6466,13 +6504,10 @@ function viewSettings(){
     <div class="card">
       <h3>${t('set.online')}</h3>
       ${!Cloud.enabled() ? `
-      <div class="d dim" style="margin-bottom:8px">${t('set.onlineDesc')}</div>
-      <div class="set-row"><div style="flex:1"><input id="srv-url" placeholder="${t('set.url')}" style="${inpStyle}"></div></div>
-      <div class="set-row"><div style="flex:1"><input id="srv-key" placeholder="${t('set.key')}" style="${inpStyle}"></div></div>
-      <div style="display:flex;gap:8px"><button class="btn sm" id="srv-connect">${t('set.connect')}</button></div>
+      <div class="d dim" style="margin-bottom:8px">${t('set.offlineDesc')}</div>
+      <div class="set-row"><div><div class="t">${t('set.offline')}</div></div></div>
       ` : `
-      <div class="set-row"><div><div class="t">${t('set.connected')}</div><div class="d">${Cloud.cfg().url}</div></div>
-        <button class="btn ghost sm" id="srv-off">${t('set.disconnect')}</button></div>
+      <div class="set-row"><div><div class="t">${t('set.connected')}</div><div class="d">${(()=>{ try{ return new URL(Cloud.cfg().url).hostname }catch(e){ return '' } })()}</div></div></div>
       ${Cloud.loggedIn() ? `
       <div class="set-row"><div><div class="t">${t('set.welcome',{name:Cloud.session().name||''})}</div></div>
         <button class="btn ghost sm" id="srv-out">${t('set.logout')}</button></div>
@@ -6520,13 +6555,14 @@ function viewSettings(){
   document.getElementById('srv-connect') && (document.getElementById('srv-connect').onclick=()=>{
     const u=document.getElementById('srv-url').value.trim(), k=document.getElementById('srv-key').value.trim();
     if(!u||!k){ toast(t('set.needInput')); return; }
-    Cloud.saveCfg(u,k); toast(t('set.connected')); route();
+    try{ Cloud.saveCfg(u,k); toast(t('set.connected')); route(); }
+    catch(e3){ toast(friendlyCloudError(e3)); }
   });
   document.getElementById('srv-off') && (document.getElementById('srv-off').onclick=()=>{ store.data.server=null; store.save(); route(); });
   document.getElementById('srv-in') && (document.getElementById('srv-in').onclick=async ()=>{
     const e2=document.getElementById('au-email').value.trim(), p=document.getElementById('au-pw').value;
     if(!e2||!p){ toast(t('set.needInput')); return; }
-    try{ await Cloud.signIn(e2,p); toast(t('set.welcome',{name:Cloud.session().name||''})); route(); }catch(e3){ toast(e3.message||String(e3)); }
+    try{ await Cloud.signIn(e2,p); toast(t('set.welcome',{name:Cloud.session().name||''})); route(); }catch(e3){ toast(friendlyCloudError(e3)); }
   });
   document.getElementById('srv-up') && (document.getElementById('srv-up').onclick=async ()=>{
     const e2=document.getElementById('au-email').value.trim(), p=document.getElementById('au-pw').value, n2=document.getElementById('au-name').value.trim();
@@ -6537,7 +6573,7 @@ function viewSettings(){
       if(Cloud.loggedIn()) toast(t('set.welcome',{name:n2||e2.split('@')[0]}));
       else toast(t('set.checkEmail'));
       route();
-    }catch(e3){ toast(e3.message||String(e3)); }
+    }catch(e3){ toast(friendlyCloudError(e3)); }
   });
   document.getElementById('srv-out') && (document.getElementById('srv-out').onclick=async ()=>{ await Cloud.signOut(); route(); });
   document.getElementById('srv-sync') && (document.getElementById('srv-sync').onclick=async ()=>{
