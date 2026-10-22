@@ -143,8 +143,8 @@ input,select{font-family:inherit;}
 /* ===== 게임 카드 (라이브러리) ===== */
 .game-card{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:16px; display:flex; flex-direction:column; gap:10px; transition:.15s;}
 .game-card:hover{border-color:var(--border2); background:var(--card-hover); transform:translateY(-2px);}
-.gc-title{font-weight:800; font-size:15.5px; color:var(--text-strong);}
-.gc-players{font-size:13px; color:var(--text-sub);}
+.gc-title{font-weight:800; font-size:15.5px; color:var(--text-strong); display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; line-height:1.3;}
+.gc-players{font-size:13px; color:var(--text-sub); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 .gc-meta{display:flex; gap:6px; flex-wrap:wrap;}
 .gc-actions{display:flex; gap:8px; margin-top:auto;}
 .mini-board{width:74px; height:74px; border-radius:6px; overflow:hidden; flex-shrink:0;}
@@ -154,7 +154,7 @@ input,select{font-family:inherit;}
 .mb-pc{width:160%;height:160%; margin:-30%; position:relative; z-index:2; filter:drop-shadow(0 1px 1px rgba(0,0,0,.3));}
 
 /* ===== 통계 스트립 ===== */
-.stat-card{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; text-align:center;}
+.stat-card{background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 16px; text-align:center; min-height:84px; display:flex; flex-direction:column; justify-content:center;}
 .stat-card .v{font-size:24px; font-weight:900; color:var(--text-strong);}
 .stat-card .k{font-size:12px; color:var(--text-sub); margin-top:2px;}
 
@@ -200,11 +200,11 @@ input,select{font-family:inherit;}
 .rank-table .num{color:var(--text-dim); font-weight:700;}
 
 /* ===== 명언 카드 ===== */
-.quote-card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:22px 24px; position:relative;}
+.quote-card{background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px 24px 16px; position:relative; height:172px; display:flex; flex-direction:column; overflow:hidden;}
 .quote-card .qmark{position:absolute; top:10px; left:16px; font-size:52px; color:var(--green); opacity:.25; font-family:Georgia,serif; line-height:1;}
-.quote-kr{font-size:16.5px; font-weight:700; color:var(--text-strong); margin-top:6px;}
-.quote-en{font-size:13px; color:var(--text-sub); font-style:italic; margin-top:6px;}
-.quote-author{text-align:right; margin-top:10px; font-size:13px; color:var(--green); font-weight:700;}
+.quote-kr{font-size:16.5px; font-weight:700; color:var(--text-strong); margin-top:6px; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; overflow:hidden; line-height:1.45;}
+.quote-en{font-size:13px; color:var(--text-sub); font-style:italic; margin-top:6px; display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:2; overflow:hidden; line-height:1.4;}
+.quote-author{text-align:right; margin-top:auto; padding-top:8px; font-size:13px; color:var(--green); font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
 
 /* ===== 홈 히어로 ===== */
 .hero{display:grid; grid-template-columns:1fr; gap:12px;}
@@ -269,21 +269,33 @@ button{touch-action:manipulation;}
 .gate-btn{width:100%; padding:11px; font-size:15px; margin-top:2px;}
 .gate-switch{margin-top:12px; color:var(--green); font-size:13px; font-weight:600;}
 .gate-msg{min-height:18px; font-size:12.5px; margin-top:8px; color:var(--red-soft);}
+
+/* ---- 폭죽·컨페티 효과 (v1.6) ---- */
+.fx-layer{position:fixed; inset:0; pointer-events:none; z-index:9999; overflow:hidden;}
+.fx-p{position:absolute; width:6px; height:6px; border-radius:50%; animation:fx-pop .9s cubic-bezier(.15,.6,.3,1) forwards;}
+.fx-p.sm{width:4px; height:4px; animation-duration:.6s;}
+@keyframes fx-pop{ 0%{transform:translate(0,0) scale(1); opacity:1;} 70%{opacity:.85;} 100%{transform:translate(var(--dx),var(--dy)) scale(.35); opacity:0;} }
+.done-pop{position:fixed; left:50%; top:38%; transform:translateX(-50%); background:var(--card); border:1.5px solid var(--green); color:var(--green); font-weight:800; font-size:17px; padding:10px 22px; border-radius:12px; z-index:10000; box-shadow:0 8px 24px rgba(0,0,0,.35); animation:done-pop-in .18s ease-out;}
+@keyframes done-pop-in{ from{opacity:0; transform:translateX(-50%) scale(.85);} to{opacity:1; transform:translateX(-50%) scale(1);} }
+.hint-toggle{min-width:92px; white-space:nowrap; flex:none;}
+.fx-c{position:absolute; top:-14px; width:7px; height:11px; border-radius:2px; opacity:.95; animation:fx-fall 2.2s linear forwards;}
+@keyframes fx-fall{ 0%{transform:translateY(0) rotate(0deg); opacity:.95;} 100%{transform:translateY(105vh) rotate(var(--rot,540deg)); opacity:.6;} }
+.btn[disabled]{opacity:.4; cursor:not-allowed;}
 </style>
 </head>
 <body data-board="green">
 <div id="svg-defs"></div>
 <header class="topbar">
-  <div class="logo"><svg class="logo-ic" viewBox="0 0 45 45" aria-label="체스놀로지아"><rect width="45" height="45" rx="10" fill="#1e1c1a"/><g transform="translate(0.6,2.4) scale(0.97)"><use href="#pc-wN"/></g><path d="M33.5 5.5l1.6 4.6 4.6 1.6-4.6 1.6-1.6 4.6-1.6-4.6-4.6-1.6 4.6-1.6z" fill="#81b64c"/><circle cx="40.2" cy="6.4" r="1.4" fill="#81b64c" opacity=".85"/></svg>체스놀로지아</div>
+  <div class="logo"><svg class="logo-ic" viewBox="0 0 45 45" aria-label="체스놀로지아"><rect width="45" height="45" rx="10" fill="#1e1c1a"/><g transform="translate(0.6,2.4) scale(0.97)"><use href="#pc-wN"/></g><path d="M33.5 5.5l1.6 4.6 4.6 1.6-4.6 1.6-1.6 4.6-1.6-4.6-4.6-1.6 4.6-1.6z" fill="#81b64c"/><circle cx="40.2" cy="6.4" r="1.4" fill="#81b64c" opacity=".85"/></svg><span id="app-title">체스놀로지아</span></div>
   <div class="nav-right">
-    <div class="user-chip"><span class="avatar">나</span><span id="chip-summary">도전 0회</span></div>
+    <div class="user-chip"><span class="avatar" id="avatar-me">나</span><span id="chip-summary">도전 0회</span></div>
   </div>
 </header>
 <main id="app" class="container"></main>
 <footer class="site-foot">체스 기물(Chess pieces): cburnett (Colin M.L. Burnett) · 기보 출처(Game source): pgnmentor.com</footer>
 <nav class="bottnav">
   <button class="tab-btn" data-nav="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h5v-6h4v6h5V9.5"/></svg><span data-i18n="tab.home">홈</span></button>
-  <button class="tab-btn" data-nav="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span data-i18n="tab.library">기보</span></button>
+  <button class="tab-btn" data-nav="library"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V3H6.5A2.5 2.5 0 0 0 4 5.5z"/></svg><span data-i18n="tab.library" id="tab-lib">기보</span></button>
   <button class="tab-btn" data-nav="collection"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg><span data-i18n="tab.collection">컬렉션</span></button>
   <button class="tab-btn" data-nav="ranking"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4a3 3 0 0 0 3 4"/><path d="M17 6h3a3 3 0 0 1-3 4"/></svg><span data-i18n="tab.ranking">랭킹</span></button>
   <button class="tab-btn" data-nav="puzzle"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.4 2.5h5.2c.1-1 .6-1.8 1.4-2.5A6 6 0 0 0 12 3z"/></svg><span data-i18n="tab.puzzle">퍼즐</span></button>
@@ -5102,13 +5114,14 @@ const QUOTES = [
   "사비엘리 타르타코워"
  ]
 ];
+const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','Savielly Tartakower','Siegbert Tarrasch','Irving Chernev','Bobby Fischer','—','Mikhail Tal','Bobby Fischer','Robert Fischer','Blaise Pascal (attributed)','Rudolf Spielmann','Rudolf Spielmann','Savielly Tartakower','Savielly Tartakower'];
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='1.5.0';
+const APP_VERSION='1.8.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
-  studyHint:true, challengeHint:false, instantFeedback:false, showTimer:true, lang:'ko',
+  studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
   autoFlip:false, savePartial:true, showQuote:true
 };
 const store = {
@@ -5123,8 +5136,6 @@ const store = {
     if(!this.data.daily) this.data.daily={streak:0,lastDone:null};
     if(!this.data.puzzle) this.data.puzzle={streak:0,done:0};
     if(!this.data.stats) this.data.stats={challenges:0};
-    if(!this.data.customGames) this.data.customGames=[];
-    (this.data.customGames||[]).forEach(g=>{ if(!GAMES.some(x=>x.id===g.id)) GAMES.push(g); });
     return this.data;
   },
   save(){ try{ localStorage.setItem('chessmemo.v1', JSON.stringify(this.data)); }catch(e){} }
@@ -5152,6 +5163,7 @@ function toggleBookmark(gid, ply){
 }
 function bookmarksOf(gid){ return store.data.bookmarks[gid]||[]; }
 function updateChip(){
+  applyAppName();
   const el=document.getElementById('chip-summary'); if(!el) return;
   el.textContent = t('chip', {a:store.data.stats.challenges, b:perfectGames().length});
 }
@@ -5178,7 +5190,7 @@ const Sfx = {
       this.ctx = this.ctx || new (window.AudioContext||window.webkitAudioContext)();
       if(kind==='move') this.tone(520,.07,'square',.05);
       else if(kind==='capture'){ this.tone(220,.09,'square',.07); this.tone(160,.08,'square',.05,.03); }
-      else if(kind==='check'){ this.tone(760,.08,'square',.06); this.tone(980,.10,'square',.06,.09); }
+      else if(kind==='check'){ this.tone(620,.06,'sine',.025); this.tone(780,.08,'sine',.02,.07); }
       else if(kind==='good'){ this.tone(660,.07,'sine',.07); this.tone(880,.09,'sine',.07,.07); }
       else if(kind==='err') this.tone(160,.16,'sawtooth',.06);
       else if(kind==='finish'){ [523,659,784,1047].forEach((f,i)=>this.tone(f,.14,'sine',.07,i*.1)); }
@@ -5233,7 +5245,7 @@ function createBoard(container, opts={}){
       const sq=f+rk;
       const dark=(FILES.indexOf(f)+RANKS.indexOf(rk))%2===1;
       const cell=document.createElement('div'); cell.className='sq '+(dark?'dark':'light');
-      sqEls[sq]=cell;
+      sqEls[sq]=cell; cell.dataset.sq=sq;
       const p=map[sq];
       if(st.lastMove && (st.lastMove[0]===sq||st.lastMove[1]===sq)) cell.classList.add('last');
       if(st.selected===sq) cell.classList.add('sel');
@@ -5353,7 +5365,7 @@ ko:{
  'tab.home':'홈','tab.library':'기보','tab.collection':'컬렉션','tab.ranking':'랭킹','tab.puzzle':'퍼즐','tab.settings':'설정',
  'chip':'도전 {a}회 · 퍼펙트 {b}',
  'btn.study':'학습','btn.challenge':'도전','btn.retry':'재도전','btn.ranking':'랭킹','btn.home':'홈으로','btn.close':'닫기',
- 'home.daily':'오늘의 게임','home.doneToday':'오늘 완료!','home.streak':'연속 {n}일','home.studyFirst':'먼저 학습','home.otherQuote':'다른 명언',
+ 'home.daily':'오늘의 게임','home.doneToday':'오늘 완료!','home.streak':'연속 {n}일','home.studyFirst':'먼저 학습','home.otherQuote':'다른 명언','app.name':'체스놀로지아','avatar.me':'나','home.catSoon':'추가 중입니다.','ch.quitQ':'정말 그만두시겠어요?','ch.quitYes':'그만두기','ch.quitNo':'계속하기','res.streakSoFar':'완주 전 — {n}수 연속 일치!','res.graphMine':'아직 전체 데이터가 없어요 — 내 기록으로 표시했어요','study.complete':'완료!','study.hintOn':'힌트 on','study.hintOff':'힌트 off','live.study':'학습 중','live.challenge':'도전 중','nav.guardQ':'진행 중인 학습·도전이 있어요','nav.guardD':'다른 페이지로 넘어가면 진행 중인 내용이 초기화돼요. 계속할까요?','nav.leave':'나가기','nav.stay':'돌아가기',
  'stat.challenges':'암기 도전','stat.perfect':'100% 완료 게임','stat.avg':'평균 정확도',
  'home.categories':'카테고리','home.recent':'최근 기록','home.recentEmpty':'아직 도전 기록이 없어요. 라이브러리에서 명경기를 골라 학습한 뒤 도전해보세요!',
  'th.game':'게임','th.acc':'정확도','th.grade':'등급','th.time':'시간','th.when':'언제','th.mode':'모드','th.hint':'힌트','th.date':'날짜','th.n':'#',
@@ -5368,20 +5380,20 @@ ko:{
  'set.title':'설정','set.lang':'언어 · Language','set.challenge':'도전 모드','set.challengeSub':'힌트 등 도전 중 기능은 여기서 켜고 끌 수 있어요','set.difficulty':'암기 난이도','set.screen':'화면 · 소리',
  'set.hint':'힌트','set.hintD':'도전 중 다음에 움직일 기물의 위치를 알려줍니다. 힌트를 쓰면 100%여도 S등급으로 조정돼요.',
  'set.fb':'즉시 정답 피드백','set.fbD':'도전 중 기보와 다른 수를 두면 바로 알려줍니다. 끄면 틀려도 알려주지 않는 긴장감 모드!',
- 'set.timer':'시간 표시','set.timerD':'도전 중 경과 시간을 표시합니다.','set.flip':'자동 보드 뒤집기','set.flipD':'도전에서 둘 차례인 색을 아래로 오도록 보드를 자동 회전합니다.','set.coords':'보드 좌표 표시','set.coordsD':'a~h, 1~8 좌표를 표시합니다.','set.sound':'효과음','set.soundD':'이동·캡처·정답·오답 효과음을 재생합니다.','set.quote':'오늘의 명언','set.quoteD':'홈에 체스 격언을 표시합니다.','set.extreme':'극한 모드 (엔드게임 포함)','set.extremeD':'기본은 엔드게임 직전까지만 암기·도전합니다. 켜면 기보 끝까지 도전할 수 있어요.','set.savePartial':'부분 기록 저장','set.savePartialD':'도전 중 종료 버튼으로 나갈 때도 기록을 저장합니다. 끄면 자연 종료(체크메이트·컷오프 등)만 기록돼요.',
- 'set.grades':'등급 기준','set.gradeNote':'정확도 = 맞춘 수 ÷ 기보 전체 수. 중간에 틀려도 다시 기보 위치에 도달하면 그 수부터 다시 인정됩니다. 일반 모드는 엔드게임 직전까지만 채점해요.','set.danger':'위험 구역','set.reset':'모든 기록 초기화','set.resetD':'도전 기록 · 북마크 · 연속 기록을 모두 삭제합니다.','set.resetBtn':'초기화','set.resetQ':'모든 기록을 초기화할까요?','set.resetWarn':'이 작업은 되돌릴 수 없어요.','set.condition':'조건','set.theme':'보드 테마','set.screenTheme':'화면 테마','set.dark':'다크','set.light':'라이트',
+ 'set.timer':'시간 표시','set.timerD':'도전 중 경과 시간을 표시합니다.','set.flip':'자동 보드 뒤집기','set.flipD':'도전에서 둘 차례인 색을 아래로 오도록 보드를 자동 회전합니다.','set.coords':'보드 좌표 표시','set.coordsD':'a~h, 1~8 좌표를 표시합니다.','set.sound':'효과음','set.soundD':'이동·캡처·정답·오답 효과음을 재생합니다.','set.quote':'오늘의 명언','set.quoteD':'홈에 체스 격언을 표시합니다.','set.extreme':'극한 모드','set.extremeD':'켜면 힌트 없이 도전하고, 완주한 기록만 랭킹에 등재됩니다. 끄면 도전에서 힌트 3개를 사용할 수 있어요(랭킹 미등재).','set.savePartial':'부분 기록 저장','set.savePartialD':'도전 중 종료 버튼으로 나갈 때도 기록을 저장합니다. 끄면 자연 종료(체크메이트 등)만 기록돼요.',
+ 'set.grades':'등급 기준','set.gradeNote':'정확도 = 맞춘 수 ÷ 기보 전체 수. 중간에 틀려도 다시 기보 위치에 도달하면 그 수부터 다시 인정됩니다.','set.danger':'위험 구역','set.reset':'모든 기록 초기화','set.resetD':'도전 기록 · 북마크 · 연속 기록을 모두 삭제합니다.','set.resetBtn':'초기화','set.resetQ':'모든 기록을 초기화할까요?','set.resetWarn':'이 작업은 되돌릴 수 없어요.','set.condition':'조건','set.theme':'보드 테마','set.screenTheme':'화면 테마','set.dark':'다크','set.light':'라이트',
  'grade.P+':'평균 2초/수 이하의 고속 완벽 기억','grade.P':'완벽한 기억 (100% 일치, 시간 제한 없음)','grade.S':'거의 완벽 (95% 이상)','grade.A':'훌륭함 (85% 이상)','grade.B':'좋음 (70% 이상)','grade.C':'절반 이상 (50% 이상)','grade.D':'기억 복습 필요 (50% 미만)',
- 'study.badge':'학습 모드','study.locked':"잠긴 구간(엔드게임) — 설정에서 '극한 모드'를 켜면 도전할 수 있어요 (학습 미리보기는 가능)",'study.desc':'기물을 <b>직접 드래그하거나 눌러서</b> 다음 수를 둬보세요 — 기보와 같으면 진행, 다르면 되돌아가요. ← → 키 이동 · F 키 뒤집기 · ⚑ 북마크도 그대로 사용할 수 있어요.','study.moves':'기보','study.status0':'시작 위치 — › 를 누르거나 기물을 직접 둬보세요','study.status':'{a}/{b}수 · {c}수째','study.bmAdd':'{n}수째에 북마크를 추가했어요','study.bmRemove':'북마크를 해제했어요','study.bmNone':'수를 선택한 후 북마크할 수 있어요','study.wrong':'기보와 다른 수예요 — 되돌렸어요','study.hint':'힌트','study.endNote':'엔드게임 제외 도전',
+ 'study.badge':'학습 모드','study.locked':"잠긴 구간(엔드게임) — 설정에서 '극한 모드'를 켜면 도전할 수 있어요 (학습 미리보기는 가능)",'study.desc':'기물을 <b>직접 드래그하거나 눌러서</b> 다음 수를 둬보세요 — 기보와 같으면 진행, 다르면 되돌아가요. ← → 키 이동 · F 키 뒤집기.','study.moves':'기보','study.status0':'시작 위치 — › 를 누르거나 기물을 직접 둬보세요','study.status':'{a}/{b}수 · {c}수째','study.bmAdd':'{n}수째에 북마크를 추가했어요','study.bmRemove':'북마크를 해제했어요','study.bmNone':'수를 선택한 후 북마크할 수 있어요','study.wrong':'기보와 다른 수예요 — 되돌렸어요','study.hint':'힌트','study.endNote':'엔드게임 제외 도전',
  'ch.end':'종료','ch.desc':'양쪽 기물을 모두 <b>내가 직접</b> 둡니다. 첫 수부터 기억을 더뎌 보세요.','ch.fbOff':'(즉시 피드백 꺼짐 — 틀려도 알려주지 않아요!)','ch.mylist':'내가 둔 수','ch.empty':'아직 둔 수가 없어요','ch.progress':'{a}수 둠 · 목표 {b}수','ch.transpo':'우회 도달! 기보에 다시 합류했어요','ch.mode.normal':'일반 모드','ch.mode.extreme':'극한 모드','ch.cut':'엔드게임 {n}수까지','ch.daily':'오늘의 게임',
  'ch.reason.mate':'체크메이트!','ch.reason.stalemate':'스테일메이트','ch.reason.draw':'무승부 (규칙 종료)','ch.reason.cutoff':'엔드게임 컷오프 도달','ch.reason.complete':'기보의 마지막 수 도달','ch.reason.manual':'직접 종료',
  'res.newbest':'신기록!','res.hintUsed':'힌트 사용','res.used':'사용함','res.time':'걸린 시간','res.streak':'연속 일치','res.streakPerfect':'처음부터 끝까지 완벽 일치!','res.streakFirst':'첫 수부터 어긋났어요','res.streakN':'{n}수까지 일치했습니다','res.played':'총 둔 수','res.accline':'정확도 — {a}/{b}수 일치','res.cutNote':' (엔드게임 제외 · 전체 {n}수)','res.closeTitle':'기보 검토로 넘어가기','ch.hintGrade':'힌트 사용 — P 등급은 힌트 없이 100%일 때만 부여돼요',
- 'rv.badge':'기보 검토','rv.matched':'맞춘 수 {a}/{b}','rv.legend':'초록 = 맞춘 수 · 빨강 = 놓친 수','rv.legendCut':' · 회색 = 엔드게임(미채점)','rv.status':'{a}/{b}수', 'set.online':'온라인 (전체 통계·랭킹)','set.onlineDesc':'Supabase 주소와 anon 키를 붙여넣으면 전 세계 통계·랭킹이 켜집니다. 설정 방법은 SUPABASE_SETUP.md 를 참고하세요.','set.url':'Supabase URL','set.key':'anon key','set.connect':'연결','set.connected':'연결됨','set.disconnect':'연결 해제','set.account':'계정','set.email':'이메일','set.pw':'비밀번호 (6자 이상)','set.name':'표시 이름','set.login':'로그인','set.signup':'회원가입','set.logout':'로그아웃','set.uploadAll':'지금까지 기록 올리기','set.uploadDone':'{n}개 기록을 올렸어요','set.needInput':'값을 입력해 주세요','set.pwShort':'비밀번호는 6자 이상이어야 해요','set.welcome':'{name} 님, 환영해요!','set.checkEmail':'확인 메일을 보냈어요 — 메일함에서 확인 후 로그인해 주세요','set.global':'전체','set.based':'전체 사용자 기준','set.mine':'내 기록 기준','set.hardest':'가장 많이 틀리는 수','set.pct':'성공률 {n}%','err.urlWrong':'주소가 올바르지 않아요 — Settings → API의 Project URL(https://xxxx.supabase.co 형태)을 다시 복사해 주세요','err.dashUrl':'그건 대시보드 주소예요 — Project URL(https://xxxx.supabase.co)을 넣어주세요','err.keyWrong':'anon key가 올바르지 않아요 — Settings → API의 anon public 키를 다시 복사해 주세요','err.badLogin':'이메일 또는 비밀번호가 틀렸어요','err.confirm':'이메일 확인이 아직 안 됐어요 — 메일함(스팸함 포함)에서 링크를 눌러주세요','err.exists':'이미 가입된 이메일이에요 — 로그인을 눌러주세요','err.network':'서버에 연결할 수 없어요 — 인터넷 상태와 주소를 확인해 주세요','gate.tagline':'유명한 명경기를 통째로 외우는 가장 재미있는 방법','gate.toSignup':'계정이 없으신가요? 회원가입','gate.toLogin':'이미 계정이 있으신가요? 로그인','gate.needAccount':'전체 통계와 랭킹 참여하려면 로그인이 필요해요','res.graph':'수별 성공 그래프 (빨간 점 = 틀린 수)','res.graphC':'금색 선 = 전체 사용자 성공률','set.offline':'오프라인 모드','set.offlineDesc':'온라인 통계·랭킹은 운영자가 연결하면 켜져요. 지금은 내 기록으로 즐기세요!','set.data':'데이터 백업','set.export':'내보내기','set.exportD':'기록·북마크·설정을 파일로 저장합니다. 기기를 바꾸기 전에 꼭 해두세요.','set.exportDone':'백업 파일을 내려받았어요','set.import':'가져오기','set.importD':'백업 파일로 기록을 되돌립니다 (현재 기록을 대체).','set.importDone':'기록을 복원했어요 — 새로고침합니다','set.importFail':'파일을 읽지 못했어요','set.version':'버전','toast.updated':'새 버전으로 업데이트했어요'
+ 'rv.badge':'기보 검토','rv.matched':'맞춘 수 {a}/{b}','rv.legend':'초록 = 맞춘 수 · 빨강 = 놓친 수','rv.legendCut':' · 회색 = 엔드게임(미채점)','rv.status':'{a}/{b}수', 'set.online':'온라인 (전체 통계·랭킹)','set.onlineDesc':'Supabase 주소와 anon 키를 붙여넣으면 전 세계 통계·랭킹이 켜집니다. 설정 방법은 SUPABASE_SETUP.md 를 참고하세요.','set.url':'Supabase URL','set.key':'anon key','set.connect':'연결','set.connected':'연결됨','set.disconnect':'연결 해제','set.account':'계정','set.email':'이메일','set.pw':'비밀번호 (6자 이상)','set.name':'표시 이름','set.login':'로그인','set.signup':'회원가입','set.logout':'로그아웃','set.uploadAll':'지금까지 기록 올리기','set.uploadDone':'{n}개 기록을 올렸어요','set.needInput':'값을 입력해 주세요','set.pwShort':'비밀번호는 6자 이상이어야 해요','set.welcome':'{name} 님, 환영해요!','set.checkEmail':'확인 메일을 보냈어요 — 메일함에서 확인 후 로그인해 주세요','set.global':'전체','set.based':'전체 사용자 기준','set.mine':'내 기록 기준','set.hardest':'가장 많이 틀리는 수','set.pct':'성공률 {n}%','err.urlWrong':'주소가 올바르지 않아요 — Settings → API의 Project URL(https://xxxx.supabase.co 형태)을 다시 복사해 주세요','err.dashUrl':'그건 대시보드 주소예요 — Project URL(https://xxxx.supabase.co)을 넣어주세요','err.keyWrong':'anon key가 올바르지 않아요 — Settings → API의 anon public 키를 다시 복사해 주세요','err.badLogin':'이메일 또는 비밀번호가 틀렸어요','err.confirm':'이메일 확인이 아직 안 됐어요 — 메일함(스팸함 포함)에서 링크를 눌러주세요','err.exists':'이미 가입된 이메일이에요 — 로그인을 눌러주세요','err.network':'서버에 연결할 수 없어요 — 인터넷 상태와 주소를 확인해 주세요','gate.tagline':'유명한 명경기를 통째로 외우는 가장 재미있는 방법','gate.toSignup':'계정이 없으신가요? 회원가입','gate.toLogin':'이미 계정이 있으신가요? 로그인','gate.needAccount':'전체 통계와 랭킹 참여하려면 로그인이 필요해요','res.graph':'수별 성공률 — 그 수를 시도한 사람 중 성공한 비율','res.graphC':'초록 막대 = 전체 사용자 성공률 · 빨간 점 = 내가 틀린 수','set.offline':'오프라인 모드','set.offlineDesc':'온라인 통계·랭킹은 운영자가 연결하면 켜져요. 지금은 내 기록으로 즐기세요!','set.data':'데이터 백업','set.export':'내보내기','set.exportD':'기록·북마크·설정을 파일로 저장합니다. 기기를 바꾸기 전에 꼭 해두세요.','set.exportDone':'백업 파일을 내려받았어요','set.import':'가져오기','set.importD':'백업 파일로 기록을 되돌립니다 (현재 기록을 대체).','set.importDone':'기록을 복원했어요 — 새로고침합니다','set.importFail':'파일을 읽지 못했어요','set.version':'버전','toast.updated':'새 버전으로 업데이트했어요'
 },
 en:{
  'tab.home':'Home','tab.library':'Games','tab.collection':'Collection','tab.ranking':'Ranking','tab.puzzle':'Puzzle','tab.settings':'Settings',
  'chip':'{a} runs · {b} perfect',
  'btn.study':'Study','btn.challenge':'Challenge','btn.retry':'Retry','btn.ranking':'Ranking','btn.home':'Home','btn.close':'Close',
- 'home.daily':"Daily Game",'home.doneToday':"Done today!",'home.streak':'{n}-day streak','home.studyFirst':'Study first','home.otherQuote':'Another quote',
+ 'home.daily':"Daily Game",'home.doneToday':"Done today!",'home.streak':'{n}-day streak','home.studyFirst':'Study first','home.otherQuote':'Another quote','app.name':'Chessnology','avatar.me':'Me','home.catSoon':'Coming soon.','ch.quitQ':'Quit this run?','ch.quitYes':'Quit','ch.quitNo':'Keep going','res.streakSoFar':'Not finished — {n} matched in a row!','res.graphMine':'No global data yet — showing my latest run','study.complete':'Done!','study.hintOn':'Hint on','study.hintOff':'Hint off','live.study':'Studying','live.challenge':'Challenging','nav.guardQ':'A study/challenge is in progress','nav.guardD':'Leaving now resets the run in progress. Continue?','nav.leave':'Leave','nav.stay':'Stay',
  'stat.challenges':'Challenges','stat.perfect':'100% games','stat.avg':'Avg. accuracy',
  'home.categories':'Categories','home.recent':'Recent runs','home.recentEmpty':'No runs yet. Pick a famous game in the library, study it, then take the challenge!',
  'th.game':'Game','th.acc':'Accuracy','th.grade':'Grade','th.time':'Time','th.when':'When','th.mode':'Mode','th.hint':'Hint','th.date':'Date','th.n':'#',
@@ -5396,22 +5408,47 @@ en:{
  'set.title':'Settings','set.lang':'언어 · Language','set.challenge':'Challenge mode','set.challengeSub':'Toggle in-challenge aids like hints here','set.difficulty':'Memorization difficulty','set.screen':'Screen & sound',
  'set.hint':'Hints','set.hintD':'Shows where the next piece should move. Using hints caps a 100% run at S grade.',
  'set.fb':'Instant feedback','set.fbD':'Tells you right away when a move differs from the game. Off = no warnings, maximum tension!',
- 'set.timer':'Show timer','set.timerD':'Shows elapsed time during a challenge.','set.flip':'Auto-flip board','set.flipD':'Rotates the board so the side to move sits at the bottom.','set.coords':'Board coordinates','set.coordsD':'Shows a–h / 1–8 coordinates.','set.sound':'Sound effects','set.soundD':'Move, capture, correct and wrong sounds.','set.quote':'Daily quote','set.quoteD':'Shows a chess quote on Home.','set.extreme':'Extreme mode (include endgame)','set.extremeD':'By default you memorize up to just before the endgame. Turn on to go all the way.','set.savePartial':'Save partial runs','set.savePartialD':'Saves the record even when you quit via the End button. Off = only natural finishes count.',
- 'set.grades':'Grade table','set.gradeNote':'Accuracy = matched moves ÷ all moves in the game. Reaching the game position again after a slip re-syncs from there. Normal mode scores only up to the endgame cutoff.','set.danger':'Danger zone','set.reset':'Reset all records','set.resetD':'Deletes all runs, bookmarks and streaks.','set.resetBtn':'Reset','set.resetQ':'Reset all records?','set.resetWarn':'This cannot be undone.','set.condition':'Condition','set.theme':'Board theme','set.screenTheme':'Screen theme','set.dark':'Dark','set.light':'Light',
+ 'set.timer':'Show timer','set.timerD':'Shows elapsed time during a challenge.','set.flip':'Auto-flip board','set.flipD':'Rotates the board so the side to move sits at the bottom.','set.coords':'Board coordinates','set.coordsD':'Shows a–h / 1–8 coordinates.','set.sound':'Sound effects','set.soundD':'Move, capture, correct and wrong sounds.','set.quote':'Daily quote','set.quoteD':'Shows a chess quote on Home.','set.extreme':'Extreme mode','set.extremeD':'On: no hints — finished runs go on the ranking. Off: 3 hints per run (not ranked).','set.savePartial':'Save partial runs','set.savePartialD':'Saves the record even when you quit via the End button. Off = only natural finishes count.',
+ 'set.grades':'Grade table','set.gradeNote':'Accuracy = matched moves ÷ all moves in the game. Reaching the game position again after a slip re-syncs from there.','set.danger':'Danger zone','set.reset':'Reset all records','set.resetD':'Deletes all runs, bookmarks and streaks.','set.resetBtn':'Reset','set.resetQ':'Reset all records?','set.resetWarn':'This cannot be undone.','set.condition':'Condition','set.theme':'Board theme','set.screenTheme':'Screen theme','set.dark':'Dark','set.light':'Light',
  'grade.P+':'Perfect at speed (avg ≤ 2s per move)','grade.P':'Perfect recall (100% match, no time limit)','grade.S':'Near perfect (95%+)','grade.A':'Great (85%+)','grade.B':'Good (70%+)','grade.C':'Halfway there (50%+)','grade.D':'Needs review (below 50%)',
- 'study.badge':'Study mode','study.locked':"Locked section (endgame) — turn on 'Extreme mode' in Settings to challenge it. Preview is still available here.",'study.desc':'<b>Drag or tap a piece</b> to play the next move — matching moves advance, others snap back. Arrow keys, F to flip and ⚑ bookmarks still work.','study.moves':'Moves','study.status0':'Start position — press › or play a move yourself','study.status':'{a}/{b} plies · move {c}','study.bmAdd':'Bookmarked move {n}','study.bmRemove':'Bookmark removed','study.bmNone':'Select a move first, then bookmark it','study.wrong':"That's not the game's move — snapped back",'study.hint':'Hint','study.endNote':'Endgame excluded',
+ 'study.badge':'Study mode','study.locked':"Locked section (endgame) — turn on 'Extreme mode' in Settings to challenge it. Preview is still available here.",'study.desc':'<b>Drag or tap a piece</b> to play the next move — matching moves advance, others snap back. Arrow keys and F to flip.','study.moves':'Moves','study.status0':'Start position — press › or play a move yourself','study.status':'{a}/{b} plies · move {c}','study.bmAdd':'Bookmarked move {n}','study.bmRemove':'Bookmark removed','study.bmNone':'Select a move first, then bookmark it','study.wrong':"That's not the game's move — snapped back",'study.hint':'Hint','study.endNote':'Endgame excluded',
  'ch.end':'End','ch.desc':'You move <b>both sides yourself</b>. Recall the game from move one.','ch.fbOff':'(Instant feedback off — no warnings!)','ch.mylist':'My moves','ch.empty':'No moves yet','ch.progress':'{a} plies · target {b}','ch.transpo':'Back on track! You re-joined the game.','ch.mode.normal':'Normal mode','ch.mode.extreme':'Extreme mode','ch.cut':'up to move {n}','ch.daily':'Daily Game',
  'ch.reason.mate':'Checkmate!','ch.reason.stalemate':'Stalemate','ch.reason.draw':'Draw (rule finish)','ch.reason.cutoff':'Endgame cutoff reached','ch.reason.complete':'Reached the final move','ch.reason.manual':'Ended manually',
  'res.newbest':'New best!','res.hintUsed':'Hint used','res.used':'used','res.time':'Time','res.streak':'Matching streak','res.streakPerfect':'Perfect from the first move to the last!','res.streakFirst':'First move already differs','res.streakN':'Matched through move {n}','res.played':'Total moves played','res.accline':'Accuracy — {a}/{b} moves matched','res.cutNote':' (endgame excluded · {n} total)','res.closeTitle':'Go to review','ch.hintGrade':'Hints used — P grades require a hint-free 100%',
- 'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.online':'Online (global stats & ranking)','set.onlineDesc':'Paste your Supabase URL and anon key to enable global stats and rankings. See SUPABASE_SETUP.md.','set.url':'Supabase URL','set.key':'anon key','set.connect':'Connect','set.connected':'Connected','set.disconnect':'Disconnect','set.account':'Account','set.email':'Email','set.pw':'Password (6+ chars)','set.name':'Display name','set.login':'Log in','set.signup':'Sign up','set.logout':'Log out','set.uploadAll':'Upload my past records','set.uploadDone':'Uploaded {n} records','set.needInput':'Please fill in the fields','set.pwShort':'Password must be at least 6 characters','set.welcome':'Welcome, {name}!','set.checkEmail':'Confirmation email sent — check your inbox, then log in','set.global':'Global','set.based':'All players','set.mine':'My records','set.hardest':'Moves missed the most','set.pct':'{n}% success','err.urlWrong':'That URL does not look right — copy the Project URL (https://xxxx.supabase.co) from Settings → API again','err.dashUrl':"That's the dashboard address — use the Project URL (https://xxxx.supabase.co)",'err.keyWrong':'That anon key does not look right — copy the anon public key from Settings → API again','err.badLogin':'Wrong email or password','err.confirm':'Email not confirmed yet — click the link in your inbox (check spam)','err.exists':'That email is already registered — use Log in','err.network':'Cannot reach the server — check your internet and the URL','gate.tagline':'The most fun way to memorize famous chess games','gate.toSignup':'No account? Sign up','gate.toLogin':'Already have an account? Log in','gate.needAccount':'Log in to join global stats and rankings','res.graph':'Move-by-move graph (red dots = missed moves)','res.graphC':'Gold line = all players success rate','set.offline':'Offline mode','set.offlineDesc':'Global stats turn on once the site owner connects Supabase. For now, enjoy with your own records!','set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
+ 'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.online':'Online (global stats & ranking)','set.onlineDesc':'Paste your Supabase URL and anon key to enable global stats and rankings. See SUPABASE_SETUP.md.','set.url':'Supabase URL','set.key':'anon key','set.connect':'Connect','set.connected':'Connected','set.disconnect':'Disconnect','set.account':'Account','set.email':'Email','set.pw':'Password (6+ chars)','set.name':'Display name','set.login':'Log in','set.signup':'Sign up','set.logout':'Log out','set.uploadAll':'Upload my past records','set.uploadDone':'Uploaded {n} records','set.needInput':'Please fill in the fields','set.pwShort':'Password must be at least 6 characters','set.welcome':'Welcome, {name}!','set.checkEmail':'Confirmation email sent — check your inbox, then log in','set.global':'Global','set.based':'All players','set.mine':'My records','set.hardest':'Moves missed the most','set.pct':'{n}% success','err.urlWrong':'That URL does not look right — copy the Project URL (https://xxxx.supabase.co) from Settings → API again','err.dashUrl':"That's the dashboard address — use the Project URL (https://xxxx.supabase.co)",'err.keyWrong':'That anon key does not look right — copy the anon public key from Settings → API again','err.badLogin':'Wrong email or password','err.confirm':'Email not confirmed yet — click the link in your inbox (check spam)','err.exists':'That email is already registered — use Log in','err.network':'Cannot reach the server — check your internet and the URL','gate.tagline':'The most fun way to memorize famous chess games','gate.toSignup':'No account? Sign up','gate.toLogin':'Already have an account? Log in','gate.needAccount':'Log in to join global stats and rankings','res.graph':'Per-move success rate — of players who attempted the move','res.graphC':'Green bars = all players success rate · red dot = my missed move','set.offline':'Offline mode','set.offlineDesc':'Global stats turn on once the site owner connects Supabase. For now, enjoy with your own records!','set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
 }};
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
   if(vars) for(const kk in vars) s = s.split('{'+kk+'}').join(String(vars[kk]));
   return s;
 }
+Object.assign(I18N.ko, {
+ 'th.name':'이름','rank.loading':'랭킹을 불러오는 중…','rank.you':'나','rank.myBest':'내 최고 기록 (극한) — {t}',
+ 'rank.local':'랭킹은 극한 모드 기록만 등재됩니다. 온라인 연결 시 전 세계 랭킹에 참여해요.',
+ 'rank.speedEmpty':'아직 극한 모드 100% 기록이 없어요. 극한 모드에서 완벽하게 완주해보세요!',
+ 'set.extremeD':'켜면 힌트 없이 도전하고, 완주한 기록만 랭킹에 등재됩니다. 끄면 도전에서 힌트 3개를 사용할 수 있어요(랭킹 미등재).',
+ 'set.fetchAll':'기록 가져오기 (서버 → 이 기기)','set.fetchAllD':'다른 기기·브라우저에서 둔 기록을 가져와 이 기기의 컬렉션·통계에 합칩니다.',
+ 'set.fetchDone':'{n}개 기록을 가져왔어요','set.fetchEmpty':'가져올 새 기록이 없어요',
+ 'ch.hintBtn':'힌트 ({n})','ch.hintMax':'힌트를 모두 사용했어요','ch.hintExtreme':'힌트 없음 · 극한'
+});
+Object.assign(I18N.en, {
+ 'th.name':'Name','rank.loading':'Loading ranking…','rank.you':'You','rank.myBest':'My best (extreme) — {t}',
+ 'rank.local':'Only Extreme-mode runs are ranked. Connect online to join the global ranking.',
+ 'rank.speedEmpty':'No Extreme-mode 100% records yet. Finish a game perfectly in Extreme mode!',
+ 'set.extremeD':'On: no hints — finished runs go on the ranking. Off: 3 hints per run (not ranked).',
+ 'set.fetchAll':'Fetch my records (server → this device)','set.fetchAllD':'Pull records played on other devices or browsers into this device\u2019s collection and stats.',
+ 'set.fetchDone':'Fetched {n} records','set.fetchEmpty':'Nothing new to fetch',
+ 'ch.hintBtn':'Hint ({n})','ch.hintMax':'No hints left','ch.hintExtreme':'No hints · Extreme'
+});
 function applyStaticI18n(){
   document.querySelectorAll('[data-i18n]').forEach(el=>{ el.textContent=t(el.dataset.i18n); });
+  applyAppName();
+  if(typeof updateLiveTab==='function') updateLiveTab();
+}
+function applyAppName(){
+  const el=document.getElementById('app-title'); if(el) el.textContent=t('app.name');
+  const av=document.getElementById('avatar-me'); if(av) av.textContent=t('avatar.me');
+  document.title = LANG==='en'? 'Chessnology — Memorize famous chess games' : '체스놀로지아 — 명경기 암기 플랫폼';
 }
 // ---- 게임 데이터 번역 헬퍼 ----
 const TITLE_EN={opera:'The Opera Game',immortal:'The Immortal Game',evergreen:'The Evergreen Game',rubinstein_immortal:"Rubinstein's Immortal",capablanca_marshall:'Capablanca vs Marshall',lasker_thomas:"Lasker's King March",byrne_fischer:'The Game of the Century',fischer_spassky_g6:'Fischer vs Spassky, Game 6',spassky_fischer_g13:'Spassky vs Fischer, Game 13',kasparov_topalov:"Kasparov's Immortal",deepblue_kasparov_g6:'Deep Blue vs Kasparov, Game 6',kasparov_karpov_g16:'The Octopus Knight',carlsen_karjakin_tb4:"Carlsen's Technical Finish",anand_topalov_g4:"Anand's Prepared Strike",tal_botvinnik_g6:"Tal's Immortal"};
@@ -5522,6 +5559,35 @@ const Cloud = {
       return (rows||[]).map(r=>r.moves).filter(Boolean);
     }catch(e){ console.warn('move stats fail:', e.message); return []; }
   },
+  async fetchSpeedRanking(){
+    if(!this.enabled()) return null;
+    try{
+      const rows=await this._rest('attempts?select=user_id,game_id,ms,grade,created_at&acc=eq.100&mode=eq.extreme&order=ms.asc&limit=20');
+      const ids=[...new Set((rows||[]).map(r=>r.user_id).filter(Boolean))];
+      const names={};
+      if(ids.length){
+        try{ const ps=await this._rest('players?select=id,name&id=in.('+ids.join(',')+')'); (ps||[]).forEach(p=>names[p.id]=p.name); }catch(e2){}
+      }
+      return (rows||[]).map((r,i)=>({rank:i+1, user_id:r.user_id, name:names[r.user_id]||'Player', game_id:r.game_id, ms:r.ms, grade:r.grade}));
+    }catch(e){ console.warn('ranking fail:', e.message); return null; }
+  },
+  async fetchMyAttempts(){
+    if(!this.enabled() || !this.loggedIn()) return 0;
+    try{
+      const uid=this.session().user_id;
+      const rows=await this._rest('attempts?select=game_id,acc,ms,grade,mode,hint,moves,created_at&user_id=eq.'+uid+'&order=created_at.asc&limit=2000');
+      let n=0;
+      (rows||[]).forEach(r=>{
+        const ts=Date.parse(r.created_at); if(isNaN(ts)) return;
+        if(!store.data.records[r.game_id]) store.data.records[r.game_id]=[];
+        if(store.data.records[r.game_id].some(x=>x.ts===ts)) return;
+        store.data.records[r.game_id].push({ts, acc:r.acc, ms:r.ms, grade:r.grade||'-', mode:r.mode||'normal', hint:!!r.hint, cut:false, played:null, moves:r.moves||null, synced:true});
+        n++;
+      });
+      if(n) store.save();
+      return n;
+    }catch(e){ console.warn('fetch mine fail:', e.message); return -1; }
+  },
   async syncAllLocal(){
     if(!this.enabled() || !this.loggedIn()) return 0;
     let n=0;
@@ -5578,6 +5644,52 @@ function gradeDesc(code){ return t('grade.'+code); }
 
 let viewCleanup=null;
 function cleanupView(){ if(viewCleanup){ try{viewCleanup();}catch(e){} viewCleanup=null; } }
+
+// ---- 폭죽·컨페티 (v1.6: 학습 완주 약한 폭죽 / 도전 등급별 축하) ----
+function fxBurst(x, y, opts={}){
+  const {count=14, small=false, colors=['#81b64c','#f7d046','#ffffff']}=opts;
+  const layer=document.createElement('div'); layer.className='fx-layer'; document.body.appendChild(layer);
+  for(let i=0;i<count;i++){
+    const p=document.createElement('div'); p.className='fx-p'+(small?' sm':'');
+    const a=Math.random()*Math.PI*2;
+    const dist=(small?36:80)+Math.random()*(small?26:70);
+    p.style.left=x+'px'; p.style.top=y+'px';
+    p.style.setProperty('--dx',(Math.cos(a)*dist).toFixed(1)+'px');
+    p.style.setProperty('--dy',(Math.sin(a)*dist).toFixed(1)+'px');
+    p.style.background=colors[i%colors.length];
+    p.style.animationDelay=(Math.random()*0.12).toFixed(2)+'s';
+    layer.appendChild(p);
+  }
+  setTimeout(()=>layer.remove(), small?900:1300);
+}
+function fxBurstAt(el, opts){ if(!el) return; const r=el.getBoundingClientRect(); fxBurst(r.left+r.width/2, r.top+r.height/2, opts); }
+function showDonePop(){
+  const el=document.createElement('div'); el.className='done-pop'; el.textContent=t('study.complete');
+  document.body.appendChild(el);
+  let dead=false;
+  const kill=()=>{ if(dead) return; dead=true; el.remove(); document.removeEventListener('pointerdown', kill, true); };
+  setTimeout(kill, 1000);
+  document.addEventListener('pointerdown', kill, true);
+}
+function fxConfetti(){
+  const layer=document.createElement('div'); layer.className='fx-layer'; document.body.appendChild(layer);
+  const colors=['#81b64c','#f7d046','#ffffff','#e8a33d'];
+  for(let i=0;i<80;i++){
+    const c=document.createElement('div'); c.className='fx-c';
+    c.style.left=(Math.random()*100).toFixed(1)+'%';
+    c.style.background=colors[i%colors.length];
+    c.style.animationDelay=(Math.random()*0.8).toFixed(2)+'s';
+    c.style.animationDuration=(1.7+Math.random()*1.3).toFixed(2)+'s';
+    c.style.setProperty('--rot',Math.round(Math.random()*720-360)+'deg');
+    layer.appendChild(c);
+  }
+  setTimeout(()=>layer.remove(),3600);
+}
+function fxGrade(code){
+  if(code==='P+'||code==='P'){ fxConfetti(); fxBurst(innerWidth*0.5, innerHeight*0.32, {count:20}); setTimeout(()=>fxBurst(innerWidth*0.28, innerHeight*0.4,{count:16}),260); setTimeout(()=>fxBurst(innerWidth*0.72, innerHeight*0.38,{count:16}),480); }
+  else if(code==='S'){ fxBurst(innerWidth*0.5, innerHeight*0.32, {count:18}); }
+  else if(code==='A'){ fxBurst(innerWidth*0.5, innerHeight*0.32, {count:10, small:true, colors:['#f7d046','#ffffff']}); }
+}
 let lastReview=null;
 
 // ---- 수 목록 (학습 모드) ----
@@ -5592,16 +5704,12 @@ function studyMovelistHTML(d, curPly, gid){
       const cls=[];
       if(ply===curPly) cls.push('cur');
       if(bms.includes(ply)) cls.push('flagged');
-      if(d.endgamePly && ply>d.endgamePly) cls.push('endgame-shade');
       row+=`<div class="ml-move ${cls.join(' ')}" data-ply="${ply}">${d.sans[ply-1]}${bms.includes(ply)?'<span class="bm">⚑</span>':''}</div>`;
     }
     row+='</div>';
     rows.push(row);
   }
   let html=rows.join('');
-  if(d.endgamePly && !store.data.settings.extreme){
-    html+=`<div class="lock-note">${t('study.locked')}</div>`;
-  }
   return html;
 }
 
@@ -5609,7 +5717,10 @@ function studyMovelistHTML(d, curPly, gid){
 function viewStudy(gid){
   cleanupView();
   const g=gById(gid); const d=gameData(g);
-  let idx=0, flipped=false;
+  const resume=(liveRun && liveRun.type==='study' && liveRun.gid===gid)? liveRun : null;
+  let idx=resume? (resume.idx||0):0, flipped=false, doneShown=resume? !!resume.doneShown : false, prevIdx=-1;
+  liveRun={type:'study', gid, hash:'#/study/'+gid, isLive:()=>true, idx, doneShown};
+  updateLiveTab();
   appEl.innerHTML=`
     <div class="section-title">${gTitle(g)} <span class="badge blue">${t('study.badge')}</span>
       <button class="btn challenge sm" id="st-go-challenge" style="margin-left:auto">⚔ ${t('btn.challenge')}</button></div>
@@ -5622,8 +5733,7 @@ function viewStudy(gid){
           <button class="ctrl-btn" id="st-next" title="›">›</button>
           <button class="ctrl-btn" id="st-last" title="»">»</button>
           <button class="ctrl-btn" id="st-flip" title="↕">↕</button>
-          <button class="ctrl-btn" id="st-bm" title="⚑">⚑</button>
-          <button class="ctrl-btn wide" id="st-hint" title="${t('study.hint')}">${t('study.hint')}</button>
+          <button class="btn sm hint-toggle" id="st-hint">${t('study.hintOff')}</button>
         </div>
         <div class="muted" style="text-align:center;margin-top:8px" id="st-status"></div>
       </div>
@@ -5634,7 +5744,6 @@ function viewStudy(gid){
             <span class="badge gray">${g.event} ${g.year}</span>
             <span class="badge gray">${gOpening(g)}</span>
             <span class="badge gray">${Math.ceil(d.N/2)} ${t('unit.moves')} · ${g.result}</span>
-            ${g.endgamePly&&!store.data.settings.extreme?`<span class="badge gray">${t('study.endNote')}</span>`:''}
           </div>
           <p class="muted" style="margin-top:8px">${gBlurb(g)}</p>
           <div class="dim" style="margin-top:8px">${t('study.desc')}</div>
@@ -5667,7 +5776,9 @@ function viewStudy(gid){
         if(m2.captured) Sfx.play('capture'); else Sfx.play('move');
         const chk=(c.inCheck&&c.inCheck())||(c.in_check&&c.in_check());
         if(chk) Sfx.play('check');
-        idx++; render();
+        idx++;
+        render();
+        if(idx===d.N) fxBurstAt(document.querySelector('#st-board [data-sq="'+mv.to+'"]'), {count:12, small:true});
       } else {
         Sfx.play('err');
         const now=Date.now();
@@ -5688,24 +5799,20 @@ function viewStudy(gid){
     document.getElementById('st-moves').innerHTML=studyMovelistHTML(d, idx, g.id);
     document.getElementById('st-status').textContent = idx===0? t('study.status0') : t('study.status',{a:idx, b:d.N, c:Math.ceil(idx/2)});
     document.getElementById('st-bmcount').textContent = bookmarksOf(g.id).length? `⚑ ${bookmarksOf(g.id).length}`:'';
-    document.getElementById('st-bm').classList.toggle('on', idx>0 && bookmarksOf(g.id).includes(idx));
-    document.getElementById('st-hint').classList.toggle('on', store.data.settings.studyHint);
+    const hb=document.getElementById('st-hint');
+    if(hb){ hb.textContent=store.data.settings.studyHint? t('study.hintOn') : t('study.hintOff'); hb.classList.toggle('ghost', !store.data.settings.studyHint); }
     const list=document.getElementById('st-moves');
     scrollToEl(list, list.querySelector('.ml-move.cur'));
     list.querySelectorAll('.ml-move[data-ply]').forEach(el=>el.addEventListener('click',()=>{ idx=+el.dataset.ply; render(); }));
+    if(idx===d.N && prevIdx!==d.N && !doneShown){ doneShown=true; showDonePop(); }
+    prevIdx=idx;
+    if(liveRun && liveRun.type==='study' && liveRun.gid===gid){ liveRun.idx=idx; liveRun.doneShown=doneShown; }
   }
   document.getElementById('st-first').onclick=()=>{ idx=0; render(); };
   document.getElementById('st-prev').onclick=()=>{ if(idx>0){ idx--; render(); } };
   document.getElementById('st-next').onclick=()=>{ if(idx<d.N){ Sfx.play('move'); idx++; render(); } };
   document.getElementById('st-last').onclick=()=>{ idx=d.N; render(); };
   document.getElementById('st-flip').onclick=()=>{ flipped=!flipped; board.setFlipped(flipped); };
-  document.getElementById('st-bm').onclick=()=>{
-    if(idx===0){ toast(t('study.bmNone')); return; }
-    const on=toggleBookmark(g.id, idx); toast(on? t('study.bmAdd',{n:idx}) : t('study.bmRemove'));
-    document.getElementById('st-bm').classList.toggle('on', on);
-    document.getElementById('st-moves').innerHTML=studyMovelistHTML(d, idx, g.id);
-    document.getElementById('st-moves').querySelectorAll('.ml-move[data-ply]').forEach(el=>el.addEventListener('click',()=>{ idx=+el.dataset.ply; render(); }));
-  };
   document.getElementById('st-hint').onclick=()=>{
     store.data.settings.studyHint=!store.data.settings.studyHint; store.save();
     render();
@@ -5728,15 +5835,22 @@ function viewChallenge(gid, opts={}){
   cleanupView();
   const g=gById(gid); const d=gameData(g);
   const extreme=store.data.settings.extreme;
-  const cut=(!extreme && g.endgamePly && g.endgamePly<d.N) ? g.endgamePly : d.N;
+  const cut=d.N;
   const tMoves=d.uci.slice(0,cut), tBoards=d.boards.slice(0,cut);
   const chess=new Chess();
-  const state={played:[], playedBoards:[], offPlys:[], syncTi:0, curPos:d.startBoard, started:false, t0:0, done:false, hintUsed:false, timer:null};
+  const state={played:[], playedBoards:[], offPlys:[], syncTi:0, curPos:d.startBoard, started:false, t0:0, done:false, hintUsed:false, timer:null, hintsLeft: extreme?0:3, hintSqs:null};
   const posAfter=k=> k===0? d.startBoard : tBoards[k-1];
+  const resumeRun=(liveRun && liveRun.type==='challenge' && liveRun.gid===gid)? liveRun : null;
+  const resume=resumeRun? resumeRun.snap() : null;
+  liveRun={type:'challenge', gid, hash:(opts.daily? '#/challenge/'+gid+'/daily' : '#/challenge/'+gid),
+    isLive:()=>state.started&&!state.done,
+    snap:()=>({played:state.played.slice(), offPlys:state.offPlys.slice(), ms:state.started? Date.now()-state.t0 : 0, hintUsed:state.hintUsed, hintsLeft:state.hintsLeft})};
+  updateLiveTab();
   appEl.innerHTML=`
-    <div class="section-title">${gTitle(g)} <span class="badge ${extreme?'red':'green'}">${t('ch.mode.'+(extreme?'extreme':'normal'))}${cut<d.N? ` · ${t('ch.cut',{n:cut})}`:''}</span>
+    <div class="section-title">${gTitle(g)} <span class="badge ${extreme?'red':'green'}">${t('ch.mode.'+(extreme?'extreme':'normal'))}</span>
       ${opts.daily?`<span class="badge gold">${t('ch.daily')}</span>`:''}
-      <button class="btn danger sm" id="ch-end" style="margin-left:auto">${t('ch.end')}</button></div>
+      ${extreme? `<span class="badge gray" style="margin-left:auto">${t('ch.hintExtreme')}</span>` : `<button class="btn sm" id="ch-hint" style="margin-left:auto">${t('ch.hintBtn',{n:3})}</button>`}
+      <button class="btn danger sm" id="ch-end" style="margin-left:8px">${t('ch.end')}</button></div>
     <div class="board-layout">
       <div>
         <div id="ch-board"></div>
@@ -5788,13 +5902,20 @@ function viewChallenge(gid, opts={}){
     document.getElementById('ch-moves').scrollTop=document.getElementById('ch-moves').scrollHeight;
     progress();
   }
-  function updateHint(){
-    // 동기화가 깨진(기보 이탈) 상태에서는 힌트를 끈다 — 틀린 수 자리에 효과가 남는 버그 방지
-    if(store.data.settings.challengeHint && !state.done && state.syncTi<cut && state.curPos===posAfter(state.syncTi)){
-      board.setHint([tMoves[state.syncTi].slice(0,2)]);
-      state.hintUsed=true;
-    } else board.setHint([]);
+  function applyHint(){ board.setHint(state.hintSqs||[]); }
+  function renderHintBtn(){
+    const b=document.getElementById('ch-hint'); if(!b) return;
+    b.textContent=t('ch.hintBtn',{n:state.hintsLeft});
+    b.classList.toggle('ghost', state.hintsLeft===0);
+    b.disabled=state.hintsLeft<=0;
   }
+  document.getElementById('ch-hint') && (document.getElementById('ch-hint').onclick=()=>{
+    if(state.done) return;
+    if(state.hintsLeft<=0){ toast(t('ch.hintMax')); return; }
+    if(state.syncTi>=cut || state.curPos!==posAfter(state.syncTi)) return;
+    state.hintsLeft--; state.hintSqs=[tMoves[state.syncTi].slice(0,2)]; state.hintUsed=true;
+    applyHint(); renderHintBtn();
+  });
   function onUserMove(mv){
     if(state.done) return;
     let promo=null;
@@ -5814,7 +5935,7 @@ function viewChallenge(gid, opts={}){
     syncLocal(uci, bd);
     board.setFen(chess.fen(), {lastMove:[mv.from,mv.to], checkSq:kingSqIfCheck(chess)});
     if(store.data.settings.autoFlip) board.setFlipped(chess.turn()==='b');
-    renderPanel(); updateHint();
+    renderPanel(); state.hintSqs=null; applyHint(); renderHintBtn();
     const over=(chess.isGameOver||chess.game_over).call(chess);
     if(over) finish('gameover');
     else if(state.syncTi>=cut) finish(cut<d.N?'cutoff':'complete');
@@ -5837,6 +5958,7 @@ function viewChallenge(gid, opts={}){
   function finish(reason){
     if(state.done) return;
     state.done=true;
+    liveRun=null; updateLiveTab();
     clearInterval(state.timer); board.setEnabled(false); board.setHint([]);
     const ms=state.started? Date.now()-state.t0 : 0;
     const res=computeAccuracy(state.played, state.playedBoards, tMoves, tBoards, d.startBoard);
@@ -5864,7 +5986,10 @@ function viewChallenge(gid, opts={}){
     else reasonText = t('ch.reason.'+reason);
     const playedSans=[]; { const rc=new Chess(); for(const u of state.played){ try{ const m2=rc.move({from:u.slice(0,2),to:u.slice(2,4),promotion:u[4]||undefined}); playedSans.push(m2? m2.san:'?'); }catch(e){ playedSans.push('?'); } } }
     lastReview={g, d, cut, opts, res, ms, gr, played:state.played.slice(), playedSans, targetMatched:(res.targetMatched||[]).slice()};
-    const streakText = res.firstDiff===null? t('res.streakPerfect') : (res.firstDiff===1? t('res.streakFirst') : t('res.streakN',{n:res.firstDiff-1}));
+    const perfectRun = res.firstDiff===null && reason!=='manual';
+    const streakText = perfectRun? t('res.streakPerfect')
+      : (res.firstDiff===null? t('res.streakSoFar',{n:res.matchedCount})
+      : (res.firstDiff===1? t('res.streakFirst') : t('res.streakN',{n:res.firstDiff-1})));
     showModal(`
       <div style="text-align:center">
         <button class="modal-x" id="rs-close" title="${t('res.closeTitle')}">✕</button>
@@ -5876,7 +6001,7 @@ function viewChallenge(gid, opts={}){
         <div class="muted">${t('res.accline',{a:res.matchedCount, b:res.targetCount})}${cut<d.N? t('res.cutNote',{n:d.N}):''}</div>
         <div style="margin-top:12px">
           <div class="dim" style="text-align:left;margin-bottom:4px">${t('res.graph')}</div>
-          <svg id="res-graph" viewBox="0 0 300 72" preserveAspectRatio="none" style="width:100%;height:76px;background:var(--bg-deep);border-radius:8px;display:block"></svg>
+          <svg id="res-graph" viewBox="0 0 300 84" preserveAspectRatio="none" style="width:100%;height:88px;background:var(--bg-deep);border-radius:8px;display:block"></svg>
           <div class="dim" id="res-graph-note" style="text-align:left;margin-top:3px"></div>
         </div>
         <div style="margin-top:14px;text-align:left">
@@ -5886,48 +6011,85 @@ function viewChallenge(gid, opts={}){
           ${state.hintUsed?`<div class="set-row"><div><div class="t">${t('res.hintUsed')}</div></div><div class="badge gray">${t('res.used')}</div></div>`:''}
         </div>
       </div>`);
-    drawRunGraph(res);
+    drawRateGraph(res);
+    const gn=document.getElementById('res-graph-note');
+    if(gn) gn.textContent=t('res.graphMine');
     if(Cloud.enabled()){
       Cloud.fetchMoveBinaries(g.id).then(bins=>{
         if(bins && bins.length){
-          drawRunGraph(res, moveStats(bins));
+          drawRateGraph(res, moveStats(bins));
           const n=document.getElementById('res-graph-note');
           if(n) n.textContent=t('res.graphC');
         }
       });
     }
+    if(reason!=='manual') fxGrade(gr.code);
     document.getElementById('rs-close').onclick=()=>{ closeModal(); viewReview(); };
   }
-  document.getElementById('ch-end').onclick=()=>finish('manual');
-  renderPanel(); updateHint();
+  document.getElementById('ch-end').onclick=()=>{
+    if(state.done || !state.started){ finish('manual'); return; }
+    showModal(`<h3 style="justify-content:center">${t('ch.quitQ')}</h3>
+      <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
+        <button class="btn danger" id="qt-yes">${t('ch.quitYes')}</button>
+        <button class="btn outline" id="qt-no">${t('ch.quitNo')}</button></div>`);
+    document.getElementById('qt-yes').onclick=()=>{ closeModal(); finish('manual'); };
+    document.getElementById('qt-no').onclick=closeModal;
+  };
+  if(resume && resume.played && resume.played.length){
+    for(const u of resume.played){
+      let r2=null; try{ r2=chess.move({from:u.slice(0,2), to:u.slice(2,4), promotion:u[4]||undefined}); }catch(e2){ r2=null; }
+      if(!r2) break;
+      const bd=fenBoard(chess.fen());
+      state.played.push(u); state.playedBoards.push(bd);
+      const inSync=state.syncTi<cut && state.curPos===posAfter(state.syncTi);
+      if(inSync && u===tMoves[state.syncTi]) state.syncTi++;
+      else{
+        let k=-1;
+        for(let x=state.syncTi;x<cut;x++){ if(tBoards[x]===bd){ k=x; break; } }
+        if(k>=0) state.syncTi=k+1;
+      }
+      state.curPos=bd;
+    }
+    state.offPlys=(resume.offPlys||[]).slice();
+    state.hintUsed=!!resume.hintUsed;
+    state.hintsLeft=(typeof resume.hintsLeft==='number')? resume.hintsLeft : (extreme?0:3);
+    state.started=true; state.t0=Date.now()-(resume.ms||0);
+    if(store.data.settings.showTimer) state.timer=setInterval(tick,500);
+    const lu=state.played[state.played.length-1];
+    board.setFen(chess.fen(), {lastMove:[lu.slice(0,2), lu.slice(2,4)], checkSq:kingSqIfCheck(chess)});
+    if(store.data.settings.autoFlip) board.setFlipped(chess.turn()==='b');
+  }
+  renderPanel(); applyHint(); renderHintBtn();
   viewCleanup=()=>clearInterval(state.timer);
 }
 
-/* 결과 그래프: 수별 성공(초록 계단선) + 틀린 수(빨간 점) + 전체 사용자 성공률(금색 선) */
-function drawRunGraph(res, community){
+/* 수별 성공률 그래프: 그 수를 도전 모드에서 시도한 전체 사용자 중 성공한 비율(%) — 오프라인이면 내 최근 기록 */
+function drawRateGraph(res, community){
   const svg=document.getElementById('res-graph'); if(!svg) return;
   const tm=res.targetMatched||[];
   const N=Math.max(1,tm.length);
-  const W=300, H=72, pad=5, yTop=9, yBot=H-9;
-  const x=i=> pad + i*(W-2*pad)/Math.max(1,N-1);
-  let path='';
-  tm.forEach((ok,i)=>{
-    const yy= ok? yTop : yBot, xx=x(i);
-    if(i===0) path=`M ${xx.toFixed(1)} ${yy}`;
-    else { const py= tm[i-1]? yTop : yBot; path+=` L ${xx.toFixed(1)} ${py.toFixed(1)} L ${xx.toFixed(1)} ${yy}`; }
+  const W=300, H=84, pad=6, yTop=14, yBot=H-14;
+  const bw=Math.max(2.5,(W-2*pad)/N*0.64);
+  const hasComm=!!(community && community.length);
+  const vals=tm.map((ok,i)=> hasComm? ((community[i]&&community[i].total)? community[i].pct : 0) : (ok?100:0));
+  let bars='';
+  vals.forEach((p,i)=>{
+    if(p<=0) return;
+    const x=pad+(i+0.5)*(W-2*pad)/N;
+    const h=(yBot-yTop)*p/100;
+    bars+=`<rect x="${(x-bw/2).toFixed(1)}" y="${(yBot-h).toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="1.5" fill="${hasComm?'var(--green)':'var(--border2)'}" opacity="${hasComm?'0.85':'0.7'}"><title>${i+1} — ${p}%</title></rect>`;
   });
   let marks='';
-  tm.forEach((ok,i)=>{ if(!ok) marks+=`<circle cx="${x(i).toFixed(1)}" cy="${yBot}" r="2.8" fill="var(--red-soft)"/>`; });
-  let commLine='';
-  if(community && community.length){
-    const cy=p=> yBot - (yBot-yTop)*(p/100);
-    commLine=`<polyline fill="none" stroke="var(--gold)" stroke-opacity=".6" stroke-width="1.6" points="${community.map((m,i)=>`${x(i).toFixed(1)},${cy(m.pct).toFixed(1)}`).join(' ')}"/>`;
-  }
-  const fd = res.firstDiff!==null && res.firstDiff!==undefined ? x(Math.max(0,res.firstDiff-1)) : null;
-  svg.innerHTML=`<line x1="${pad}" y1="${yTop}" x2="${W-pad}" y2="${yTop}" stroke="var(--border2)" stroke-dasharray="3 3"/>`
-    + commLine
-    + `<path d="${path}" fill="none" stroke="var(--green)" stroke-width="2"/>` + marks
-    + (fd!==null? `<line x1="${fd.toFixed(1)}" y1="${yTop}" x2="${fd.toFixed(1)}" y2="${yBot}" stroke="var(--red-soft)" stroke-opacity=".45" stroke-width="1"/>` : '');
+  tm.forEach((ok,i)=>{
+    if(!ok){ const x=pad+(i+0.5)*(W-2*pad)/N; marks+=`<circle cx="${x.toFixed(1)}" cy="${yTop-6}" r="2.6" fill="var(--red-soft)"/>`; }
+  });
+  let grid='';
+  [[0,0.8],[50,0.35],[100,0.35]].forEach(([g,o])=>{
+    const yy=yBot-(yBot-yTop)*g/100;
+    grid+=`<line x1="${pad}" y1="${yy.toFixed(1)}" x2="${W-pad}" y2="${yy.toFixed(1)}" stroke="var(--border2)" stroke-opacity="${o}"${g===0?'':' stroke-dasharray="2 3"'}/>`;
+  });
+  grid+=`<text x="0.5" y="${(yTop+2).toFixed(1)}" font-size="7" fill="var(--text-dim)">100</text><text x="0.5" y="${(yBot+2).toFixed(1)}" font-size="7" fill="var(--text-dim)">0</text>`;
+  svg.innerHTML=grid+bars+marks;
 }
 
 // ---- 기보 검토 (맞은 수 초록 / 놓친 수 빨강) ----
@@ -5936,7 +6098,7 @@ function viewReview(){
   const R=lastReview;
   if(!R){ location.hash='#/home'; return; }
   const {g,d}=R;
-  let idx=0, flipped=false;
+  let idx=R.cut, flipped=false;
   const okN=R.targetMatched.filter(Boolean).length;
   appEl.innerHTML=`
     <div class="section-title">${gTitle(g)} <span class="badge blue">${t('rv.badge')}</span>
@@ -6052,7 +6214,7 @@ function importData(file){
     try{
       const d=JSON.parse(r.result);
       if(!d || typeof d!=='object' || !d.settings || typeof d.records!=='object') throw new Error('bad file');
-      store.data=Object.assign({settings:{}, records:{}, bookmarks:{}, daily:{}, puzzle:{}, stats:{}, customGames:[]}, d);
+      store.data=Object.assign({settings:{}, records:{}, bookmarks:{}, daily:{}, puzzle:{}, stats:{}}, d);
       store.save(); toast(t('set.importDone'));
       setTimeout(()=>location.reload(), 900);
     }catch(e){ toast(t('set.importFail')); }
@@ -6071,7 +6233,11 @@ function markDailyDone(){
   dd.streak = dd.lastDone===todayKey(y) ? dd.streak+1 : 1;
   dd.lastDone=day; store.save();
 }
-function todayQuote(){ return QUOTES[hashStr('quote-'+todayKey())%QUOTES.length]; }
+function todayQuote(){ return hashStr('quote-'+todayKey())%QUOTES.length; }
+function quoteTexts(i){
+  const q=QUOTES[i];
+  return LANG==='ko'? {main:q[0], sub:q[1], author:q[2]} : {main:q[1], sub:'', author:QUOTE_AUTHOR_EN[i]||q[2]};
+}
 
 // ---- 미니 보드 썸네일 / 배지 ----
 function miniBoardHTML(g){
@@ -6104,15 +6270,12 @@ function successRateBadge(gid){
 function viewHome(){
   const g=dailyGame();
   const doneToday=recs(g.id).some(r=>new Date(r.ts).toDateString()===new Date().toDateString());
-  const q=todayQuote();
+  const qi=todayQuote();
   const allRecs=GAMES.flatMap(x=>recs(x.id));
   const avg=allRecs.length? Math.round(allRecs.reduce((a,r)=>a+r.acc,0)/allRecs.length*10)/10 : null;
   const perfect=perfectGames();
-  const ers=GAMES.map(x=>x.era).filter((v,i,a)=>a.indexOf(v)===i);
-  const ops=GAMES.map(x=>x.opening).filter((v,i,a)=>a.indexOf(v)===i);
   const recent=allRecs.slice(-5).reverse();
-  const qMain = LANG==='ko'? q[0] : q[1];
-  const qSub = LANG==='ko'? q[1] : q[0];
+  const qt=quoteTexts(qi);
   appEl.innerHTML=`
     <div class="hero">
       <div class="daily-card">
@@ -6122,11 +6285,9 @@ function viewHome(){
             <h2>${gTitle(g)}</h2>
             <div class="gc-players">${gWhite(g)} vs ${gBlack(g)} · ${g.event} ${g.year}</div>
             <div class="gc-meta" style="margin:10px 0 14px">
-              <span class="badge gray">${gOpening(g)}</span>
               <span class="badge gray">${Math.ceil(gameData(g).N/2)} ${t('unit.moves')}</span>
               ${doneToday?`<span class="badge green">${t('home.doneToday')}</span>`:''}
               ${successRateBadge(g.id)}
-              <span class="streak">${t('home.streak',{n:store.data.daily.streak})}</span>
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <button class="btn" data-go="#/study/${g.id}">${t('home.studyFirst')}</button>
@@ -6139,9 +6300,9 @@ function viewHome(){
       ${store.data.settings.showQuote?`
       <div class="quote-card">
         <div class="qmark">“</div>
-        <div class="quote-kr">${qMain}</div>
-        <div class="quote-en">${qSub}</div>
-        <div class="quote-author">— ${q[2]}</div>
+        <div class="quote-kr">${qt.main}</div>
+        ${qt.sub?`<div class="quote-en">${qt.sub}</div>`:''}
+        <div class="quote-author">— ${qt.author}</div>
         <div style="text-align:right;margin-top:8px"><button class="btn xs ghost" id="qt-shuffle">${t('home.otherQuote')}</button></div>
       </div>`:''}
     </div>
@@ -6151,10 +6312,7 @@ function viewHome(){
       <div class="stat-card"><div class="v">${avg===null?'-':avg+'%'}</div><div class="k">${t('stat.avg')}</div></div>
     </div>
     <div class="section-title">${t('home.categories')}</div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      ${ers.map(e=>`<button class="chip" data-cat="era" data-val="${e}">${labelEra(e)}</button>`).join('')}
-      ${ops.map(o=>`<button class="chip" data-cat="opening" data-val="${o}">${labelOpening(o)}</button>`).join('')}
-    </div>
+    <div class="card muted" style="padding:12px 16px">${t('home.catSoon')}</div>
     <div class="section-title">${t('home.recent')}</div>
     ${recent.length?`<div class="card" style="padding:6px 14px">
       <table class="rank-table"><tr><th>${t('th.game')}</th><th>${t('th.acc')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.when')}</th></tr>
@@ -6164,17 +6322,14 @@ function viewHome(){
       }).join('')}</table></div>`
     :`<div class="card muted">${t('home.recentEmpty')}</div>`}`;
   appEl.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ location.hash=b.dataset.go; });
-  appEl.querySelectorAll('[data-cat]').forEach(b=>b.onclick=()=>{
-    window.__libFilter={type:b.dataset.cat, value:b.dataset.val};
-    location.hash='#/library';
-  });
   const sh=document.getElementById('qt-shuffle');
   if(sh) sh.onclick=()=>{
     const card=sh.closest('.quote-card');
-    const nq=QUOTES[Math.floor(Math.random()*QUOTES.length)];
-    card.querySelector('.quote-kr').textContent = LANG==='ko'? nq[0] : nq[1];
-    card.querySelector('.quote-en').textContent = LANG==='ko'? nq[1] : nq[0];
-    card.querySelector('.quote-author').textContent='— '+nq[2];
+    const nq=quoteTexts(Math.floor(Math.random()*QUOTES.length));
+    card.querySelector('.quote-kr').textContent=nq.main;
+    const sub=card.querySelector('.quote-en');
+    if(sub) sub.textContent=nq.sub;
+    card.querySelector('.quote-author').textContent='— '+nq.author;
   };
 }
 
@@ -6182,28 +6337,20 @@ function viewHome(){
 let libFilter={type:'all', value:null}, libQuery='';
 function viewLibrary(){
   cleanupView();
-  if(window.__libFilter){ libFilter=window.__libFilter; window.__libFilter=null; }
-  const ers=GAMES.map(x=>x.era).filter((v,i,a)=>a.indexOf(v)===i);
-  const ops=GAMES.map(x=>x.opening).filter((v,i,a)=>a.indexOf(v)===i);
+  libFilter={type:'all', value:null}; window.__libFilter=null;
   appEl.innerHTML=`
-    <div class="section-title">${t('lib.title')} <span class="badge gray">${t('lib.games',{n:GAMES.length})}</span>
-      <button class="btn sm" id="lib-add" style="margin-left:auto">${t('lib.add')}</button></div>
+    <div class="section-title">${t('lib.title')} <span class="badge gray">${t('lib.games',{n:GAMES.length})}</span></div>
     <div class="dim" style="margin-bottom:12px">${t('lib.serverNote')}</div>
-    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:14px">
+    <div style="margin-bottom:14px">
       <input id="lib-q" placeholder="${t('lib.search')}" value="${libQuery}"
-        style="flex:1;min-width:200px;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:14px;outline:none">
-      <button class="chip ${libFilter.type==='all'?'active':''}" data-lf="all">${t('lib.filterAll')}</button>
-      ${ers.map(e=>`<button class="chip ${libFilter.type==='era'&&libFilter.value===e?'active':''}" data-lf="era" data-v="${e}">${labelEra(e)}</button>`).join('')}
-      ${ops.map(o=>`<button class="chip ${libFilter.type==='opening'&&libFilter.value===o?'active':''}" data-lf="opening" data-v="${o}">${labelOpening(o)}</button>`).join('')}
+        style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:14px;outline:none">
     </div>
     <div id="lib-grid" class="stack"></div>`;
   const grid=document.getElementById('lib-grid');
   function renderGrid(){
     const q=libQuery.trim().toLowerCase();
     const list=GAMES.filter(g=>{
-      if(libFilter.type==='era'&&g.era!==libFilter.value) return false;
-      if(libFilter.type==='opening'&&g.opening!==libFilter.value) return false;
-      if(q && !(`${gTitle(g)} ${gWhite(g)} ${gBlack(g)} ${g.whiteEn} ${g.blackEn} ${g.event} ${gOpening(g)}`.toLowerCase().includes(q))) return false;
+      if(q && !(`${gTitle(g)} ${gWhite(g)} ${gBlack(g)} ${g.whiteEn} ${g.blackEn} ${g.event}`.toLowerCase().includes(q))) return false;
       return true;
     });
     grid.innerHTML=list.length? list.map(g=>`
@@ -6212,14 +6359,13 @@ function viewLibrary(){
           <div><div class="gc-title">${gTitle(g)}</div>
           <div class="gc-players">${gWhite(g)} vs ${gBlack(g)}</div>
           <div class="gc-meta" style="margin-top:6px">
-            <span class="badge gray">${g.year}</span><span class="badge gray">${gOpening(g)}</span>
+            <span class="badge gray">${g.year}</span>
             <span class="badge gray">${Math.ceil(gameData(g).N/2)} ${t('unit.moves')}</span>
             ${successRateBadge(g.id)}
           </div></div>
         </div>
         <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${bestBadge(g.id)}
           ${bookmarksOf(g.id).length?`<span class="badge gray">${t('lib.marks',{n:bookmarksOf(g.id).length})}</span>`:''}
-          ${g.endgamePly&&!store.data.settings.extreme?`<span class="badge gray">${t('lib.cut')}</span>`:''}
         </div>
         <div class="gc-actions">
           <button class="btn sm" data-st="${g.id}">${t('btn.study')}</button>
@@ -6229,14 +6375,7 @@ function viewLibrary(){
     grid.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{ location.hash=`#/challenge/${b.dataset.ch}`; });
     grid.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ location.hash=`#/study/${b.dataset.st}`; });
   }
-  document.querySelectorAll('[data-lf]').forEach(b=>b.onclick=()=>{
-    if(b.dataset.lf==='all') libFilter={type:'all',value:null};
-    else libFilter={type:b.dataset.lf, value:b.dataset.v};
-    document.querySelectorAll('[data-lf]').forEach(x=>x.classList.remove('active'));
-    b.classList.add('active'); renderGrid();
-  });
   document.getElementById('lib-q').addEventListener('input', e=>{ libQuery=e.target.value; renderGrid(); });
-  document.getElementById('lib-add').onclick=openImportModal;
   renderGrid();
   // 서버 연결 시 전체 성공률로 배지 교체
   if(Cloud.enabled()){
@@ -6252,43 +6391,6 @@ function viewLibrary(){
       });
     });
   }
-}
-
-// ---- 기보 직접 추가 (PGN 붙여넣기) ----
-function openImportModal(){
-  showModal(`
-    <h3 style="justify-content:center">${t('imp.title')}</h3>
-    <p class="muted" style="margin:8px 0 10px">${t('imp.desc')}</p>
-    <textarea id="imp-pgn" rows="9" style="width:100%;background:var(--bg-deep);border:1.5px solid var(--border);border-radius:8px;color:var(--text);padding:10px;font-size:12.5px;font-family:Consolas,monospace" placeholder="[Event &quot;...&quot;] [White &quot;...&quot;] [Black &quot;...&quot;] ... 1. e4 e5 2. Nf3 ..."></textarea>
-    <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
-      <button class="btn" id="imp-ok">${t('imp.ok')}</button>
-      <button class="btn outline" id="imp-cancel">${t('imp.cancel')}</button>
-    </div>`);
-  document.getElementById('imp-cancel').onclick=closeModal;
-  document.getElementById('imp-ok').onclick=()=>{
-    const txt=document.getElementById('imp-pgn').value.trim();
-    if(!txt){ toast(t('imp.need')); return; }
-    try{
-      const c=new Chess();
-      (c.loadPgn||c.load_pgn).call(c, txt);
-      const hist=c.history({verbose:true});
-      if(!hist.length) throw new Error(t('imp.noMoves'));
-      let h={};
-      try{ h=(c.getHeaders||c.header).call(c)||{}; }catch(e){}
-      const plies=hist.length;
-      const game={
-        id:'custom-'+Date.now(),
-        title:h.Event||`${h.White||'White'} vs ${h.Black||'Black'}`,
-        white:h.White||'White', black:h.Black||'Black', whiteEn:h.White||'', blackEn:h.Black||'',
-        event:h.Event||(LANG==='en'?'Imported':'직접 추가'), year:h.Date?String(h.Date).slice(0,4):'',
-        blurb:'', opening:'추가한 기보', eco:h.ECO||'', era:'추가한 기보',
-        plies, endgamePly: plies>60? Math.floor(plies*0.72/2)*2 : null,
-        result:h.Result||'*', pgn:txt, source:'import'
-      };
-      store.data.customGames.push(game); store.save(); GAMES.push(game);
-      updateChip(); closeModal(); toast(t('imp.done')); route();
-    }catch(e){ toast(t('imp.fail',{m:e.message})); }
-  };
 }
 
 // ---- 나의 컬렉션 (100% 완료 게임만) ----
@@ -6320,6 +6422,7 @@ function viewRanking(){
   cleanupView();
   const allRecs=GAMES.flatMap(g=>recs(g.id).map(r=>({g, r})));
   const perfect=allRecs.filter(x=>x.r.acc>=100);
+  const extremeLocal=perfect.filter(x=>x.r.mode==='extreme');
   const pCounts={}; perfect.forEach(x=>{ pCounts[x.r.grade]=(pCounts[x.r.grade]||0)+1; });
   const avg=allRecs.length? Math.round(allRecs.reduce((a,x)=>a+x.r.acc,0)/allRecs.length*10)/10 : null;
   appEl.innerHTML=`
@@ -6334,18 +6437,38 @@ function viewRanking(){
       <button class="chip ${rankTab==='game'?'active':''}" data-rt="game">${t('rank.byGame')}</button>
     </div>
     <div class="card dim" style="margin-bottom:14px">${t('rank.local')}</div>
+    <!-- 랭킹: 극한 모드 전용 (v1.7) -->
     <div id="rank-body"></div>`;
   document.querySelectorAll('[data-rt]').forEach(b=>b.onclick=()=>{ rankTab=b.dataset.rt; viewRanking(); });
   const body=document.getElementById('rank-body');
   if(rankTab==='speed'){
-    const sorted=[...perfect].sort((a,b)=>a.r.ms-b.r.ms);
-    body.innerHTML=sorted.length? `<div class="card" style="padding:6px 14px"><table class="rank-table">
-      <tr><th>${t('th.n')}</th><th>${t('th.game')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.mode')}</th><th>${t('th.date')}</th></tr>
-      ${sorted.map((x,i)=>`<tr><td class="num">${i+1}</td><td>${gTitle(x.g)}</td>
-        <td><span class="badge gold">${x.r.grade}</span></td><td><b>${fmtTime(x.r.ms)}</b></td>
-        <td>${x.r.mode==='extreme'?(LANG==='en'?'Extreme':'극한'):(LANG==='en'?'Normal':'일반')}</td><td class="dim">${new Date(x.r.ts).toLocaleDateString('ko-KR')}</td></tr>`).join('')}
-      </table></div>`
-    : `<div class="card muted">${t('rank.speedEmpty')}</div>`;
+    if(Cloud.enabled() && Cloud.loggedIn()){
+      body.innerHTML=`<div class="card muted">${t('rank.loading')}</div>`;
+      Cloud.fetchSpeedRanking().then(rows=>{
+        const b2=document.getElementById('rank-body'); if(!b2) return;
+        if(rows===null){ b2.innerHTML=`<div class="card muted">${t('err.network')}</div>`; return; }
+        const uid=(Cloud.session()||{}).user_id;
+        const mineRow=(rows||[]).find(x=>x.user_id===uid);
+        const localBest=Math.min(...extremeLocal.map(x=>x.r.ms).concat([Infinity]));
+        b2.innerHTML=(rows&&rows.length)? `<div class="card" style="padding:6px 14px"><table class="rank-table">
+          <tr><th>${t('th.n')}</th><th>${t('th.name')}</th><th>${t('th.game')}</th><th>${t('th.time')}</th></tr>
+          ${rows.map(x=>`<tr${x.user_id===uid?' style="background:rgba(129,182,76,.10)"':''}><td class="num">${x.rank}</td>
+            <td>${x.name}${x.user_id===uid?` <span class="badge green">${t('rank.you')}</span>`:''}</td>
+            <td>${gById(x.game_id)? gTitle(gById(x.game_id)) : x.game_id}</td><td><b>${fmtTime(x.ms)}</b></td></tr>`).join('')}
+          </table></div>
+          <div class="card dim" style="margin-top:10px">${t('rank.myBest',{t:isFinite(Math.min(mineRow?mineRow.ms:Infinity, localBest))? fmtTime(Math.min(mineRow?mineRow.ms:Infinity, localBest)):'-'})}</div>`
+        : `<div class="card muted">${t('rank.speedEmpty')}</div>`;
+      });
+    } else {
+      const sorted=[...extremeLocal].sort((a,b)=>a.r.ms-b.r.ms);
+      body.innerHTML=sorted.length? `<div class="card" style="padding:6px 14px"><table class="rank-table">
+        <tr><th>${t('th.n')}</th><th>${t('th.game')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.date')}</th></tr>
+        ${sorted.map((x,i)=>`<tr><td class="num">${i+1}</td><td>${gTitle(x.g)}</td>
+          <td><span class="badge gold">${x.r.grade}</span></td><td><b>${fmtTime(x.r.ms)}</b></td>
+          <td class="dim">${new Date(x.r.ts).toLocaleDateString('ko-KR')}</td></tr>`).join('')}
+        </table></div>`
+      : `<div class="card muted">${t('rank.speedEmpty')}</div>`;
+    }
   } else {
     const options=GAMES.map(g=>`<option value="${g.id}" ${rankGame===g.id?'selected':''}>${gTitle(g)}</option>`).join('');
     body.innerHTML=`<div class="card">
@@ -6476,14 +6599,11 @@ function startPuzzle(){
 // ---- 설정 ----
 const SETTING_DEFS={
   challenge:[
-    ['challengeHint','set.hint','set.hintD'],
+    ['extreme','set.extreme','set.extremeD'],
     ['instantFeedback','set.fb','set.fbD'],
     ['showTimer','set.timer','set.timerD'],
     ['autoFlip','set.flip','set.flipD'],
     ['savePartial','set.savePartial','set.savePartialD'],
-  ],
-  difficulty:[
-    ['extreme','set.extreme','set.extremeD'],
   ],
   screen:[
     ['coords','set.coords','set.coordsD'],
@@ -6513,10 +6633,6 @@ function viewSettings(){
     <div class="card">
       <h3>${t('set.challenge')} <span class="dim" style="font-weight:400;font-size:12px">${t('set.challengeSub')}</span></h3>
       ${SETTING_DEFS.challenge.map(rowHTML).join('')}
-    </div>
-    <div class="card">
-      <h3>${t('set.difficulty')}</h3>
-      ${SETTING_DEFS.difficulty.map(rowHTML).join('')}
     </div>
     <div class="card">
       <h3>${t('set.screen')}</h3>
@@ -6558,6 +6674,8 @@ function viewSettings(){
         <button class="btn ghost sm" id="srv-out">${t('set.logout')}</button></div>
       <div class="set-row"><div><div class="t">${t('set.uploadAll')}</div></div>
         <button class="btn sm" id="srv-sync">${t('set.uploadAll')}</button></div>
+      <div class="set-row"><div><div class="t">${t('set.fetchAll')}</div><div class="d">${t('set.fetchAllD')}</div></div>
+        <button class="btn ghost sm" id="srv-fetch">${t('set.fetchAll')}</button></div>
       ` : `
       <div class="set-row"><div style="flex:1"><div class="t">${t('gate.needAccount')}</div></div>
         <button class="btn sm" id="srv-open-gate">${t('set.login')}</button></div>
@@ -6602,50 +6720,15 @@ function viewSettings(){
   });
   document.getElementById('srv-off') && (document.getElementById('srv-off').onclick=()=>{ store.data.server=null; store.save(); route(); });
   document.getElementById('srv-open-gate') && (document.getElementById('srv-open-gate').onclick=()=>renderGate());
-  document.getElementById('srv-out') && (document.getElementById('srv-out').onclick=async ()=>{ await Cloud.signOut(); route(); });(b=>b.onclick=()=>{
-    store.data.settings.lang=b.dataset.lang; store.save(); LANG=b.dataset.lang;
-    applyStaticI18n(); route();
-  });
-  appEl.querySelectorAll('[data-set]').forEach(inp=>inp.addEventListener('change',()=>{
-    store.data.settings[inp.dataset.set]=inp.checked; store.save();
-  }));
-  document.querySelectorAll('[data-bt]').forEach(s=>s.onclick=()=>{
-    store.data.settings.boardTheme=s.dataset.bt; store.save(); applySettings();
-    document.querySelectorAll('[data-bt]').forEach(x=>x.classList.toggle('sel',x===s));
-  });
-  document.querySelectorAll('[data-th]').forEach(b=>b.onclick=()=>{
-    store.data.settings.theme=b.dataset.th; store.save(); applySettings();
-    document.querySelectorAll('[data-th]').forEach(x=>x.classList.toggle('active',x===b));
-  });
-  document.getElementById('set-export').onclick=exportData;
-  document.getElementById('set-import-btn').onclick=()=>document.getElementById('set-import').click();
-  document.getElementById('set-import').addEventListener('change', e=>{ const f=e.target.files[0]; if(f) importData(f); });
-  document.getElementById('srv-connect') && (document.getElementById('srv-connect').onclick=()=>{
-    const u=document.getElementById('srv-url').value.trim(), k=document.getElementById('srv-key').value.trim();
-    if(!u||!k){ toast(t('set.needInput')); return; }
-    try{ Cloud.saveCfg(u,k); toast(t('set.connected')); route(); }
-    catch(e3){ toast(friendlyCloudError(e3)); }
-  });
-  document.getElementById('srv-off') && (document.getElementById('srv-off').onclick=()=>{ store.data.server=null; store.save(); route(); });
-  document.getElementById('srv-in') && (document.getElementById('srv-in').onclick=async ()=>{
-    const e2=document.getElementById('au-email').value.trim(), p=document.getElementById('au-pw').value;
-    if(!e2||!p){ toast(t('set.needInput')); return; }
-    try{ await Cloud.signIn(e2,p); toast(t('set.welcome',{name:Cloud.session().name||''})); route(); }catch(e3){ toast(friendlyCloudError(e3)); }
-  });
-  document.getElementById('srv-up') && (document.getElementById('srv-up').onclick=async ()=>{
-    const e2=document.getElementById('au-email').value.trim(), p=document.getElementById('au-pw').value, n2=document.getElementById('au-name').value.trim();
-    if(!e2||!p){ toast(t('set.needInput')); return; }
-    if(p.length<6){ toast(t('set.pwShort')); return; }
-    try{
-      await Cloud.signUp(e2,p,n2||e2.split('@')[0]);
-      if(Cloud.loggedIn()) toast(t('set.welcome',{name:n2||e2.split('@')[0]}));
-      else toast(t('set.checkEmail'));
-      route();
-    }catch(e3){ toast(friendlyCloudError(e3)); }
-  });
   document.getElementById('srv-out') && (document.getElementById('srv-out').onclick=async ()=>{ await Cloud.signOut(); route(); });
   document.getElementById('srv-sync') && (document.getElementById('srv-sync').onclick=async ()=>{
     const n2=await Cloud.syncAllLocal(); toast(t('set.uploadDone',{n:n2}));
+  });
+  document.getElementById('srv-fetch') && (document.getElementById('srv-fetch').onclick=async ()=>{
+    const n2=await Cloud.fetchMyAttempts();
+    if(n2<0){ toast(t('err.network')); return; }
+    toast(n2? t('set.fetchDone',{n:n2}) : t('set.fetchEmpty'));
+    if(n2) updateChip();
   });
   document.getElementById('set-reset').onclick=()=>{
     showModal(`<h3 style="justify-content:center">${t('set.resetQ')}</h3>
@@ -6667,7 +6750,7 @@ function renderGate(){
   const m=gateMode;
   appEl.innerHTML=`<div class="gate-wrap"><div class="gate-card">
     <div class="gate-logo">${GATE_LOGO}</div>
-    <h1>체스놀로지아</h1>
+    <h1>${t('app.name')}</h1>
     <div class="gate-tag">${t('gate.tagline')}</div>
     <div class="gate-tabs">
       <button class="chip ${m==='login'?'active':''}" data-gm="login">${t('set.login')}</button>
@@ -6703,12 +6786,18 @@ function renderGate(){
 }
 
 // ---- 라우터 ----
-function route(){
-  if (Cloud.enabled() && !Cloud.loggedIn()){ renderGate(); return; }
+let liveRun=null;
+function updateLiveTab(){
+  const el=document.getElementById('tab-lib'); if(!el) return;
+  el.textContent=(liveRun && liveRun.isLive && liveRun.isLive())? t(liveRun.type==='study'?'live.study':'live.challenge') : t('tab.library');
+}
+function sameLiveRun(nav, parts){
+  return !!liveRun && (
+    (liveRun.type==='study' && nav==='study' && parts[1]===liveRun.gid) ||
+    (liveRun.type==='challenge' && nav==='challenge' && parts[1]===liveRun.gid));
+}
+function renderRoute(parts, nav){
   cleanupView(); closeModal();
-  const h=location.hash||'#/home';
-  const parts=h.replace(/^#\//,'').split('/');
-  const nav=parts[0]||'home';
   document.querySelectorAll('[data-nav]').forEach(b=>b.classList.toggle('active', b.dataset.nav===nav));
   if(parts[0]==='study'&&parts[1]) viewStudy(parts[1]);
   else if(parts[0]==='challenge'&&parts[1]) viewChallenge(parts[1], {daily:parts[2]==='daily'});
@@ -6720,7 +6809,33 @@ function route(){
   else viewHome();
   window.scrollTo(0,0);
 }
-document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{ location.hash='#/'+b.dataset.nav; }));
+function route(){
+  if (Cloud.enabled() && !Cloud.loggedIn()){ renderGate(); return; }
+  const h=location.hash||'#/home';
+  const parts=h.replace(/^#\//,'').split('/');
+  const nav=parts[0]||'home';
+  const live=!!(liveRun && liveRun.isLive && liveRun.isLive());
+  if(live && !sameLiveRun(nav, parts) && nav!=='settings'){
+    showModal(`<h3 style="justify-content:center">${t('nav.guardQ')}</h3>
+      <p class="muted" style="margin:8px 0 10px">${t('nav.guardD')}</p>
+      <div style="display:flex;gap:8px;justify-content:center">
+        <button class="btn danger" id="nv-leave">${t('nav.leave')}</button>
+        <button class="btn outline" id="nv-stay">${t('nav.stay')}</button></div>`);
+    document.getElementById('nv-leave').onclick=()=>{ closeModal(); liveRun=null; updateLiveTab(); renderRoute(parts, nav); };
+    document.getElementById('nv-stay').onclick=()=>{ closeModal(); const h2=liveRun.hash; if(location.hash===h2) route(); else location.hash=h2; };
+    return;
+  }
+  if(liveRun && !live && !sameLiveRun(nav, parts)){ liveRun=null; updateLiveTab(); }
+  renderRoute(parts, nav);
+}
+document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()=>{
+  if(b.dataset.nav==='library' && liveRun && liveRun.isLive && liveRun.isLive()){
+    const h2=liveRun.hash; if(location.hash===h2) route(); else location.hash=h2;
+    return;
+  }
+  const h2='#/'+b.dataset.nav;
+  if(location.hash===h2) route(); else location.hash=h2;
+}));
 window.addEventListener('hashchange', route);
 
 // ---- 부팅 ----
