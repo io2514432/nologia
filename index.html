@@ -281,6 +281,55 @@ button{touch-action:manipulation;}
 .fx-c{position:absolute; top:-14px; width:7px; height:11px; border-radius:2px; opacity:.95; animation:fx-fall 2.2s linear forwards;}
 @keyframes fx-fall{ 0%{transform:translateY(0) rotate(0deg); opacity:.95;} 100%{transform:translateY(105vh) rotate(var(--rot,540deg)); opacity:.6;} }
 .btn[disabled]{opacity:.4; cursor:not-allowed;}
+
+/* ===== v1.9 홈 개편 · 주간 캘린더 · 관리자 ===== */
+.streak-card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px 18px 14px;}
+.streak-head{display:flex; align-items:center; gap:12px;}
+.streak-ico{width:42px; height:42px; border-radius:12px; background:var(--bg-deep); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.streak-ico svg{width:22px; height:22px; stroke:var(--gold); fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+.streak-tt{font-size:12px; color:var(--text-sub); letter-spacing:.02em;}
+.streak-n{font-size:19px; font-weight:900; color:var(--text-strong); line-height:1.25; margin-top:1px;}
+.streak-n b{color:var(--gold);}
+.streak-week{margin-left:auto; font-size:11px; color:var(--text-sub); background:var(--bg-deep); border:1px solid var(--border); border-radius:999px; padding:4px 9px; white-space:nowrap;}
+.week-row{display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-top:14px;}
+.wk{text-align:center;}
+.wk-d{font-size:10px; font-weight:700; color:var(--text-dim); letter-spacing:.04em;}
+.wk-c{width:32px; height:32px; margin:5px auto 0; border-radius:50%; border:1.5px solid var(--border); background:var(--bg-deep); color:var(--text-dim); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; position:relative;}
+.wk-c.on{border-color:var(--green); color:var(--green); background:var(--card);}
+.wk-c.on::after{content:''; position:absolute; bottom:3px; width:4px; height:4px; border-radius:50%; background:var(--green);}
+.wk-c.today{border-color:var(--gold); color:var(--text-strong); box-shadow:0 0 0 2px var(--bg-deep), 0 0 0 3px var(--gold);}
+.wk-c.today.on{color:var(--green);}
+.wk.future .wk-c{opacity:.4;}
+.home-stats{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;}
+.stat-card.v2{flex-direction:row; align-items:center; text-align:left; gap:12px; padding:14px; min-height:76px;}
+.sc-ico{width:38px; height:38px; border-radius:11px; background:var(--bg-deep); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.sc-ico svg{width:20px; height:20px; stroke:var(--green); fill:none; stroke-width:1.9; stroke-linecap:round; stroke-linejoin:round;}
+.sc-ico.gold svg{stroke:var(--gold);}
+.stat-card.v2 .v{font-size:22px; line-height:1.1;}
+.stat-card.v2 .k{font-size:11px; margin-top:2px; line-height:1.3;}
+.recent-card{display:flex; align-items:center; gap:12px; background:var(--card); border:1px solid var(--border); border-radius:12px; padding:13px 14px; margin-top:10px;}
+.rc-body{min-width:0; flex:1;}
+.rc-k{font-size:11px; color:var(--text-sub);}
+.rc-t{font-size:14px; font-weight:800; color:var(--text-strong); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.rc-m{font-size:11px; color:var(--text-dim); margin-top:2px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.daily-blurb{font-size:13px; color:var(--text-sub); margin-top:6px; line-height:1.55;}
+.daily-players{display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-top:10px; font-size:13px; color:var(--text);}
+.dp-side{font-size:10px; font-weight:800; letter-spacing:.04em; color:var(--text-dim); border:1px solid var(--border); border-radius:5px; padding:1px 5px; margin-right:5px;}
+.dp-vs{color:var(--text-dim); font-size:11px;}
+.daily-year{font-size:12px; color:var(--text-sub); margin-top:7px;}
+.adm-form{display:grid; gap:8px;}
+.adm-in{width:100%; background:var(--bg-deep); border:1.5px solid var(--border); border-radius:8px; color:var(--text); padding:9px 12px; font-size:13px; outline:none; font-family:inherit;}
+.adm-in:focus{border-color:var(--green);}
+textarea.adm-in{min-height:150px; resize:vertical; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:12px; line-height:1.5;}
+.adm-grid{display:grid; grid-template-columns:1fr 1fr; gap:8px;}
+.adm-row{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+.adm-item{display:flex; align-items:center; gap:10px; padding:9px 0; border-top:1px solid var(--border);}
+.adm-item:first-child{border-top:0;}
+.adm-item .t2{font-size:13px; font-weight:700; color:var(--text-strong);}
+.adm-item .d2{font-size:11px; color:var(--text-dim); margin-top:1px;}
+.adm-item .grow{flex:1; min-width:0;}
+@media(max-width:400px){.wk-c{width:29px; height:29px; font-size:10px;} .stat-card.v2{padding:12px; gap:10px;} .sc-ico{width:34px; height:34px;}}
+
 </style>
 </head>
 <body data-board="green">
@@ -5118,7 +5167,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='1.8.0';
+const APP_VERSION='1.9.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5153,6 +5202,7 @@ function addRecord(gid, rec){
   store.data.records[gid].push(rec);
   if(store.data.records[gid].length>100) store.data.records[gid]=store.data.records[gid].slice(-100);
   store.data.stats.challenges++;
+  logActivity(gid);
   store.save(); updateChip();
 }
 function toggleBookmark(gid, ply){
@@ -5417,6 +5467,84 @@ en:{
  'res.newbest':'New best!','res.hintUsed':'Hint used','res.used':'used','res.time':'Time','res.streak':'Matching streak','res.streakPerfect':'Perfect from the first move to the last!','res.streakFirst':'First move already differs','res.streakN':'Matched through move {n}','res.played':'Total moves played','res.accline':'Accuracy — {a}/{b} moves matched','res.cutNote':' (endgame excluded · {n} total)','res.closeTitle':'Go to review','ch.hintGrade':'Hints used — P grades require a hint-free 100%',
  'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.online':'Online (global stats & ranking)','set.onlineDesc':'Paste your Supabase URL and anon key to enable global stats and rankings. See SUPABASE_SETUP.md.','set.url':'Supabase URL','set.key':'anon key','set.connect':'Connect','set.connected':'Connected','set.disconnect':'Disconnect','set.account':'Account','set.email':'Email','set.pw':'Password (6+ chars)','set.name':'Display name','set.login':'Log in','set.signup':'Sign up','set.logout':'Log out','set.uploadAll':'Upload my past records','set.uploadDone':'Uploaded {n} records','set.needInput':'Please fill in the fields','set.pwShort':'Password must be at least 6 characters','set.welcome':'Welcome, {name}!','set.checkEmail':'Confirmation email sent — check your inbox, then log in','set.global':'Global','set.based':'All players','set.mine':'My records','set.hardest':'Moves missed the most','set.pct':'{n}% success','err.urlWrong':'That URL does not look right — copy the Project URL (https://xxxx.supabase.co) from Settings → API again','err.dashUrl':"That's the dashboard address — use the Project URL (https://xxxx.supabase.co)",'err.keyWrong':'That anon key does not look right — copy the anon public key from Settings → API again','err.badLogin':'Wrong email or password','err.confirm':'Email not confirmed yet — click the link in your inbox (check spam)','err.exists':'That email is already registered — use Log in','err.network':'Cannot reach the server — check your internet and the URL','gate.tagline':'The most fun way to memorize famous chess games','gate.toSignup':'No account? Sign up','gate.toLogin':'Already have an account? Log in','gate.needAccount':'Log in to join global stats and rankings','res.graph':'Per-move success rate — of players who attempted the move','res.graphC':'Green bars = all players success rate · red dot = my missed move','set.offline':'Offline mode','set.offlineDesc':'Global stats turn on once the site owner connects Supabase. For now, enjoy with your own records!','set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
 }};
+// V19_I18N
+Object.assign(I18N.ko, {
+ 'home.streakTitle':'연속 학습',
+ 'home.streakDays':'{n}일 연속',
+ 'home.streakZero':'오늘부터 시작해보세요',
+ 'home.weekShort':'이번 주 {n}일',
+ 'home.totalChallenges':'총 도전 횟수',
+ 'home.memorized':'암기한 기보',
+ 'home.recentGame':'최근 학습 · 도전',
+ 'home.recentNone':'아직 학습 기록이 없어요',
+ 'home.continue':'이어서 학습',
+ 'side.white':'백', 'side.black':'흑', 'side.vs':'vs',
+ 'wk.mon':'월','wk.tue':'화','wk.wed':'수','wk.thu':'목','wk.fri':'금','wk.sat':'토','wk.sun':'일',
+ 'time.justNow':'방금','time.min':'{n}분 전','time.hour':'{n}시간 전','time.day':'{n}일 전',
+ 'adm.title':'관리자',
+ 'adm.sub':'기보 추가와 일일 게임 설정',
+ 'adm.add':'기보 추가',
+ 'adm.pgn':'PGN',
+ 'adm.pgnPh':'PGN 전체를 붙여넣으세요 ([White]/[Black]/[Date] 헤더 포함 권장)',
+ 'adm.fTitle':'표시 제목', 'adm.fWhite':'백 선수', 'adm.fBlack':'흑 선수',
+ 'adm.fBlurb':'한 줄 소개', 'adm.fYear':'연도', 'adm.fOpening':'오프닝', 'adm.fResult':'결과',
+ 'adm.validate':'검증 후 추가',
+ 'adm.invalid':'PGN을 확인해 주세요: {m}',
+ 'adm.needFields':'제목 · 백 · 흑 이름을 입력해 주세요',
+ 'adm.added':'기보를 추가했어요',
+ 'adm.addFail':'추가 실패: {m}',
+ 'adm.list':'등록된 기보',
+ 'adm.serverOnly':'서버에 추가한 기보만 삭제할 수 있어요',
+ 'adm.delete':'목록에서 숨기기',
+ 'adm.deleted':'기보를 숨겼어요',
+ 'adm.confirmDel':'이 기보를 목록에서 숨길까요? 기존 기록은 남습니다.',
+ 'adm.daily':'일일 게임 설정',
+ 'adm.dailyDesc':'날짜를 고르고 그날의 게임을 지정합니다. 지정하지 않은 날은 자동으로 선택됩니다.',
+ 'adm.date':'날짜', 'adm.game':'게임', 'adm.save':'저장',
+ 'adm.saved':'저장했어요',
+ 'adm.picks':'최근 지정',
+ 'adm.none':'아직 없어요',
+ 'adm.notAdmin':'관리자 권한이 없어요'
+});
+Object.assign(I18N.en, {
+ 'home.streakTitle':'Study streak',
+ 'home.streakDays':'{n}-day streak',
+ 'home.streakZero':'Start your first session today',
+ 'home.weekShort':'{n} days this week',
+ 'home.totalChallenges':'Total attempts',
+ 'home.memorized':'Games memorized',
+ 'home.recentGame':'Last session',
+ 'home.recentNone':'No sessions yet',
+ 'home.continue':'Continue',
+ 'side.white':'White', 'side.black':'Black', 'side.vs':'vs',
+ 'wk.mon':'M','wk.tue':'T','wk.wed':'W','wk.thu':'T','wk.fri':'F','wk.sat':'S','wk.sun':'S',
+ 'time.justNow':'just now','time.min':'{n}m ago','time.hour':'{n}h ago','time.day':'{n}d ago',
+ 'adm.title':'Admin',
+ 'adm.sub':'Add games and pick the daily game',
+ 'adm.add':'Add game',
+ 'adm.pgn':'PGN',
+ 'adm.pgnPh':'Paste the full PGN (include [White]/[Black]/[Date] headers)',
+ 'adm.fTitle':'Display title', 'adm.fWhite':'White player', 'adm.fBlack':'Black player',
+ 'adm.fBlurb':'One-line blurb', 'adm.fYear':'Year', 'adm.fOpening':'Opening', 'adm.fResult':'Result',
+ 'adm.validate':'Validate & add',
+ 'adm.invalid':'Check the PGN: {m}',
+ 'adm.needFields':'Title, White and Black are required',
+ 'adm.added':'Game added',
+ 'adm.addFail':'Add failed: {m}',
+ 'adm.list':'Games on server',
+ 'adm.serverOnly':'Only games added on the server can be removed',
+ 'adm.delete':'Hide from list',
+ 'adm.deleted':'Game hidden',
+ 'adm.confirmDel':'Hide this game from the list? Existing records are kept.',
+ 'adm.daily':'Daily game',
+ 'adm.dailyDesc':'Pick a date and choose its game. Unset dates fall back to automatic selection.',
+ 'adm.date':'Date', 'adm.game':'Game', 'adm.save':'Save',
+ 'adm.saved':'Saved',
+ 'adm.picks':'Recent picks',
+ 'adm.none':'Nothing yet',
+ 'adm.notAdmin':'You are not an admin'
+});
+
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
   if(vars) for(const kk in vars) s = s.split('{'+kk+'}').join(String(vars[kk]));
@@ -5601,6 +5729,253 @@ const Cloud = {
   }
 };
 
+// V19_CLOUD
+// === v1.9 === 클라우드 동기화 · 활동 기록 · 관리자 API
+function currentStreak(){
+  const a=store.data.activity||{};
+  const d=new Date(); d.setHours(12,0,0,0);
+  if(!a[todayKey(d)]) d.setDate(d.getDate()-1);
+  let n=0, guard=0;
+  while(a[todayKey(d)] && guard<4000){ n++; guard++; d.setDate(d.getDate()-1); }
+  return n;
+}
+function activityOf(day){ const a=store.data.activity||{}; return a[day]||0; }
+function logActivity(gid){
+  try{
+    if(!store.data.activity) store.data.activity={};
+    const day=todayKey();
+    store.data.activity[day]=(store.data.activity[day]||0)+1;
+    const st=currentStreak();
+    if(st>0){ store.data.daily.streak=st; store.data.daily.lastDone=day; }
+    store.save();
+  }catch(e){ console.warn('activity fail', e); }
+}
+function rebuildActivity(){
+  try{
+    if(!store.data.activity) store.data.activity={};
+    const a=store.data.activity;
+    for(const gid in store.data.records){
+      for(const r of store.data.records[gid]||[]){
+        if(!r || !r.ts) continue;
+        const k=todayKey(new Date(r.ts));
+        if(!a[k]) a[k]=1;
+      }
+    }
+    const st=currentStreak();
+    if(st>0) store.data.daily.streak=st;
+  }catch(e){}
+}
+
+Object.assign(Cloud, {
+  isAdmin:false,
+  dailyId:null,
+  serverGameIds:[],
+  profileBroken:false,
+  _pushTimer:null,
+
+  async uploadAttempt(gameId, rec, userId){
+    if(!this.enabled()) return false;
+    const body={
+      user_id: userId || (this.session()||{}).user_id,
+      game_id: gameId, acc: rec.acc, ms: Math.round(rec.ms), grade: rec.grade,
+      mode: rec.mode, hint: !!rec.hint, moves: rec.moves || null,
+      client_ts: rec.ts ? Math.round(rec.ts) : Date.now()
+    };
+    try{
+      await this._rest('attempts?on_conflict=user_id,game_id,client_ts', {
+        method:'POST',
+        headers:{'Prefer':'return=minimal,resolution=ignore-duplicates'},
+        body: JSON.stringify(body)
+      });
+      return true;
+    }catch(e){
+      try{
+        await this._rest('attempts', {method:'POST', headers:{'Prefer':'return=minimal'}, body: JSON.stringify(body)});
+        return true;
+      }catch(e2){ console.warn('upload fail:', e2.message); return false; }
+    }
+  },
+
+  async fetchMyAttempts(){
+    if(!this.enabled() || !this.loggedIn()) return 0;
+    try{
+      const uid=this.session().user_id;
+      const rows=await this._rest('attempts?select=game_id,acc,ms,grade,mode,hint,moves,client_ts,created_at&user_id=eq.'+uid+'&order=created_at.asc&limit=5000');
+      let n=0;
+      (rows||[]).forEach(r=>{
+        const ts = Number(r.client_ts) || Date.parse(r.created_at);
+        if(!ts || isNaN(ts)) return;
+        if(!store.data.records[r.game_id]) store.data.records[r.game_id]=[];
+        const arr=store.data.records[r.game_id];
+        const hit=arr.find(x=>x.ts===ts);
+        if(hit){ if(!hit.synced){ hit.synced=true; n++; } return; }
+        arr.push({ts, acc:r.acc, ms:r.ms, grade:r.grade||'-', mode:r.mode||'normal', hint:!!r.hint, cut:false, played:null, moves:r.moves||null, synced:true});
+        n++;
+      });
+      if(n) store.save();
+      return n;
+    }catch(e){ console.warn('fetch mine fail:', e.message); return -1; }
+  },
+
+  async syncAllLocal(){
+    if(!this.enabled() || !this.loggedIn()) return 0;
+    let n=0;
+    for(const gid in store.data.records){
+      for(const rec of store.data.records[gid]){
+        if(rec.synced) continue;
+        if(await this.uploadAttempt(gid, rec)){ rec.synced=true; n++; }
+      }
+    }
+    store.save(); return n;
+  },
+
+  async pushProfile(){
+    if(!this.enabled() || !this.loggedIn() || this.profileBroken) return false;
+    const s=this.session(); if(!s) return false;
+    const at=Date.now();
+    const data={ bookmarks:store.data.bookmarks, settings:store.data.settings, daily:store.data.daily,
+                 puzzle:store.data.puzzle, stats:store.data.stats, activity:store.data.activity, at };
+    try{
+      await this._rest('players?on_conflict=id', {
+        method:'POST',
+        headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+        body: JSON.stringify({ id:s.user_id, name:s.name||'', data })
+      });
+      store.data.profileAt=at;
+      return true;
+    }catch(e){
+      if(/column|schema|data/i.test(e.message||'')) this.profileBroken=true;
+      console.warn('profile push fail:', e.message);
+      return false;
+    }
+  },
+
+  async pullProfile(){
+    if(!this.enabled() || !this.loggedIn() || this.profileBroken) return false;
+    try{
+      const uid=this.session().user_id;
+      const rows=await this._rest('players?select=data&id=eq.'+uid);
+      const rem=(rows && rows[0] && rows[0].data) || null;
+      if(!rem) return false;
+      const localAt=store.data.profileAt||0;
+      if((rem.at||0) > localAt){
+        if(rem.settings) store.data.settings=Object.assign({}, store.data.settings, rem.settings);
+        if(rem.bookmarks){
+          const merged=Object.assign({}, rem.bookmarks);
+          for(const k in store.data.bookmarks){
+            const s=new Set((merged[k]||[]).concat(store.data.bookmarks[k]||[]));
+            merged[k]=[...s];
+          }
+          store.data.bookmarks=merged;
+        }
+        if(rem.daily) store.data.daily=Object.assign({}, store.data.daily, rem.daily);
+        if(rem.puzzle) store.data.puzzle=Object.assign({}, store.data.puzzle, rem.puzzle);
+        if(rem.stats) store.data.stats=Object.assign({}, rem.stats);
+        store.data.profileAt=rem.at||0;
+        store.save();
+      }
+      return true;
+    }catch(e){
+      if(/column|schema/i.test(e.message||'')) this.profileBroken=true;
+      console.warn('profile pull fail:', e.message);
+      return false;
+    }
+  },
+
+  pushSoon(){
+    if(!this.enabled() || !this.loggedIn() || this.profileBroken) return;
+    clearTimeout(this._pushTimer);
+    this._pushTimer=setTimeout(()=>{ this.pushProfile(); }, 2500);
+  },
+
+  async loadServerGames(){
+    if(!this.enabled()) return 0;
+    try{
+      const rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn&active=eq.true&order=created_at.asc');
+      let n=0;
+      (rows||[]).forEach(r=>{
+        if(!r.pgn) return;
+        if(!this.serverGameIds.includes(r.id)) this.serverGameIds.push(r.id);
+        if(GAMES.some(g=>g.id===r.id)) return;
+        GAMES.push({ id:r.id, title:r.title, white:r.white, black:r.black, whiteEn:r.white, blackEn:r.black,
+          year:r.year||'', event:r.event||'', blurb:r.blurb||'', opening:r.opening||'', eco:r.eco||'',
+          result:r.result||'*', plies:0, endgamePly:null, pgn:r.pgn, server:true });
+        n++;
+      });
+      return n;
+    }catch(e){ console.warn('games load fail:', e.message); return -1; }
+  },
+
+  async loadDailyPick(){
+    if(!this.enabled()) return null;
+    try{
+      const rows=await this._rest('daily_picks?select=day,game_id&day=eq.'+todayKey());
+      this.dailyId=(rows && rows[0] && rows[0].game_id) || null;
+      return this.dailyId;
+    }catch(e){ console.warn('daily load fail:', e.message); return null; }
+  },
+
+  async checkAdmin(){
+    this.isAdmin=false;
+    if(!this.enabled() || !this.loggedIn()) return false;
+    try{
+      const rows=await this._rest('admins?select=user_id&user_id=eq.'+this.session().user_id);
+      this.isAdmin=!!(rows && rows.length);
+    }catch(e){ this.isAdmin=false; }
+    return this.isAdmin;
+  },
+
+  async afterLogin(){
+    await this.fetchMyAttempts();
+    await this.pullProfile();
+    await this.loadServerGames();
+    await this.loadDailyPick();
+    await this.checkAdmin();
+    rebuildActivity();
+    store.save();
+  },
+
+  async adminAddGame(row){
+    const out=await this._rest('games', {
+      method:'POST', headers:{'Prefer':'return=representation'}, body: JSON.stringify(row)
+    });
+    return (out && out[0]) || row;
+  },
+  async adminArchiveGame(id){
+    await this._rest('games?id=eq.'+encodeURIComponent(id), {method:'PATCH', headers:{'Prefer':'return=minimal'}, body: JSON.stringify({active:false})});
+    return true;
+  },
+  async adminSetDaily(day, gameId){
+    await this._rest('daily_picks?on_conflict=day', {
+      method:'POST', headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body: JSON.stringify({ day, game_id: gameId })
+    });
+    return true;
+  },
+  async adminPicks(){
+    try{ return await this._rest('daily_picks?select=day,game_id&order=day.desc&limit=10'); }
+    catch(e){ return []; }
+  }
+});
+
+(function(){
+  const orig=Cloud.signIn.bind(Cloud);
+  Cloud.signIn=async function(email,pw){
+    await orig(email,pw);
+    if(this.loggedIn()){ try{ await this.afterLogin(); }catch(e){ console.warn(e); } }
+  };
+})();
+
+(function(){
+  if(store.__v19) return;
+  const orig=store.save.bind(store);
+  store.save=function(){
+    orig();
+    try{ if(typeof Cloud!=='undefined' && Cloud.loggedIn && Cloud.loggedIn()) Cloud.pushSoon(); }catch(e){}
+  };
+  store.__v19=1;
+})();
+
 // Supabase 오류를 사람 말로 바꿔주는 변환기
 function friendlyCloudError(e){
   const m=String((e && e.message)||e);
@@ -5721,6 +6096,7 @@ function viewStudy(gid){
   let idx=resume? (resume.idx||0):0, flipped=false, doneShown=resume? !!resume.doneShown : false, prevIdx=-1;
   liveRun={type:'study', gid, hash:'#/study/'+gid, isLive:()=>true, idx, doneShown};
   updateLiveTab();
+  logActivity(gid);
   appEl.innerHTML=`
     <div class="section-title">${gTitle(g)} <span class="badge blue">${t('study.badge')}</span>
       <button class="btn challenge sm" id="st-go-challenge" style="margin-left:auto">⚔ ${t('btn.challenge')}</button></div>
@@ -6225,7 +6601,7 @@ document.getElementById('modal-root').addEventListener('click', e=>{ if(e.target
 document.addEventListener('keydown', e=>{ if(e.key==='Escape') closeModal(); });
 
 // ---- 오늘의 게임 / 명언 ----
-function dailyGame(){ return pickDaily(GAMES, todayKey()); }
+function dailyGame(){ const ov=(typeof Cloud!=='undefined' && Cloud.dailyId)? GAMES.find(x=>x.id===Cloud.dailyId):null; return ov||pickDaily(GAMES, todayKey()); }
 function markDailyDone(){
   const dd=store.data.daily; const day=todayKey();
   if(dd.lastDone===day) return;
@@ -6267,25 +6643,98 @@ function successRateBadge(gid){
 }
 
 // ---- 홈 ----
+// === v1.9 === 홈: 주간 캘린더 · 통계 카드 · 최근 세션 · 일일게임 소개
+function homeIcon(name){
+  const p={
+    flame:'<path d="M12 3c2.6 3.2 3.9 5.4 3.9 7.2a3.9 3.9 0 0 1-7.8 0c0-1.1.4-2.2 1.1-3.3"/><path d="M12 21a4.4 4.4 0 0 0 4.4-4.4c0-2.2-2.2-4.4-4.4-6.6-2.2 2.2-4.4 4.4-4.4 6.6A4.4 4.4 0 0 0 12 21z"/>',
+    target:'<circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2.6"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3"/>',
+    book:'<path d="M4 5.5A2.5 2.5 0 0 1 6.5 3H19v18H6.5A2.5 2.5 0 0 1 4 18.5z"/><path d="M8 3v18"/><path d="M11.5 8h4"/>',
+    clock:'<circle cx="12" cy="12" r="8"/><path d="M12 7.5V12l3 1.8"/>'
+  };
+  return `<svg viewBox="0 0 24 24" aria-hidden="true">${p[name]||''}</svg>`;
+}
+function relTime(ts){
+  const diff=Math.max(0, Date.now()-ts);
+  const m=Math.floor(diff/60000);
+  if(m<1) return t('time.justNow');
+  if(m<60) return t('time.min',{n:m});
+  const h=Math.floor(m/60);
+  if(h<24) return t('time.hour',{n:h});
+  return t('time.day',{n:Math.floor(h/24)});
+}
+function weekDays(){
+  const now=new Date(); now.setHours(12,0,0,0);
+  const mon=new Date(now); mon.setDate(now.getDate()-((now.getDay()+6)%7));
+  const keys=['wk.mon','wk.tue','wk.wed','wk.thu','wk.fri','wk.sat','wk.sun'];
+  const out=[];
+  for(let i=0;i<7;i++){
+    const d=new Date(mon); d.setDate(mon.getDate()+i);
+    out.push({ key:todayKey(d), label:t(keys[i]), date:d, n:d.getDate(),
+      today:d.toDateString()===now.toDateString(), future:d>now });
+  }
+  return out;
+}
+function weekStripHTML(){
+  return '<div class="week-row">'+weekDays().map(d=>{
+    const on=activityOf(d.key)>0;
+    const cls='wk'+(d.future?' future':'')+(on?' done':'');
+    return `<div class="${cls}"><div class="wk-d">${d.label}</div>`
+      + `<div class="wk-c${on?' on':''}${d.today?' today':''}">${d.n}</div></div>`;
+  }).join('')+'</div>';
+}
+function latestSession(){
+  let best=null;
+  for(const g of GAMES){
+    for(const r of recs(g.id)){
+      if(!r || !r.ts) continue;
+      if(!best || r.ts>best.r.ts) best={g, r};
+    }
+  }
+  return best;
+}
+function recentCardHTML(latest){
+  if(!latest){
+    return `<div class="recent-card"><div class="sc-ico">${homeIcon('clock')}</div>
+      <div class="rc-body"><div class="rc-k">${t('home.recentGame')}</div>
+      <div class="rc-m">${t('home.recentNone')}</div></div></div>`;
+  }
+  const g=latest.g, r=latest.r;
+  return `<div class="recent-card">
+    <div class="sc-ico gold">${homeIcon('clock')}</div>
+    <div class="rc-body">
+      <div class="rc-k">${t('home.recentGame')}</div>
+      <div class="rc-t">${gTitle(g)}</div>
+      <div class="rc-m">${r.acc}% · ${r.grade} · ${relTime(r.ts)}</div>
+    </div>
+    <button class="btn sm" data-go="#/study/${g.id}">${t('home.continue')}</button>
+  </div>`;
+}
+
 function viewHome(){
   const g=dailyGame();
+  const dd=gameData(g);
   const doneToday=recs(g.id).some(r=>new Date(r.ts).toDateString()===new Date().toDateString());
-  const qi=todayQuote();
-  const allRecs=GAMES.flatMap(x=>recs(x.id));
-  const avg=allRecs.length? Math.round(allRecs.reduce((a,r)=>a+r.acc,0)/allRecs.length*10)/10 : null;
   const perfect=perfectGames();
+  const latest=latestSession();
+  const streak=currentStreak();
+  const weekCount=weekDays().filter(d=>activityOf(d.key)>0).length;
+  const allRecs=GAMES.flatMap(x=>recs(x.id));
   const recent=allRecs.slice(-5).reverse();
-  const qt=quoteTexts(qi);
   appEl.innerHTML=`
     <div class="hero">
       <div class="daily-card">
-        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
           <div style="flex:1;min-width:200px">
             <div class="date">${t('home.daily')} · ${todayKey()}</div>
             <h2>${gTitle(g)}</h2>
-            <div class="gc-players">${gWhite(g)} vs ${gBlack(g)} · ${g.event} ${g.year}</div>
-            <div class="gc-meta" style="margin:10px 0 14px">
-              <span class="badge gray">${Math.ceil(gameData(g).N/2)} ${t('unit.moves')}</span>
+            <div class="daily-blurb">${gBlurb(g)}</div>
+            <div class="daily-players">
+              <span><span class="dp-side">${t('side.white')}</span>${gWhite(g)}</span>
+              <span class="dp-vs">${t('side.vs')}</span>
+              <span><span class="dp-side">${t('side.black')}</span>${gBlack(g)}</span>
+            </div>
+            <div class="daily-year">${g.year||''}${gOpening(g)?' · '+gOpening(g):''} · ${Math.ceil(dd.N/2)} ${t('unit.moves')}</div>
+            <div class="gc-meta" style="margin:12px 0 14px">
               ${doneToday?`<span class="badge green">${t('home.doneToday')}</span>`:''}
               ${successRateBadge(g.id)}
             </div>
@@ -6294,23 +6743,28 @@ function viewHome(){
               <button class="btn challenge" data-go="#/challenge/${g.id}/daily">⚔ ${t('btn.challenge')}</button>
             </div>
           </div>
-          <div style="width:130px;flex-shrink:0">${miniBoardHTML(g)}</div>
+          <div style="width:120px;flex-shrink:0">${miniBoardHTML(g)}</div>
         </div>
       </div>
-      ${store.data.settings.showQuote?`
-      <div class="quote-card">
-        <div class="qmark">“</div>
-        <div class="quote-kr">${qt.main}</div>
-        ${qt.sub?`<div class="quote-en">${qt.sub}</div>`:''}
-        <div class="quote-author">— ${qt.author}</div>
-        <div style="text-align:right;margin-top:8px"><button class="btn xs ghost" id="qt-shuffle">${t('home.otherQuote')}</button></div>
-      </div>`:''}
+      <div class="streak-card">
+        <div class="streak-head">
+          <div class="streak-ico">${homeIcon('flame')}</div>
+          <div>
+            <div class="streak-tt">${t('home.streakTitle')}</div>
+            <div class="streak-n">${streak?t('home.streakDays',{n:'<b>'+streak+'</b>'}):t('home.streakZero')}</div>
+          </div>
+          <div class="streak-week">${t('home.weekShort',{n:weekCount})}</div>
+        </div>
+        ${weekStripHTML()}
+      </div>
     </div>
-    <div class="stats-row" style="margin-top:14px">
-      <div class="stat-card"><div class="v">${store.data.stats.challenges}</div><div class="k">${t('stat.challenges')}</div></div>
-      <div class="stat-card"><div class="v" style="color:var(--gold)">${perfect.length}</div><div class="k">${t('stat.perfect')}</div></div>
-      <div class="stat-card"><div class="v">${avg===null?'-':avg+'%'}</div><div class="k">${t('stat.avg')}</div></div>
+    <div class="home-stats">
+      <div class="stat-card v2"><div class="sc-ico">${homeIcon('target')}</div>
+        <div><div class="v">${store.data.stats.challenges||0}</div><div class="k">${t('home.totalChallenges')}</div></div></div>
+      <div class="stat-card v2"><div class="sc-ico gold">${homeIcon('book')}</div>
+        <div><div class="v">${perfect.length}</div><div class="k">${t('home.memorized')}</div></div></div>
     </div>
+    ${recentCardHTML(latest)}
     <div class="section-title">${t('home.categories')}</div>
     <div class="card muted" style="padding:12px 16px">${t('home.catSoon')}</div>
     <div class="section-title">${t('home.recent')}</div>
@@ -6318,20 +6772,12 @@ function viewHome(){
       <table class="rank-table"><tr><th>${t('th.game')}</th><th>${t('th.acc')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.when')}</th></tr>
       ${recent.map(r=>{
         const gg=GAMES.find(x=>recs(x.id).includes(r));
-        return `<tr><td>${gTitle(gg)}</td><td><b>${r.acc}%</b></td><td><span class="badge" style="background:${gradeOf(r.acc,r.ms,1).color}22;color:${gradeOf(r.acc,r.ms,1).color}">${r.grade}</span></td><td>${fmtTime(r.ms)}</td><td class="dim">${new Date(r.ts).toLocaleDateString('ko-KR')}</td></tr>`;
+        return `<tr><td>${gTitle(gg)}</td><td><b>${r.acc}%</b></td><td><span class="badge" style="background:${gradeOf(r.acc,r.ms,1).color}22;color:${gradeOf(r.acc,r.ms,1).color}">${r.grade}</span></td><td>${fmtTime(r.ms)}</td><td class="dim">${new Date(r.ts).toLocaleDateString(LANG==='en'?'en-US':'ko-KR')}</td></tr>`;
       }).join('')}</table></div>`
     :`<div class="card muted">${t('home.recentEmpty')}</div>`}`;
   appEl.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ location.hash=b.dataset.go; });
-  const sh=document.getElementById('qt-shuffle');
-  if(sh) sh.onclick=()=>{
-    const card=sh.closest('.quote-card');
-    const nq=quoteTexts(Math.floor(Math.random()*QUOTES.length));
-    card.querySelector('.quote-kr').textContent=nq.main;
-    const sub=card.querySelector('.quote-en');
-    if(sub) sub.textContent=nq.sub;
-    card.querySelector('.quote-author').textContent='— '+nq.author;
-  };
 }
+
 
 // ---- 라이브러리 ----
 let libFilter={type:'all', value:null}, libQuery='';
@@ -6608,9 +7054,147 @@ const SETTING_DEFS={
   screen:[
     ['coords','set.coords','set.coordsD'],
     ['sound','set.sound','set.soundD'],
-    ['showQuote','set.quote','set.quoteD'],
   ],
 };
+// === v1.9 === 관리자: 기보 추가 · 일일 게임 설정
+function adminCardHTML(){
+  if(!Cloud.isAdmin) return '';
+  return `<div class="card">
+      <h3>${t('adm.title')}</h3>
+      <div class="set-row">
+        <div><div class="t">${t('adm.add')}</div><div class="d">${t('adm.sub')}</div></div>
+        <button class="btn sm" data-go="#/admin">${t('adm.title')}</button>
+      </div>
+    </div>`;
+}
+
+function admSlug(title, year){
+  const base=String(title||'game').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'').slice(0,36)||'game';
+  let id=year? base+'-'+year : base;
+  let i=2, out=id;
+  while(GAMES.some(g=>g.id===out) || Cloud.serverGameIds.includes(out)){ out=id+'-'+i; i++; }
+  return out;
+}
+
+function viewAdmin(){
+  cleanupView();
+  if(!Cloud.isAdmin){ appEl.innerHTML=`<div class="card muted">${t('adm.notAdmin')}</div>`; return; }
+  const opts=GAMES.map(g=>`<option value="${g.id}">${gTitle(g)} (${g.year||''})</option>`).join('');
+  appEl.innerHTML=`
+    <div class="section-title">${t('adm.title')} <span class="badge gold">admin</span></div>
+
+    <div class="card">
+      <h3>${t('adm.add')}</h3>
+      <div class="adm-form">
+        <textarea class="adm-in" id="adm-pgn" placeholder="${t('adm.pgnPh')}"></textarea>
+        <div class="adm-grid">
+          <input class="adm-in" id="adm-title" placeholder="${t('adm.fTitle')}">
+          <input class="adm-in" id="adm-year" placeholder="${t('adm.fYear')}">
+          <input class="adm-in" id="adm-white" placeholder="${t('adm.fWhite')}">
+          <input class="adm-in" id="adm-black" placeholder="${t('adm.fBlack')}">
+        </div>
+        <input class="adm-in" id="adm-blurb" placeholder="${t('adm.fBlurb')}">
+        <div class="adm-grid">
+          <input class="adm-in" id="adm-opening" placeholder="${t('adm.fOpening')}">
+          <input class="adm-in" id="adm-result" placeholder="${t('adm.fResult')}">
+        </div>
+        <div class="adm-row"><button class="btn" id="adm-save">${t('adm.validate')}</button></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>${t('adm.daily')}</h3>
+      <div class="dim" style="margin-bottom:8px">${t('adm.dailyDesc')}</div>
+      <div class="adm-form">
+        <div class="adm-grid">
+          <input class="adm-in" type="date" id="adm-day" value="${todayKey()}">
+          <select class="adm-in" id="adm-game">${opts}</select>
+        </div>
+        <div class="adm-row"><button class="btn sm" id="adm-daily-save">${t('adm.save')}</button></div>
+      </div>
+      <div id="adm-picks" class="dim" style="margin-top:10px">…</div>
+    </div>
+
+    <div class="card">
+      <h3>${t('adm.list')}</h3>
+      <div id="adm-list"></div>
+    </div>`;
+
+  function fillList(){
+    const el=document.getElementById('adm-list'); if(!el) return;
+    el.innerHTML=GAMES.slice().reverse().map(g=>{
+      const server=Cloud.serverGameIds.includes(g.id);
+      return `<div class="adm-item">
+        <div class="grow"><div class="t2">${gTitle(g)}</div>
+          <div class="d2">${gWhite(g)} ${t('side.vs')} ${gBlack(g)} · ${g.year||''} · ${server?'server':'built-in'}</div></div>
+        ${server?`<button class="btn xs ghost" data-del="${g.id}">${t('adm.delete')}</button>`:''}
+      </div>`;
+    }).join('');
+    el.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{
+      if(!confirm(t('adm.confirmDel'))) return;
+      try{
+        await Cloud.adminArchiveGame(b.dataset.del);
+        Cloud.serverGameIds=Cloud.serverGameIds.filter(x=>x!==b.dataset.del);
+        toast(t('adm.deleted')); viewAdmin();
+      }catch(e){ toast(t('adm.addFail',{m:e.message})); }
+    });
+  }
+  fillList();
+
+  Cloud.adminPicks().then(rows=>{
+    const el=document.getElementById('adm-picks'); if(!el) return;
+    el.innerHTML = (rows&&rows.length)
+      ? rows.map(r=>{ const g=GAMES.find(x=>x.id===r.game_id); return `<div class="adm-item"><div class="grow"><div class="t2">${r.day}</div><div class="d2">${g?gTitle(g):r.game_id}</div></div></div>`; }).join('')
+      : t('adm.none');
+  });
+
+  document.getElementById('adm-daily-save').onclick=async()=>{
+    const day=document.getElementById('adm-day').value;
+    const gid=document.getElementById('adm-game').value;
+    if(!day||!gid) return;
+    try{
+      await Cloud.adminSetDaily(day, gid);
+      if(day===todayKey()) Cloud.dailyId=gid;
+      toast(t('adm.saved')); viewAdmin();
+    }catch(e){ toast(t('adm.addFail',{m:e.message})); }
+  };
+
+  document.getElementById('adm-save').onclick=async()=>{
+    const pgn=document.getElementById('adm-pgn').value.trim();
+    const title=document.getElementById('adm-title').value.trim();
+    const white=document.getElementById('adm-white').value.trim();
+    const black=document.getElementById('adm-black').value.trim();
+    const blurb=document.getElementById('adm-blurb').value.trim();
+    const year=document.getElementById('adm-year').value.trim();
+    const opening=document.getElementById('adm-opening').value.trim();
+    const result=document.getElementById('adm-result').value.trim();
+    if(!title||!white||!black){ toast(t('adm.needFields')); return; }
+    if(!pgn){ toast(t('adm.invalid',{m:'PGN'})); return; }
+    let hd={}, plies=0;
+    try{
+      const c=new Chess();
+      (c.loadPgn||c.load_pgn).call(c, pgn);
+      hd=(c.header? c.header() : (c.getHeaders? c.getHeaders() : {}))||{};
+      plies=c.history().length;
+      if(!plies) throw new Error('no moves');
+    }catch(e){ toast(t('adm.invalid',{m:e.message||'parse'})); return; }
+    const row={
+      id: admSlug(title, year||(hd.Date||'').slice(0,4)),
+      title, white, black, blurb: blurb||'', year: year||(hd.Date||'').slice(0,4),
+      event: hd.Event||'', opening: opening||'', eco: hd.ECO||'', result: result||hd.Result||'*',
+      pgn, plies, created_by: (Cloud.session()||{}).user_id
+    };
+    try{
+      await Cloud.adminAddGame(row);
+      Cloud.serverGameIds.push(row.id);
+      if(!GAMES.some(g=>g.id===row.id)){
+        GAMES.push(Object.assign({}, row, {whiteEn:row.white, blackEn:row.black, endgamePly:null, server:true}));
+      }
+      toast(t('adm.added')); viewAdmin();
+    }catch(e){ toast(t('adm.addFail',{m:e.message})); }
+  };
+}
+
 function viewSettings(){
   cleanupView();
   const st=store.data.settings;
@@ -6658,6 +7242,7 @@ function viewSettings(){
       </table>
       <div class="dim" style="margin-top:8px">${t('set.gradeNote')}</div>
     </div>
+${Cloud.isAdmin?adminCardHTML():''}
     <div class="card">
       <h3>${t('set.danger')}</h3>
       <div class="set-row">
@@ -6805,6 +7390,7 @@ function renderRoute(parts, nav){
   else if(parts[0]==='collection') viewCollection();
   else if(parts[0]==='ranking') viewRanking();
   else if(parts[0]==='puzzle') viewPuzzle();
+  else if(parts[0]==='admin') viewAdmin();
   else if(parts[0]==='settings') viewSettings();
   else viewHome();
   window.scrollTo(0,0);
@@ -6848,6 +7434,10 @@ try{
 }catch(e){
   console.error(e);
   appEl.innerHTML='<div class="card"><h3>Error</h3><p class="muted">'+e.message+'</p></div>';
+}
+rebuildActivity();
+if(Cloud.enabled() && Cloud.loggedIn()){
+  Cloud.afterLogin().then(()=>{ try{ updateChip(); if(!location.hash || location.hash==='#/home') route(); }catch(e){} }).catch(()=>{});
 }
 window.addEventListener('error', e=>console.error('window error:', e.message));
 
