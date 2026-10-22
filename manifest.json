@@ -1,0 +1,16 @@
+{
+  "name": "체스놀로지아",
+  "short_name": "체스놀로지아",
+  "description": "유명한 명경기를 통째로 외우는 체스 암기 플랫폼",
+  "lang": "ko",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#312e2b",
+  "theme_color": "#262421",
+  "icons": [
+    { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icons/icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
