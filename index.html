@@ -3726,6 +3726,27 @@ function gradeOf(accuracy, elapsedMs, plies){
   return { code:'D', color:'var(--text-dim)', desc:'기억 복습 필요 (50% 미만)' };
 }
 
+/* 수별 결과를 '110101...' 이진 문자열로 인코딩 (i번째 글자 = 기보 i+1수째를 맞췄는지) */
+function movesToString(targetMatched){
+  return (targetMatched||[]).map(b=> b? '1':'0').join('');
+}
+/* 이진 문자열 여러 개 -> 수별 성공률 집계 */
+function moveStats(binaries){
+  const succ=[], total=[];
+  for(const s of binaries||[]){
+    if(typeof s!=='string') continue;
+    for(let i=0;i<s.length;i++){
+      succ[i]=(succ[i]||0)+(s[i]==='1'?1:0);
+      total[i]=(total[i]||0)+1;
+    }
+  }
+  return succ.map((s,i)=>({ ply:i+1, succ:s, total:total[i], pct: total[i]? Math.round(1000*s/total[i])/10 : 0 }));
+}
+/* 가장 어려운 수 순으로 정렬 (시도 2회 이상만) */
+function hardestMoves(arr, n=3){
+  return arr.filter(x=>x.total>=2).sort((a,b)=>a.pct-b.pct).slice(0,n);
+}
+
 function fmtTime(ms){
   const s = Math.floor(ms / 1000);
   const m = Math.floor(s / 60);
@@ -3748,7 +3769,7 @@ function pickDaily(games, dateKey){
   return games[hashStr('daily-' + dateKey) % games.length];
 }
 
-export { computeAccuracy, gradeOf, fmtTime, todayKey, hashStr, pickDaily };
+export { computeAccuracy, gradeOf, fmtTime, todayKey, hashStr, pickDaily, movesToString, moveStats, hardestMoves };
 // 유명 명경기 데이터 (출처: pgnmentor.com PGN 아카이브 · 라스커 경기는 Wikipedia 교차확인 · python-chess로 전 기보 타당성 검증)
 const GAMES = [
  {
@@ -5065,7 +5086,7 @@ const QUOTES = [
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='1.2.0';
+const APP_VERSION='1.3.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, challengeHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5335,7 +5356,7 @@ ko:{
  'ch.end':'종료','ch.desc':'양쪽 기물을 모두 <b>내가 직접</b> 둡니다. 첫 수부터 기억을 더뎌 보세요.','ch.fbOff':'(즉시 피드백 꺼짐 — 틀려도 알려주지 않아요!)','ch.mylist':'내가 둔 수','ch.empty':'아직 둔 수가 없어요','ch.progress':'{a}수 둠 · 목표 {b}수','ch.transpo':'우회 도달! 기보에 다시 합류했어요','ch.mode.normal':'일반 모드','ch.mode.extreme':'극한 모드','ch.cut':'엔드게임 {n}수까지','ch.daily':'오늘의 게임',
  'ch.reason.mate':'체크메이트!','ch.reason.stalemate':'스테일메이트','ch.reason.draw':'무승부 (규칙 종료)','ch.reason.cutoff':'엔드게임 컷오프 도달','ch.reason.complete':'기보의 마지막 수 도달','ch.reason.manual':'직접 종료',
  'res.newbest':'신기록!','res.hintUsed':'힌트 사용','res.used':'사용함','res.time':'걸린 시간','res.streak':'연속 일치','res.streakPerfect':'처음부터 끝까지 완벽 일치!','res.streakFirst':'첫 수부터 어긋났어요','res.streakN':'{n}수까지 일치했습니다','res.played':'총 둔 수','res.accline':'정확도 — {a}/{b}수 일치','res.cutNote':' (엔드게임 제외 · 전체 {n}수)','res.closeTitle':'기보 검토로 넘어가기','ch.hintGrade':'힌트 사용 — P 등급은 힌트 없이 100%일 때만 부여돼요',
- 'rv.badge':'기보 검토','rv.matched':'맞춘 수 {a}/{b}','rv.legend':'초록 = 맞춘 수 · 빨강 = 놓친 수','rv.legendCut':' · 회색 = 엔드게임(미채점)','rv.status':'{a}/{b}수', 'set.data':'데이터 백업','set.export':'내보내기','set.exportD':'기록·북마크·설정을 파일로 저장합니다. 기기를 바꾸기 전에 꼭 해두세요.','set.exportDone':'백업 파일을 내려받았어요','set.import':'가져오기','set.importD':'백업 파일로 기록을 되돌립니다 (현재 기록을 대체).','set.importDone':'기록을 복원했어요 — 새로고침합니다','set.importFail':'파일을 읽지 못했어요','set.version':'버전','toast.updated':'새 버전으로 업데이트했어요'
+ 'rv.badge':'기보 검토','rv.matched':'맞춘 수 {a}/{b}','rv.legend':'초록 = 맞춘 수 · 빨강 = 놓친 수','rv.legendCut':' · 회색 = 엔드게임(미채점)','rv.status':'{a}/{b}수', 'set.online':'온라인 (전체 통계·랭킹)','set.onlineDesc':'Supabase 주소와 anon 키를 붙여넣으면 전 세계 통계·랭킹이 켜집니다. 설정 방법은 SUPABASE_SETUP.md 를 참고하세요.','set.url':'Supabase URL','set.key':'anon key','set.connect':'연결','set.connected':'연결됨','set.disconnect':'연결 해제','set.account':'계정','set.email':'이메일','set.pw':'비밀번호 (6자 이상)','set.name':'표시 이름','set.login':'로그인','set.signup':'회원가입','set.logout':'로그아웃','set.uploadAll':'지금까지 기록 올리기','set.uploadDone':'{n}개 기록을 올렸어요','set.needInput':'값을 입력해 주세요','set.pwShort':'비밀번호는 6자 이상이어야 해요','set.welcome':'{name} 님, 환영해요!','set.checkEmail':'확인 메일을 보냈어요 — 메일함에서 확인 후 로그인해 주세요','set.global':'전체','set.based':'전체 사용자 기준','set.mine':'내 기록 기준','set.hardest':'가장 많이 틀리는 수','set.pct':'성공률 {n}%','set.data':'데이터 백업','set.export':'내보내기','set.exportD':'기록·북마크·설정을 파일로 저장합니다. 기기를 바꾸기 전에 꼭 해두세요.','set.exportDone':'백업 파일을 내려받았어요','set.import':'가져오기','set.importD':'백업 파일로 기록을 되돌립니다 (현재 기록을 대체).','set.importDone':'기록을 복원했어요 — 새로고침합니다','set.importFail':'파일을 읽지 못했어요','set.version':'버전','toast.updated':'새 버전으로 업데이트했어요'
 },
 en:{
  'tab.home':'Home','tab.library':'Games','tab.collection':'Collection','tab.ranking':'Ranking','tab.puzzle':'Puzzle','tab.settings':'Settings',
@@ -5363,7 +5384,7 @@ en:{
  'ch.end':'End','ch.desc':'You move <b>both sides yourself</b>. Recall the game from move one.','ch.fbOff':'(Instant feedback off — no warnings!)','ch.mylist':'My moves','ch.empty':'No moves yet','ch.progress':'{a} plies · target {b}','ch.transpo':'Back on track! You re-joined the game.','ch.mode.normal':'Normal mode','ch.mode.extreme':'Extreme mode','ch.cut':'up to move {n}','ch.daily':'Daily Game',
  'ch.reason.mate':'Checkmate!','ch.reason.stalemate':'Stalemate','ch.reason.draw':'Draw (rule finish)','ch.reason.cutoff':'Endgame cutoff reached','ch.reason.complete':'Reached the final move','ch.reason.manual':'Ended manually',
  'res.newbest':'New best!','res.hintUsed':'Hint used','res.used':'used','res.time':'Time','res.streak':'Matching streak','res.streakPerfect':'Perfect from the first move to the last!','res.streakFirst':'First move already differs','res.streakN':'Matched through move {n}','res.played':'Total moves played','res.accline':'Accuracy — {a}/{b} moves matched','res.cutNote':' (endgame excluded · {n} total)','res.closeTitle':'Go to review','ch.hintGrade':'Hints used — P grades require a hint-free 100%',
- 'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
+ 'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.online':'Online (global stats & ranking)','set.onlineDesc':'Paste your Supabase URL and anon key to enable global stats and rankings. See SUPABASE_SETUP.md.','set.url':'Supabase URL','set.key':'anon key','set.connect':'Connect','set.connected':'Connected','set.disconnect':'Disconnect','set.account':'Account','set.email':'Email','set.pw':'Password (6+ chars)','set.name':'Display name','set.login':'Log in','set.signup':'Sign up','set.logout':'Log out','set.uploadAll':'Upload my past records','set.uploadDone':'Uploaded {n} records','set.needInput':'Please fill in the fields','set.pwShort':'Password must be at least 6 characters','set.welcome':'Welcome, {name}!','set.checkEmail':'Confirmation email sent — check your inbox, then log in','set.global':'Global','set.based':'All players','set.mine':'My records','set.hardest':'Moves missed the most','set.pct':'{n}% success','set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
 }};
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
@@ -5386,6 +5407,103 @@ function gOpening(g){ return LANG==='en' ? (OPENING_EN[g.opening]||g.opening) : 
 function gEra(g){ return LANG==='en' ? (ERA_EN[g.era]||g.era) : g.era; }
 function labelEra(v){ return LANG==='en' ? (ERA_EN[v]||v) : v; }
 function labelOpening(v){ return LANG==='en' ? (OPENING_EN[v]||v) : v; }
+
+// ============================================================
+// Cloud — Supabase REST 클라이언트 (SDK 없이 fetch, 오프라인 우선 유지)
+// ============================================================
+const Cloud = {
+  cfg(){ return store.data.server || null; },
+  enabled(){ const s=this.cfg(); return !!(s && s.url && s.key); },
+  saveCfg(url, key){ store.data.server={url:url.replace(/\/+$/,''), key:key.trim()}; store.save(); },
+  sessKey:'chessnologia.auth',
+  session(){ try{ return JSON.parse(localStorage.getItem(this.sessKey)); }catch(e){ return null; } },
+  saveSession(s){ s? localStorage.setItem(this.sessKey, JSON.stringify(s)) : localStorage.removeItem(this.sessKey); },
+  loggedIn(){ const s=this.session(); return !!(s && s.access_token && s.user_id); },
+
+  async _auth(path, body){
+    const c=this.cfg();
+    const res=await fetch(c.url+'/auth/v1/'+path, {
+      method:'POST',
+      headers:{'apikey':c.key, 'Content-Type':'application/json'},
+      body: JSON.stringify(body)
+    });
+    const j=await res.json();
+    if(!res.ok) throw new Error(j.msg||j.error_description||j.message||('HTTP '+res.status));
+    return j;
+  },
+  async signUp(email, pw, name){
+    const j=await this._auth('signup', {email, password:pw, data:{name}});
+    if(j.access_token && j.user) this.saveSession({access_token:j.access_token, refresh_token:j.refresh_token, user_id:j.user.id, email, name:name||email.split('@')[0]});
+    return j;
+  },
+  async signIn(email, pw){
+    const j=await this._auth('token?grant_type=password', {email, password:pw});
+    const name=(j.user && j.user.user_metadata && j.user.user_metadata.name) || email.split('@')[0];
+    this.saveSession({access_token:j.access_token, refresh_token:j.refresh_token, user_id:j.user.id, email, name});
+  },
+  async signOut(){ try{ await this._auth('logout', {refresh_token:(this.session()||{}).refresh_token}); }catch(e){} this.saveSession(null); },
+
+  async ensureToken(){
+    const s=this.session(); if(!s) return null;
+    const exp=JSON.parse(atob(s.access_token.split('.')[1])).exp*1000;
+    if(Date.now() < exp - 60000) return s.access_token;
+    const j=await this._auth('token?grant_type=refresh_token', {refresh_token:s.refresh_token});
+    this.saveSession({...s, access_token:j.access_token, refresh_token:j.refresh_token});
+    return j.access_token;
+  },
+  async _rest(path, opts={}){
+    const c=this.cfg(); const token=await this.ensureToken();
+    const res=await fetch(c.url+'/rest/v1/'+path, {
+      ...opts,
+      headers:{'apikey':c.key, 'Authorization':'Bearer '+token, 'Content-Type':'application/json', ...(opts.headers||{})}
+    });
+    if(!res.ok){ const t2=await res.text(); throw new Error(t2.slice(0,140)); }
+    const txt=await res.text();
+    return txt? JSON.parse(txt) : null;
+  },
+
+  async uploadAttempt(gameId, rec, userId){
+    if(!this.enabled()) return false;
+    try{
+      await this._rest('attempts', {method:'POST', headers:{'Prefer':'return=minimal'}, body: JSON.stringify({
+        user_id: userId || (this.session()||{}).user_id,
+        game_id: gameId, acc: rec.acc, ms: Math.round(rec.ms), grade: rec.grade,
+        mode: rec.mode, hint: !!rec.hint, moves: rec.moves || null
+      })});
+      return true;
+    }catch(e){ console.warn('upload fail:', e.message); return false; }
+  },
+  async fetchGameStats(){
+    if(!this.enabled()) return null;
+    const CK='chessnologia.stats.game';
+    try{
+      const hit=JSON.parse(localStorage.getItem(CK));
+      if(hit && Date.now()-hit.ts < 3600000) return hit.data;
+      const rows=await this._rest('game_stats?select=*');
+      const map={}; (rows||[]).forEach(r=>map[r.game_id]=r);
+      localStorage.setItem(CK, JSON.stringify({ts:Date.now(), data:map}));
+      return map;
+    }catch(e){ console.warn('game_stats fail:', e.message); return null; }
+  },
+  async fetchMoveBinaries(gameId){
+    if(!this.enabled()) return [];
+    try{
+      const rows=await this._rest('attempts?select=moves&game_id=eq.'+encodeURIComponent(gameId)+'&moves=not.is.null');
+      return (rows||[]).map(r=>r.moves).filter(Boolean);
+    }catch(e){ console.warn('move stats fail:', e.message); return []; }
+  },
+  async syncAllLocal(){
+    if(!this.enabled() || !this.loggedIn()) return 0;
+    let n=0;
+    for(const gid in store.data.records){
+      for(const rec of store.data.records[gid]){
+        if(rec.synced) continue;
+        if(await this.uploadAttempt(gid, rec)){ rec.synced=true; n++; }
+      }
+    }
+    store.save(); return n;
+  }
+};
 // ============================================================
 // app2.js — 기보 파싱 · 학습 모드 · 도전 모드 · 기보 검토 (i18n 적용)
 // ============================================================
@@ -5685,10 +5803,11 @@ function viewChallenge(gid, opts={}){
     const saveRec = auto || store.data.settings.savePartial;
     let isBest=false, rec=null;
     if(saveRec){
-      rec={ts:Date.now(), acc:res.accuracy, ms, grade:gr.code, mode:extreme?'extreme':'normal', hint:state.hintUsed, cut:cut<d.N, played:res.playedCount};
+      rec={ts:Date.now(), acc:res.accuracy, ms, grade:gr.code, mode:extreme?'extreme':'normal', hint:state.hintUsed, cut:cut<d.N, played:res.playedCount, moves:movesToString(res.targetMatched)};
       const prev=bestOf(g.id);
       isBest = !prev || res.accuracy>prev.acc || (res.accuracy===prev.acc && ms<prev.ms);
       addRecord(g.id, rec);
+      if(Cloud.enabled() && Cloud.loggedIn()){ Cloud.uploadAttempt(g.id, rec); }
       if(opts.daily && auto) markDailyDone();
     }
     Sfx.play(res.accuracy>=100?'finish':(res.accuracy>=70?'good':'fail'));
@@ -5754,6 +5873,7 @@ function viewReview(){
         <div class="card">
           <h3>${gWhite(g)} vs ${gBlack(g)}</h3>
           <div class="pbar" style="margin-bottom:10px"><div style="width:${Math.round(okN/R.res.targetCount*100)}%"></div></div>
+          <div id="rv-hard" class="gc-meta" style="margin-bottom:10px"></div>
           <div id="rv-moves" class="movelist" style="max-height:min(52vh,480px)"></div>
         </div>
       </div>
@@ -5802,6 +5922,18 @@ function viewReview(){
   document.addEventListener('keydown', kh);
   viewCleanup=()=>document.removeEventListener('keydown', kh);
   render();
+  // 수별 성공률: 내 기록 + (연결 시) 전체 사용자 기록 집합
+  (async ()=>{
+    let bins=(recs(g.id)||[]).map(r=>r.moves).filter(Boolean);
+    if(Cloud.enabled()){ const gb=await Cloud.fetchMoveBinaries(g.id); bins=bins.concat(gb||[]); }
+    const el=document.getElementById('rv-hard');
+    if(!el || !bins.length) return;
+    const st=moveStats(bins);
+    const hm=hardestMoves(st);
+    if(!hm.length) return;
+    el.innerHTML=`<span class="dim">${t('set.hardest')} · ${Cloud.enabled()? t('set.based'):t('set.mine')}</span>`
+      + hm.map(x=>`<span class="badge gray">${d.sans[x.ply-1]||('수'+x.ply)} · ${t('set.pct',{n:x.pct})} (${x.succ}/${x.total})</span>`).join('');
+  })();
 }
 // ============================================================
 // app3.js — 라우터 · 홈 · 라이브러리 · 컬렉션 · 랭킹 · 퍼즐 · 설정 (i18n 적용)
@@ -5879,7 +6011,7 @@ function successRateBadge(gid){
   const rs=recs(gid);
   if(!rs.length) return `<span class="badge gray">${t('lib.noRecord')}</span>`;
   const pct=Math.round(100*rs.filter(r=>r.acc>=100).length/rs.length);
-  return `<span class="badge ${pct>=50?'green':'gray'}" title="${t('lib.successTip')}">${t('lib.success',{n:pct})}</span>`;
+  return `<span class="badge ${pct>=50?'green':'gray'}" data-sr="${gid}" title="${t('lib.successTip')}">${t('lib.success',{n:pct})}</span>`;
 }
 
 // ---- 홈 ----
@@ -6020,6 +6152,20 @@ function viewLibrary(){
   document.getElementById('lib-q').addEventListener('input', e=>{ libQuery=e.target.value; renderGrid(); });
   document.getElementById('lib-add').onclick=openImportModal;
   renderGrid();
+  // 서버 연결 시 전체 성공률로 배지 교체
+  if(Cloud.enabled()){
+    Cloud.fetchGameStats().then(map=>{
+      if(!map) return;
+      document.querySelectorAll('[data-sr]').forEach(el=>{
+        const gs=map[el.dataset.sr];
+        if(gs && gs.attempts>0){
+          el.textContent=`${t('set.global')} ${gs.success_pct}% · ${gs.attempts}`;
+          el.classList.add('green');
+          el.title=t('set.based');
+        }
+      });
+    });
+  }
 }
 
 // ---- 기보 직접 추가 (PGN 붙여넣기) ----
@@ -6262,6 +6408,7 @@ const SETTING_DEFS={
 function viewSettings(){
   cleanupView();
   const st=store.data.settings;
+  const inpStyle='width:100%;background:var(--bg-deep);border:1.5px solid var(--border);border-radius:8px;color:var(--text);padding:8px 12px;font-size:14px;outline:none';
   const rowHTML=def=>`<div class="set-row">
       <div><div class="t">${t(def[1])}</div><div class="d">${t(def[2])}</div></div>
       <label class="switch"><input type="checkbox" data-set="${def[0]}" ${st[def[0]]?'checked':''}><span class="slider"></span></label>
@@ -6317,6 +6464,29 @@ function viewSettings(){
       </div>
     </div>
     <div class="card">
+      <h3>${t('set.online')}</h3>
+      ${!Cloud.enabled() ? `
+      <div class="d dim" style="margin-bottom:8px">${t('set.onlineDesc')}</div>
+      <div class="set-row"><div style="flex:1"><input id="srv-url" placeholder="${t('set.url')}" style="${inpStyle}"></div></div>
+      <div class="set-row"><div style="flex:1"><input id="srv-key" placeholder="${t('set.key')}" style="${inpStyle}"></div></div>
+      <div style="display:flex;gap:8px"><button class="btn sm" id="srv-connect">${t('set.connect')}</button></div>
+      ` : `
+      <div class="set-row"><div><div class="t">${t('set.connected')}</div><div class="d">${Cloud.cfg().url}</div></div>
+        <button class="btn ghost sm" id="srv-off">${t('set.disconnect')}</button></div>
+      ${Cloud.loggedIn() ? `
+      <div class="set-row"><div><div class="t">${t('set.welcome',{name:Cloud.session().name||''})}</div></div>
+        <button class="btn ghost sm" id="srv-out">${t('set.logout')}</button></div>
+      <div class="set-row"><div><div class="t">${t('set.uploadAll')}</div></div>
+        <button class="btn sm" id="srv-sync">${t('set.uploadAll')}</button></div>
+      ` : `
+      <div class="set-row"><div style="flex:1"><input id="au-email" type="email" placeholder="${t('set.email')}" style="${inpStyle}"></div></div>
+      <div class="set-row"><div style="flex:1"><input id="au-pw" type="password" placeholder="${t('set.pw')}" style="${inpStyle}"></div></div>
+      <div class="set-row"><div style="flex:1"><input id="au-name" placeholder="${t('set.name')}" style="${inpStyle}"></div></div>
+      <div style="display:flex;gap:8px"><button class="btn sm" id="srv-in">${t('set.login')}</button><button class="btn challenge sm" id="srv-up">${t('set.signup')}</button></div>
+      ` }
+      ` }
+    </div>
+    <div class="card">
       <h3>${t('set.data')}</h3>
       <div class="set-row">
         <div><div class="t">${t('set.export')}</div><div class="d">${t('set.exportD')}</div></div>
@@ -6347,6 +6517,32 @@ function viewSettings(){
   document.getElementById('set-export').onclick=exportData;
   document.getElementById('set-import-btn').onclick=()=>document.getElementById('set-import').click();
   document.getElementById('set-import').addEventListener('change', e=>{ const f=e.target.files[0]; if(f) importData(f); });
+  document.getElementById('srv-connect') && (document.getElementById('srv-connect').onclick=()=>{
+    const u=document.getElementById('srv-url').value.trim(), k=document.getElementById('srv-key').value.trim();
+    if(!u||!k){ toast(t('set.needInput')); return; }
+    Cloud.saveCfg(u,k); toast(t('set.connected')); route();
+  });
+  document.getElementById('srv-off') && (document.getElementById('srv-off').onclick=()=>{ store.data.server=null; store.save(); route(); });
+  document.getElementById('srv-in') && (document.getElementById('srv-in').onclick=async ()=>{
+    const e2=document.getElementById('au-email').value.trim(), p=document.getElementById('au-pw').value;
+    if(!e2||!p){ toast(t('set.needInput')); return; }
+    try{ await Cloud.signIn(e2,p); toast(t('set.welcome',{name:Cloud.session().name||''})); route(); }catch(e3){ toast(e3.message||String(e3)); }
+  });
+  document.getElementById('srv-up') && (document.getElementById('srv-up').onclick=async ()=>{
+    const e2=document.getElementById('au-email').value.trim(), p=document.getElementById('au-pw').value, n2=document.getElementById('au-name').value.trim();
+    if(!e2||!p){ toast(t('set.needInput')); return; }
+    if(p.length<6){ toast(t('set.pwShort')); return; }
+    try{
+      await Cloud.signUp(e2,p,n2||e2.split('@')[0]);
+      if(Cloud.loggedIn()) toast(t('set.welcome',{name:n2||e2.split('@')[0]}));
+      else toast(t('set.checkEmail'));
+      route();
+    }catch(e3){ toast(e3.message||String(e3)); }
+  });
+  document.getElementById('srv-out') && (document.getElementById('srv-out').onclick=async ()=>{ await Cloud.signOut(); route(); });
+  document.getElementById('srv-sync') && (document.getElementById('srv-sync').onclick=async ()=>{
+    const n2=await Cloud.syncAllLocal(); toast(t('set.uploadDone',{n:n2}));
+  });
   document.getElementById('set-reset').onclick=()=>{
     showModal(`<h3 style="justify-content:center">${t('set.resetQ')}</h3>
       <p class="muted" style="margin:10px 0">${t('set.resetWarn')}</p>
