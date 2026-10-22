@@ -1,6 +1,6 @@
 /* 체스놀로지아 서비스 워커 — 오프라인 우선(캐시 우선 + 백그라운드 갱신) */
-const CACHE = 'chessnologia-v3';
-const ASSETS = ['./', './index.html', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png'];
+const CACHE = 'chessnologia-v4';
+const ASSETS = ['./', './index.html', './config.js', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png'];
 
 self.addEventListener('install', e => {
   e.waitUntil(caches.open(CACHE).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
