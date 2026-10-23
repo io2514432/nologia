@@ -297,8 +297,8 @@ button{touch-action:manipulation;}
 .wk-c{width:32px; height:32px; margin:5px auto 0; border-radius:50%; border:1.5px solid var(--border); background:var(--bg-deep); color:var(--text-dim); font-size:11px; font-weight:700; display:flex; align-items:center; justify-content:center; position:relative;}
 .wk-c.on{border-color:var(--green); color:var(--green); background:var(--card);}
 .wk-c.on::after{content:''; position:absolute; bottom:3px; width:4px; height:4px; border-radius:50%; background:var(--green);}
-.wk-c.today{border-color:var(--gold); color:var(--text-strong); box-shadow:0 0 0 2px var(--bg-deep), 0 0 0 3px var(--gold);}
-.wk-c.today.on{color:var(--green);}
+.wk-c.today{border-radius:7px; border-color:var(--text-strong); color:var(--text-strong); background:transparent; box-shadow:none;}
+.wk-c.today.on{color:var(--green); border-color:var(--text-strong);}
 .wk.future .wk-c{opacity:.4;}
 .home-stats{display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:14px;}
 .stat-card.v2{flex-direction:row; align-items:center; text-align:left; gap:12px; padding:14px; min-height:76px;}
@@ -3992,7 +3992,7 @@ const GAMES = [
   "black": "브라운공작 & 이소아 백작",
   "whiteEn": "Morphy, Paul ",
   "blackEn": "Duke Karl Count Isouard",
-  "event": "Paris it",
+  "eventKo": "기타 · 파리 오페라 극장", "eventEn": "Other · Paris Opera House",
   "year": "1858",
   "blurb": "오페라를 보러 갔다가 두었다는 단 한 판. 퀸 희생으로 마무리되는 완벽한 공격의 교과서.",
   "opening": "필리도어 디펜스",
@@ -4046,7 +4046,7 @@ const GAMES = [
   "black": "리오넬 키제리츠키",
   "whiteEn": "Anderssen, Adolf",
   "blackEn": "Kieseritzky, Lionel",
-  "event": "London 'Immortal game'",
+  "eventKo": "기타 · 런던 (1851 국제 대회 기간)", "eventEn": "Other · London (1851 International Tournament)",
   "year": "1851",
   "blurb": "퀸과 룩, 비숍까지 모두 내주고 체크메이트로 끝내는 체스 역사상 가장 유명한 희생극.",
   "opening": "킹스 갬빗",
@@ -4112,7 +4112,7 @@ const GAMES = [
   "black": "장 뒤프렌",
   "whiteEn": "Anderssen, Adolf",
   "blackEn": "Dufresne, Jean",
-  "event": "Berlin 'Evergreen'",
+  "eventKo": "기타 · 베를린", "eventEn": "Other · Berlin",
   "year": "1852",
   "blurb": "'불멸의 게임보다 더 상록수라 불리는' 룩 희생과 더블 비숍의 완성형 콤비네이션.",
   "opening": "이탈리안 게임",
@@ -4180,7 +4180,7 @@ const GAMES = [
   "black": "아키바 루빈슈타인",
   "whiteEn": "Rotlewi, Georg A",
   "blackEn": "Rubinstein, Akiba",
-  "event": "Lodz1",
+  "eventKo": "우치 대회 1907", "eventEn": "Łódź 1907 tournament",
   "year": "1907",
   "blurb": "더블 비숍 희생 후, 왕이 직접 걸어 들어가 마무리하는 환상적인 콤비네이션.",
   "opening": "퀸스 갬빗 디펜스",
@@ -4251,7 +4251,7 @@ const GAMES = [
   "black": "프랭크 마셜",
   "whiteEn": "Capablanca, Jose Raul",
   "blackEn": "Marshall, Frank James",
-  "event": "USA m",
+  "eventKo": "뉴욕 매치 1909", "eventEn": "New York match 1909",
   "year": "1909",
   "blurb": "15수 준비된 갬빗에 시종의 침착한 방어와 맞상(카운터) 공격이 얽힌 명수전.",
   "opening": "루이 로페즈",
@@ -4335,7 +4335,7 @@ const GAMES = [
   "black": "조지 토머스",
   "whiteEn": "Lasker, Edward",
   "blackEn": "Thomas, George Alan",
-  "event": "London",
+  "eventKo": "런던 대회 1912", "eventEn": "London 1912 tournament",
   "year": "1912",
   "blurb": "왕이 직접 전장을 건너가 메이트를 완성하는, 체스 교본에 실리는 유쾌한 한 판.",
   "opening": "네덜란드 디펜스",
@@ -4354,7 +4354,7 @@ const GAMES = [
   "black": "로버트 제임스 피셔",
   "whiteEn": "Byrne, Donald",
   "blackEn": "Fischer, Robert James",
-  "event": "New York Rosenwald",
+  "eventKo": "로젠월드 트로피 1956 · 뉴욕", "eventEn": "Rosenwald Trophy 1956 · New York",
   "year": "1956",
   "blurb": "13세 보비 피셔가 퀸을 내주며 펼친 압도적인 반격. 체스를 시작하게 만드는 기보.",
   "opening": "그륀펠트 디펜스",
@@ -4457,7 +4457,7 @@ const GAMES = [
   "black": "보리스 스파스키",
   "whiteEn": "Fischer, Robert James",
   "blackEn": "Spassky, Boris V",
-  "event": "World Championship 28th",
+  "eventKo": "세계 챔피언십 1972 · 레이캬비크", "eventEn": "World Championship 1972 · Reykjavík",
   "year": "1972",
   "blurb": "'세기의 대결' 세계선수권 6국. 스파스키가 일어나 박수를 보낸 피셔의 완벽한 공격.",
   "opening": "퀸스 갬빗 디펜스",
@@ -4559,7 +4559,7 @@ const GAMES = [
   "black": "로버트 제임스 피셔",
   "whiteEn": "Spassky, Boris V",
   "blackEn": "Fischer, Robert James",
-  "event": "World Championship 28th",
+  "eventKo": "세계 챔피언십 1972 · 레이캬비크", "eventEn": "World Championship 1972 · Reykjavík",
   "year": "1972",
   "blurb": "26...Bh3!? 파수꾼 비숍. 세계선수권에서 나온 또 하나의 걸작.",
   "opening": "시실리안",
@@ -4728,7 +4728,7 @@ const GAMES = [
   "black": "베셀린 토발로프",
   "whiteEn": "Kasparov, Gary",
   "blackEn": "Topalov, Veselin",
-  "event": "Hoogovens",
+  "eventKo": "빅커안지 1999 · 후호번스", "eventEn": "Hoogovens · Wijk aan Zee 1999",
   "year": "1999",
   "blurb": "11수를 내다본 24.Qb3!! 룩 희생. 현대 체스 최고의 콤비네이션으로 꼽힌다.",
   "opening": "피르크 디펜스",
@@ -4836,7 +4836,7 @@ const GAMES = [
   "black": "가리 카스파로프",
   "whiteEn": "Comp Deep Blue",
   "blackEn": "Kasparov, Gary",
-  "event": "New York man vs machine",
+  "eventKo": "뉴욕 1997 · 인간 vs 컴퓨터 재대결", "eventEn": "New York 1997 · man vs machine rematch",
   "year": "1997",
   "blurb": "AI가 세계 챔피언을 꺾은 역사적 매치를 완성한 마지막 한 판.",
   "opening": "카로칸 디펜스",
@@ -4894,7 +4894,7 @@ const GAMES = [
   "black": "가리 카스파로프",
   "whiteEn": "Karpov, Anatoly",
   "blackEn": "Kasparov, Gary",
-  "event": "World Championship 32th-KK2",
+  "eventKo": "세계 챔피언십 1985 · 모스크바", "eventEn": "World Championship 1985 · Moscow",
   "year": "1985",
   "blurb": "d5에 앉은 '문어' 나이트가 판 전체를 짓누르는 제16국의 압박극.",
   "opening": "시실리안",
@@ -4995,7 +4995,7 @@ const GAMES = [
   "black": "세르게이 카르야킨",
   "whiteEn": "Carlsen,M",
   "blackEn": "Karjakin,Sergey",
-  "event": "WCh Rapid TB 2016",
+  "eventKo": "세계 챔피언십 2016 타이브레이크 · 뉴욕", "eventEn": "World Championship 2016 rapid tiebreak · New York",
   "year": "2016",
   "blurb": "세계선수권 타이브레이크 4국. 단 한 수의 실수도 허용하지 않는 완벽한 엔드게임 압박.",
   "opening": "시실리안",
@@ -5115,7 +5115,7 @@ const GAMES = [
   "black": "베셀린 토발로프",
   "whiteEn": "Anand,V",
   "blackEn": "Topalov,V",
-  "event": "WCh",
+  "eventKo": "세계 챔피언십 2010 · 소피아", "eventEn": "World Championship 2010 · Sofia",
   "year": "2010",
   "blurb": "세계선수권 4국. 사전 준비한 카탈란 공격으로 완승을 거둔 한 판.",
   "opening": "카탈란 오프닝",
@@ -5199,7 +5199,7 @@ const GAMES = [
   "black": "미하일 탈",
   "whiteEn": "Botvinnik, Mikhail",
   "blackEn": "Tal, Mihail",
-  "event": "World Championship 23th",
+  "eventKo": "세계 챔피언십 1960 · 모스크바", "eventEn": "World Championship 1960 · Moscow",
   "year": "1960",
   "blurb": "세계선수권 6국. '마법사' 탈과 챔피언 보트빈니크의 명승부.",
   "opening": "킹스 인디언",
@@ -5300,7 +5300,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.3.1';
+const APP_VERSION='2.4.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -6617,7 +6617,7 @@ function v21GameModal(g){
       '<h2 class="gal-title">'+gTitle(g)+'</h2>'+
       '<div class="gal-sub2">'+gWhite(g)+' '+t('side.vs')+' '+gBlack(g)+'</div>'+
       '<div class="gm-meta"><span class="gm-moves"><b>'+mv+'</b> '+t('unit.moves')+'</span>'+v21Stars(g)+'<span class="badge gray">'+(g.year||'')+'</span></div>'+
-      '<div class="gm-tags">'+(gOpening(g)?'<span class="badge gray">'+gOpening(g)+'</span>':'')+'<span class="badge gray">'+res+'</span>'+(g.event?'<span class="badge gray">'+g.event+'</span>':'')+'</div>'+
+      '<div class="gm-tags">'+(gOpening(g)?'<span class="badge gray">'+gOpening(g)+'</span>':'')+'<span class="badge gray">'+res+'</span>'+(gEvent(g)?'<span class="badge gray">'+gEvent(g)+'</span>':'')+'</div>'+
       '<p class="gm-blurb">'+gBlurb(g)+'</p>'+
       '<div class="gm-actions">'+
         '<button class="btn" id="gm-study">'+t('btn.study')+'</button>'+
@@ -6657,7 +6657,7 @@ Object.assign(I18N.ko, {
   'rank.extremeNote':'극한 모드 결과만 반영됩니다.',
   'set.extremeD':'힌트 없이 도전합니다.',
   'lib.all':'전체','lib.sort.label':'정렬',
-  'lib.sort.date':'날짜순','lib.sort.diff':'난이도순','lib.sort.asc':'오름차순','lib.sort.desc':'내림차순','lib.sort.order':'정렬 방향',
+  'lib.sort.date':'날짜순','lib.sort.diff':'난이도순','lib.sort.recent':'최근 플레이순','lib.sort.asc':'오름차순','lib.sort.desc':'내림차순','lib.sort.order':'정렬 방향',
   'adm.pzStart':'시작 수','adm.pzEnd':'종료 수','adm.pzHint':'수 번호 기준 · 비워두면 퍼즐 제외',
   'adm.pzSide':'푸는 입장','adm.pzSideW':'백','adm.pzSideB':'흑','adm.pzSideBoth':'양쪽'
 });
@@ -6670,7 +6670,7 @@ Object.assign(I18N.en, {
   'rank.extremeNote':'Only Extreme mode results count.',
   'set.extremeD':'Challenge without hints.',
   'lib.all':'All','lib.sort.label':'Sort',
-  'lib.sort.date':'Date','lib.sort.diff':'Difficulty','lib.sort.asc':'Ascending','lib.sort.desc':'Descending','lib.sort.order':'Sort direction',
+  'lib.sort.date':'Date','lib.sort.diff':'Difficulty','lib.sort.recent':'Recently played','lib.sort.asc':'Ascending','lib.sort.desc':'Descending','lib.sort.order':'Sort direction',
   'adm.pzStart':'Start move','adm.pzEnd':'End move','adm.pzHint':'Move numbers · leave empty to skip',
   'adm.pzSide':'Solver side','adm.pzSideW':'White','adm.pzSideB':'Black','adm.pzSideBoth':'Both'
 });
@@ -6789,7 +6789,7 @@ function viewStudy(gidRaw){
         <div class="card">
           <h3>${gWhite(g)} vs ${gBlack(g)}</h3>
           <div class="gc-meta">
-            <span class="badge gray">${g.event} ${g.year}</span>
+            <span class="badge gray">${gEvent(g)} ${g.year}</span>
             <span class="badge gray">${gOpening(g)}</span>
             <span class="badge gray">${Math.ceil(d.N/2)} ${t('unit.moves')} \u00b7 ${g.result}</span>
             ${v21Stars(g)}
@@ -7371,6 +7371,11 @@ function miniBoardHTML(g){
   }
   return html+'</div></div>';
 }
+function gEvent(g){
+  if(!g) return '';
+  if(LANG==='en') return g.eventEn||g.event||'';
+  return g.eventKo||g.event||'';
+}
 function bestBadge(gid){
   const b=bestOf(gid);
   if(!b) return `<span class="badge gray">${t('lib.noRecord')}</span>`;
@@ -7517,7 +7522,7 @@ function viewHome(){
             <div class="daily-len"><span class="dl-total">${t('home.totalMoves',{n:Math.ceil(dd.N/2)})}</span>${gOpening(g)?`<i>${gOpening(g)}</i>`:''}</div>
             <div class="gc-meta" style="margin:12px 0 14px">
               ${doneToday?`<span class="badge green">${t('home.doneToday')}</span>`:''}
-              ${successRateBadge(g.id)}
+              ${v21Stars(g)}
             </div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
               <button class="btn" data-go="#/study/${g.id}">${t('home.studyFirst')}</button>
@@ -7586,6 +7591,7 @@ function viewLibrary(){
       <select id="lib-sort" class="adm-in">
         <option value="date" ${libSort==='date'?'selected':''}>${t('lib.sort.date')}</option>
         <option value="diff" ${libSort==='diff'?'selected':''}>${t('lib.sort.diff')}</option>
+        <option value="recent" ${libSort==='recent'?'selected':''}>${t('lib.sort.recent')}</option>
       </select>
       <button id="lib-dir" class="lib-dir" type="button" aria-label="${t('lib.sort.order')}">${dirMarkup()}</button>
     </div>
@@ -7596,7 +7602,17 @@ function viewLibrary(){
   function sorted(list){
     const arr=list.slice();
     const s=libDir==='asc'?1:-1;
-    if(libSort==='diff'){
+    if(libSort==='recent'){
+      const lastTs=g=>{ const rs=recs(g.id); return rs.length?Math.max.apply(null,rs.map(r=>r.ts||0)):0; };
+      const loc=LANG==='en'?'en':'ko';
+      arr.sort((a,b)=>{
+        const x=lastTs(a), y=lastTs(b);
+        if(x&&y) return s*(x-y);
+        if(x&&!y) return -1;
+        if(!x&&!y) return String(gTitle(a)).localeCompare(String(gTitle(b)),loc);
+        return 1;
+      });
+    }else if(libSort==='diff'){
       arr.sort((a,b)=>s*((v21StarCount(a)-v21StarCount(b)) || (v22Moves(a)-v22Moves(b))));
     }else{
       arr.sort((a,b)=>{
@@ -7618,7 +7634,6 @@ function viewLibrary(){
           <span class="badge gray">${g.year||''}</span>
           <span class="badge gold-soft">${t('lib.movesStrong',{n:v22Moves(g)})}</span>
           ${v21Stars(g)}
-          ${successRateBadge(g.id)}
         </div></div>
       </div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${bestBadge(g.id)}
@@ -7635,10 +7650,20 @@ function viewLibrary(){
     let list=GAMES.filter(g=>{
       if(libFolder!=='__all__' && (g.folder||'')!==libFolder) return false;
       if(!q) return true;
-      return `${gTitle(g)} ${gWhite(g)} ${gBlack(g)} ${g.whiteEn||''} ${g.blackEn||''} ${g.event||''} ${g.folder||''}`.toLowerCase().includes(q);
+      return `${gTitle(g)} ${gWhite(g)} ${gBlack(g)} ${g.whiteEn||''} ${g.blackEn||''} ${gEvent(g)} ${g.event||''} ${g.folder||''}`.toLowerCase().includes(q);
     });
     if(!list.length){ grid.innerHTML=`<div class="card muted">${t('dash.empty')}</div>`; return; }
     list=sorted(list);
+    if(libSort==='recent'){
+      grid.innerHTML='<div class="stack">'+list.map(gameCard).join('')+'</div>';
+      grid.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{ location.hash=`#/challenge/${b.dataset.ch}`; });
+      grid.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ location.hash=`#/study/${b.dataset.st}`; });
+      grid.querySelectorAll('[data-open]').forEach(el=>el.onclick=(e)=>{
+        if(e.target.closest('button')) return;
+        v21GameModal(gameByIdAny(el.dataset.open));
+      });
+      return;
+    }
     const foldersNow=[];
     list.forEach(g=>{ const f=g.folder||''; if(foldersNow.indexOf(f)<0) foldersNow.push(f); });
     grid.innerHTML=foldersNow.map(f=>{
