@@ -436,7 +436,10 @@ textarea.adm-in{min-height:150px; resize:vertical; font-family:ui-monospace,SFMo
 
 
 /* ===== v2.2 ===== */
-.ctrl-row{flex-wrap:nowrap;}
+.ctrl-row{flex-wrap:wrap; row-gap:8px;}
+.section-title{flex-wrap:wrap; row-gap:8px;}
+html,body{max-width:100%; overflow-x:hidden;}
+.board-wrap,#st-board{max-width:100%;}
 .hint-toggle{width:112px; min-width:112px; flex:0 0 112px; font-size:12px; padding-left:4px; padding-right:4px; justify-content:center; white-space:nowrap;}
 
 .lib-folders{display:grid; grid-template-columns:repeat(3,1fr); gap:7px;}
@@ -5297,7 +5300,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.3.0';
+const APP_VERSION='2.3.1';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5733,6 +5736,64 @@ Object.assign(I18N.en, {
  'adm.notAdmin':'You are not an admin'
 });
 
+Object.assign(I18N.ko, {
+ 'err.badLogin':'이메일 또는 비밀번호가 올바르지 않습니다',
+ 'err.confirm':'이메일 인증이 필요합니다. 메일함을 확인해 주세요',
+ 'err.exists':'이미 가입된 이메일입니다',
+ 'err.network':'네트워크 오류가 발생했습니다. 잠시 후 다시 시도해 주세요',
+ 'err.urlWrong':'서버 URL이 올바르지 않습니다',
+ 'err.keyWrong':'API 키가 올바르지 않습니다',
+ 'err.dashUrl':'대시보드 주소 대신 프로젝트 URL을 넣어 주세요',
+ 'gate.tagline':'유명한 명경기를 통째로 외우는 체스 암기 플랫폼',
+ 'gate.needAccount':'계정을 연결하면 기록과 랭킹이 모든 기기에서 이어집니다',
+ 'gate.toLogin':'로그인으로 돌아가기','gate.toSignup':'회원가입',
+ 'set.login':'로그인','set.logout':'로그아웃','set.signup':'회원가입',
+ 'set.email':'이메일','set.pw':'비밀번호','set.name':'닉네임',
+ 'set.pwShort':'비밀번호는 6자 이상이어야 합니다',
+ 'set.needInput':'필수 항목을 입력해 주세요',
+ 'set.checkEmail':'인증 메일을 보냈습니다. 메일함을 확인해 주세요',
+ 'set.welcome':'{name}님, 환영합니다',
+ 'set.online':'계정 · 동기화',
+ 'set.offlineDesc':'로그인하면 기록과 랭킹이 모든 기기에 동기화됩니다.',
+ 'set.connected':'연결되었습니다',
+ 'set.based':'전체 사용자 기준','set.mine':'내 기록 기준',
+ 'set.hardest':'가장 많이 틀린 수','set.pct':'{n}%',
+ 'set.version':'앱 버전',
+ 'set.exportDone':'내보냈습니다','set.importDone':'가져왔습니다','set.importFail':'가져오기에 실패했습니다',
+ 'res.graph':'수별 성공률','res.graphC':'전체 사용자 기준',
+ 'rv.badge':'복기','rv.matched':'{a}/{b} 일치',
+ 'rv.legend':'색이 진할수록 많이 틀린 수입니다.','rv.legendCut':' (남은 수는 생략)','rv.status':'{a}/{b}수',
+ 'toast.updated':'새 버전으로 업데이트되었습니다'
+});
+Object.assign(I18N.en, {
+ 'err.badLogin':'Incorrect email or password',
+ 'err.confirm':'Please confirm your email first',
+ 'err.exists':'This email is already registered',
+ 'err.network':'Network error. Please try again',
+ 'err.urlWrong':'Invalid server URL',
+ 'err.keyWrong':'Invalid API key',
+ 'err.dashUrl':'Use the project URL, not the dashboard URL',
+ 'gate.tagline':'Memorize classic games move by move',
+ 'gate.needAccount':'Connect an account to sync records and rankings',
+ 'gate.toLogin':'Back to log in','gate.toSignup':'Sign up',
+ 'set.login':'Log in','set.logout':'Log out','set.signup':'Sign up',
+ 'set.email':'Email','set.pw':'Password','set.name':'Nickname',
+ 'set.pwShort':'Password must be at least 6 characters',
+ 'set.needInput':'Please fill in every field',
+ 'set.checkEmail':'Confirmation email sent. Check your inbox',
+ 'set.welcome':'Welcome, {name}',
+ 'set.online':'Account & sync',
+ 'set.offlineDesc':'Log in to sync records and rankings across devices.',
+ 'set.connected':'Connected',
+ 'set.based':'All players','set.mine':'My records',
+ 'set.hardest':'Most-missed moves','set.pct':'{n}%',
+ 'set.version':'App version',
+ 'set.exportDone':'Exported','set.importDone':'Imported','set.importFail':'Import failed',
+ 'res.graph':'Success rate by move','res.graphC':'All players',
+ 'rv.badge':'Review','rv.matched':'{a}/{b} matched',
+ 'rv.legend':'Darker means more misses.','rv.legendCut':' (remaining moves hidden)','rv.status':'{a}/{b} moves',
+ 'toast.updated':'Updated to a new version'
+});
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
   if(vars) for(const kk in vars) s = s.split('{'+kk+'}').join(String(vars[kk]));
@@ -8270,9 +8331,10 @@ function updateLiveTab(){
   }
 }
 function sameLiveRun(nav, parts){
-  return !!liveRun && (
-    (liveRun.type==='study' && nav==='study' && parts[1]===liveRun.gid) ||
-    (liveRun.type==='challenge' && nav==='challenge' && parts[1]===liveRun.gid));
+  if(!liveRun) return false;
+  const gid=String(liveRun.gid||'');
+  return (liveRun.type==='study' && nav==='study' && String(parts[1]||'')===gid) ||
+         (liveRun.type==='challenge' && nav==='challenge' && String(parts[1]||'')===gid);
 }
 function renderRoute(parts, nav){
   cleanupView(); closeModal();
@@ -8301,7 +8363,7 @@ function route(){
         <button class="btn danger" id="nv-leave">${t('nav.leave')}</button>
         <button class="btn outline" id="nv-stay">${t('nav.stay')}</button></div>`);
     document.getElementById('nv-leave').onclick=()=>{ closeModal(); liveRun=null; updateLiveTab(); renderRoute(parts, nav); };
-    document.getElementById('nv-stay').onclick=()=>{ closeModal(); const h2=liveRun.hash; if(location.hash===h2) route(); else location.hash=h2; };
+    document.getElementById('nv-stay').onclick=()=>{ closeModal(); const h2=liveRun&&liveRun.hash; if(h2 && location.hash!==h2){ try{ history.replaceState(null,'',h2); }catch(e){ location.hash=h2; } } };
     return;
   }
   if(liveRun && !live && !sameLiveRun(nav, parts)){ liveRun=null; updateLiveTab(); }
