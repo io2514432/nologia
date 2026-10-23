@@ -1,5 +1,5 @@
 /* 체스놀로지아 서비스 워커 — 오프라인 우선(캐시 우선 + 백그라운드 갱신) */
-const CACHE = 'chessnologia-v30';
+const CACHE = 'chessnologia-v31';
 const ASSETS = ['./', './index.html', './config.js', './manifest.json', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png'];
 
 self.addEventListener('install', e => {

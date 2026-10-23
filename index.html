@@ -5293,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.9.0';
+const APP_VERSION='2.10.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -5612,7 +5612,7 @@ ko:{
  'imp.title':'기보 추가 (PGN)','imp.desc':'PGN 텍스트를 붙여넣으세요. lichess·체스닷컴 등에서 복사한 기보도 됩니다. 추가한 기보는 이 브라우저에 저장돼요.','imp.ok':'추가','imp.cancel':'취소','imp.need':'PGN을 붙여넣어 주세요','imp.done':'기보가 추가됐어요!','imp.fail':'PGN 파싱 실패: {m}','imp.noMoves':'이동 수가 없어요',
  'col.title':'나의 컬렉션','col.count':'{n}게임 100% 달성','col.desc':'100%로 완료한 게임만 모아 보여줘요. 3게임을 달성하면 나만의 퍼즐도 열립니다.','col.empty':'아직 100%로 완료한 게임이 없어요. 도전 모드에서 기보를 완벽하게 외워 컬렉션을 채워보세요!',
  'rank.speed':'100% 스피드 랭킹','rank.byGame':'게임별 기록','rank.local':'이 랭킹은 이 브라우저에 저장된 나의 기록입니다. 친구·전 세계 랭킹은 서버 연동이 필요해요.','rank.speedEmpty':'아직 100% 기록이 없어요. 도전 모드에서 기보를 완벽하게 외워보세요!','rank.gameEmpty':'아직 이 게임의 기록이 없어요.',
- 'pz.title':'나만의 퍼즐','pz.streak':'연속 성공 {n}회','pz.locked':'아직 참여할 수 없어요','pz.lockedDesc':'나만의 퍼즐은 <b>100% 완료한 게임이 3개 이상</b>일 때 참여할 수 있어요. 암기를 확실히 한 뒤 풀어야 재미있기 때문이에요. 랜덤한 국면에서 게임과 다음 수를 맞춥니다.','pz.progress':'현재 {n}/3 게임 완료','pz.go':'기보 익히러 가기','pz.desc':'100%로 완료한 기록 중 랜덤한 국면이 나왔어요','pz.q1':'Q1. 이 국면은 어느 게임일까요?','pz.q2':'Q2. 다음 수를 직접 두세요','pz.q2wait':'보드에서 기물을 클릭해 다음 수를 두세요','pz.q1ok':'Q1 정답','pz.q1bad':'Q1 오답','pz.q2ok':'Q2 정답','pz.q2bad':'Q2 오답','pz.answer':'정답 수: {m}','pz.next':'다음 퍼즐','adm.purge':'영구 삭제','adm.edit':'수정','adm.editTitle':'기보 정보 수정','adm.fEvent':'대회/장소','adm.confirmPurge':'이 기보를 서버에서 완전히 삭제합니다. 되돌릴 수 없습니다. 계속할까요?','adm.purged':'기보를 완전히 삭제했어요','adm.purgeFail':'삭제 실패:','pz.pick':'다른 퍼즐 뽑기','pz.q2okMsg':'정답! 다음 수를 맞혔어요','pz.q2badMsg':'아쉽네요 — 정답은 {m} 이었어요','pz.score':'{n}점',
+ 'pz.why':'이 국면인 이유','pz.title':'나만의 퍼즐','pz.streak':'연속 성공 {n}회','pz.locked':'아직 참여할 수 없어요','pz.lockedDesc':'나만의 퍼즐은 <b>100% 완료한 게임이 3개 이상</b>일 때 참여할 수 있어요. 암기를 확실히 한 뒤 풀어야 재미있기 때문이에요. 랜덤한 국면에서 게임과 다음 수를 맞춥니다.','pz.progress':'현재 {n}/3 게임 완료','pz.go':'기보 익히러 가기','pz.desc':'100%로 완료한 기록 중 랜덤한 국면이 나왔어요','pz.q1':'Q1. 이 국면은 어느 게임일까요?','pz.q2':'Q2. 다음 수를 직접 두세요','pz.q2wait':'보드에서 기물을 클릭해 다음 수를 두세요','pz.q1ok':'Q1 정답','pz.q1bad':'Q1 오답','pz.q2ok':'Q2 정답','pz.q2bad':'Q2 오답','pz.answer':'정답 수: {m}','pz.next':'다음 퍼즐','adm.purge':'영구 삭제','adm.edit':'수정','adm.editTitle':'기보 정보 수정','adm.fEvent':'대회/장소','adm.confirmPurge':'이 기보를 서버에서 완전히 삭제합니다. 되돌릴 수 없습니다. 계속할까요?','adm.purged':'기보를 완전히 삭제했어요','adm.purgeFail':'삭제 실패:','pz.pick':'다른 퍼즐 뽑기','pz.q2okMsg':'정답! 다음 수를 맞혔어요','pz.q2badMsg':'아쉽네요 — 정답은 {m} 이었어요','pz.score':'{n}점',
  'set.title':'설정','set.lang':'언어 · Language','set.challenge':'도전 모드','set.challengeSub':'힌트 등 도전 중 기능은 여기서 켜고 끌 수 있어요','set.difficulty':'암기 난이도','set.screen':'화면 · 소리',
  'set.hint':'힌트','set.hintD':'도전 중 다음에 움직일 기물의 위치를 알려줍니다. 힌트를 쓰면 100%여도 S등급으로 조정돼요.',
  'set.fb':'즉시 정답 피드백','set.fbD':'도전 중 기보와 다른 수를 두면 바로 알려줍니다. 끄면 틀려도 알려주지 않는 긴장감 모드!',
@@ -6384,6 +6384,8 @@ function gradeDesc(code){ return t('grade.'+code); }
 
 let viewCleanup=null;
 // === v2.0 === 대쉬보드 폴더 · 컬렉션 갤러리 · 게임별 극한 랭킹 · 관리자 폴더/숨김
+var GAME_CONTENT={"opera":{"title":"Morphy의 오페라 게임","white":"Paul Morphy","black":"Duke Karl & Count Isouard","blurb":"오페라 극장에서 두었다는 전설의 한 판. 10.Nxb5!!로 길을 열고 16.Qb8+!! 퀸 희생으로 끝내는 공격 교과서.","puzzles":[{"s":10,"e":10,"side":"w","tag":"나이트 희생","why":"10.Nxb5!! — c6 폰을 끌어내 d7·d8 라인을 열고 룩과 비숍의 협공을 준비합니다."},{"s":16,"e":16,"side":"w","tag":"퀸 희생","why":"16.Qb8+!! — 퀸을 내주고 17.Rd8# 메이트로 이어지는 마무리 수."},{"s":17,"e":17,"side":"w","tag":"메이트","why":"17.Rd8# — 나이트가 막고 있어도 룩이 마지막 줄을 장악합니다."}]},"immortal":{"title":"Anderssen의 불멸의 대국","white":"Adolf Anderssen","black":"Lionel Kieseritzky","blurb":"룩 두 개와 비숍, 퀸까지 내주고 23.Be7#로 끝내는 체스사 최고의 희생극.","puzzles":[{"s":18,"e":18,"side":"w","tag":"조용한 비숍","why":"18.Bd6!! — 퀸의 수비를 끊고 룩의 g파일 진입을 허용하며 공격을 완성합니다."},{"s":21,"e":21,"side":"w","tag":"결정적 나이트","why":"21.Nxg7+ — 킹을 끌어내며 마지막 콤비네이션의 신호탄."},{"s":22,"e":22,"side":"w","tag":"퀸 희생","why":"22.Qf6+!! — 퀸을 내주고 23.Be7#로 끝내는 이중 비숍 메이트."}]},"evergreen":{"title":"Anderssen의 상록수 대국","white":"Adolf Anderssen","black":"Jean Dufresne","blurb":"19.Rad1!! 조용한 룩 이동 뒤 20.Rxe7+! 룩 희생, 더블 비숍 메이트로 완성되는 콤비네이션.","puzzles":[{"s":19,"e":19,"side":"w","tag":"조용한 룩","why":"19.Rad1!! — 당장 위협 없이 룩을 d파일에 겹치는, 이 기보의 이름값을 만든 수."},{"s":20,"e":20,"side":"w","tag":"룩 희생","why":"20.Rxe7+! — 비숍을 걷어내고 21.Qxd7+로 이어지는 희생."},{"s":24,"e":24,"side":"w","tag":"메이트","why":"24.Bxe7# — 두 비숍이 만드는 마지막 메이트."}]},"rubinstein_immortal":{"title":"Rubinstein의 불멸의 대국","white":"Georg Rotlewi","black":"Akiba Rubinstein","blurb":"룩 두 개와 비숍을 연달아 내주며 백의 킹을 메이트망에 가두는, Rubinstein 최고의 콤비네이션.","puzzles":[{"s":22,"e":22,"side":"b","tag":"룩 희생","why":"22...Rxc3! — 수비수를 걷어내고 d2 침투를 준비합니다."},{"s":23,"e":23,"side":"b","tag":"룩 헌납","why":"23...Rd2!! — 룩을 Qxd2로 유인해 24...Bxe4+ 이중 공격을 엽니다."},{"s":24,"e":24,"side":"b","tag":"이중 공격","why":"24...Bxe4+ — 퀸과 룩을 동시에 공격하는 결정타."}]},"capablanca_marshall":{"title":"Marshall의 3...f5, Capablanca의 반박","white":"José Raúl Capablanca","black":"Frank Marshall","blurb":"Marshall이 즐겨 쓴 3...f5 갬빗. Capablanca가 정확한 수비로 반박하고 20.Rxe7!로 역공한 한 판.","puzzles":[{"s":12,"e":12,"side":"w","tag":"퀸 침투","why":"12.Qh5 — f5 갬빗의 허점을 찌르는 침투. 흑의 킹사이드 수비를 묶습니다."},{"s":20,"e":20,"side":"w","tag":"비숍 제거","why":"20.Rxe7! — 흑의 수비 비숍을 제거하고 b7 폰을 겨냥합니다."},{"s":24,"e":24,"side":"w","tag":"랭크 침투","why":"24.Rxb7 — 7랭크를 장악해 흑 진영을 완전히 묶습니다."}]},"lasker_thomas":{"title":"Lasker의 킹 행진","white":"Edward Lasker","black":"George Thomas","blurb":"11.Qxh7+!로 시작해 킹이 g1까지 걸어 들어가 18.Kd2#로 끝내는, 교본에 실리는 유쾌한 한 판.","puzzles":[{"s":11,"e":11,"side":"w","tag":"퀸 희생","why":"11.Qxh7+!! — 킹을 끌어내는 희생. 이후 킹 사냥이 시작됩니다."},{"s":13,"e":13,"side":"w","tag":"나이트 체크","why":"13.Neg4+ — 킹의 이동 경로를 좁히는 체크."},{"s":18,"e":18,"side":"w","tag":"킹 메이트","why":"18.Kd2# — 킹이 직접 걸어가 만드는 메이트."}]},"byrne_fischer":{"title":"Fischer의 세기의 대국","white":"Donald Byrne","black":"Robert James Fischer","blurb":"13세 Fischer가 17...Be6!!로 퀸을 내주며 펼친 반격. 세기의 대국.","puzzles":[{"s":17,"e":17,"side":"b","tag":"퀸 희생","why":"17...Be6!! — 퀸을 내주고 비숍으로 대각선을 장악하는 역사적 한 수."},{"s":19,"e":19,"side":"b","tag":"나이트 체크","why":"19...Ne2+ — 킹을 몰아 20...Nxd4+로 이어지는 나이트의 춤."},{"s":41,"e":41,"side":"b","tag":"메이트","why":"41...Rc2# — 룩과 나이트가 만드는 마지막 메이트."}]},"fischer_spassky_g6":{"title":"1972 세계선수권 6국 · Fischer vs Spassky","white":"Robert James Fischer","black":"Boris Spassky","blurb":"레이캬비크 6국. Spassky가 박수를 보낸 Fischer의 완벽한 한 판(1-0).","puzzles":[{"s":19,"e":19,"side":"w","tag":"나이트 희생","why":"19.Nxe6! — f폰을 끌어내 f파일을 열고 흑 킹을 노출시킵니다."},{"s":38,"e":38,"side":"w","tag":"룩 희생","why":"38.Rxf6! — g폰을 끌어내 39.Rxf6로 이어지는 마무리 공격."}]},"spassky_fischer_g13":{"title":"1972 세계선수권 13국 · Spassky vs Fischer","white":"Boris Spassky","black":"Robert James Fischer","blurb":"74수 지구전. Fischer가 흑으로 버티고 뒤집어 승리한 한 판(0-1).","puzzles":[{"s":30,"e":30,"side":"b","tag":"교환 희생","why":"30...Bxc3! — 교환을 내주고 백의 폰 구조를 무너뜨립니다."},{"s":47,"e":47,"side":"b","tag":"랭크 침투","why":"47...Rxc3+ — 체크로 템포를 벌며 폰을 걷어냅니다."},{"s":64,"e":64,"side":"b","tag":"승격","why":"64...h1=Q — 끝까지 밀어붙인 h폰이 퀸으로 승격합니다."}]},"kasparov_topalov":{"title":"Kasparov의 불멸의 대국","white":"Garry Kasparov","black":"Veselin Topalov","blurb":"24.Rxd4!! 룩 희생에서 시작해 킹을 판 밖으로 끌어내는 현대 최고의 콤비네이션.","puzzles":[{"s":24,"e":24,"side":"w","tag":"룩 희생","why":"24.Rxd4!! — 룩을 내주고 25.Re7+로 킹을 끌어내는 시작."},{"s":25,"e":25,"side":"w","tag":"체크","why":"25.Re7+!! — 킹을 b6으로 몰아 넓은 판에서 사냥합니다."},{"s":27,"e":27,"side":"w","tag":"폰 체크","why":"27.b4+ — 킹의 퇴로를 좁히는 결정적 폰 체크."}]},"deepblue_kasparov_g6":{"title":"1997 재대결 6국 · Deep Blue vs Kasparov","white":"Deep Blue","black":"Garry Kasparov","blurb":"1997 재대결 최종 6국. Deep Blue가 19.c4로 매치를 마무리하며 3.5-2.5로 승리.","puzzles":[{"s":8,"e":8,"side":"w","tag":"나이트 희생","why":"8.Nxe6! — e폰을 열어 흑 킹을 중앙에 가두는 희생."},{"s":10,"e":10,"side":"w","tag":"비숍 체크","why":"10.Bg6+ — 킹을 d8로 몰아 캐슬링 권리를 빼앗습니다."},{"s":19,"e":19,"side":"w","tag":"마무리","why":"19.c4 — 흑의 반격을 봉쇄한 마지막 수. Kasparov가 여기서 기권했습니다."}]},"kasparov_karpov_g16":{"title":"1985 세계선수권 16국 · 문어 나이트","white":"Anatoly Karpov","black":"Garry Kasparov","blurb":"d3에 자리 잡은 문어 나이트가 판을 짓누르는 1985년 16국. 21...b3!로 마무리.","puzzles":[{"s":16,"e":16,"side":"b","tag":"문어 나이트","why":"16...Nd3 — d3에 자리 잡아 백 진영 전체를 감시하는 문어 나이트."},{"s":21,"e":21,"side":"b","tag":"폰 돌파","why":"21...b3! — 폰을 밀어 b파일을 열고 룩을 끌어들입니다."},{"s":33,"e":33,"side":"b","tag":"나이트 침투","why":"33...Ne4 — f2를 노리며 마무리를 준비합니다."}]},"carlsen_karjakin_tb4":{"title":"2016 타이브레이크 4국 · Carlsen의 마무리","white":"Magnus Carlsen","black":"Sergey Karjakin","blurb":"2016 타이브레이크 4국. 50.Qh6+!! 한 수로 승부를 끝낸 Carlsen의 냉정한 마무리.","puzzles":[{"s":23,"e":23,"side":"w","tag":"비숍 배치","why":"23.Bh3 — 흑의 수비를 묶는 비숍 재배치."},{"s":50,"e":50,"side":"w","tag":"마지막 수","why":"50.Qh6+!! — 킹을 h7에 가두고 Qg7# 위협으로 항복을 받아낸 마지막 수."}]},"anand_topalov_g4":{"title":"2010 세계선수권 4국 · Anand의 준비","white":"Viswanathan Anand","black":"Veselin Topalov","blurb":"소피아 4국. 준비해 온 카탈란에서 23.Nxh6+!!로 결정적 공격을 터뜨린 Anand.","puzzles":[{"s":23,"e":23,"side":"w","tag":"비숍 희생","why":"23.Nxh6+!! — g폰을 끌어내 킹사이드를 여는 희생."},{"s":25,"e":25,"side":"w","tag":"중앙 돌파","why":"25.e5 — 수비를 뚫고 26.exf6으로 이어지는 돌파."},{"s":30,"e":30,"side":"w","tag":"폰 체크","why":"30.f7+ — 폰으로 체크하며 퀸을 잃게 만드는 마무리."}]},"tal_botvinnik_g6":{"title":"1960 세계선수권 6국 · Tal의 공격","white":"Mikhail Botvinnik","black":"Mikhail Tal","blurb":"1960년 6국. Tal이 흑으로 23...Qxb2!!부터 킹사이드로 몰아붙인 공격의 정점.","puzzles":[{"s":23,"e":23,"side":"b","tag":"퀸 침투","why":"23...Qxb2!! — b2 폰을 잡으며 백 진영에 침투합니다."},{"s":27,"e":27,"side":"b","tag":"비숍 체크","why":"27...Be5+ — 체크로 템포를 벌며 룩을 c1로 끌어들입니다."},{"s":30,"e":30,"side":"b","tag":"룩 희생","why":"30...Rxe1+ — 룩을 내주고 31...Be4로 마무리하는 콤비네이션."}]}};
+GAMES.forEach(function(g){ var c=GAME_CONTENT[g.id]; if(!c) return; if(c.title)g.title=c.title; if(c.white)g.white=c.white; if(c.black)g.black=c.black; if(c.blurb)g.blurb=c.blurb; if(c.puzzles){ g.puzzles=c.puzzles.map(function(p,i){ return Object.assign({idx:i,key:g.id+"#"+i}, p); }); } });
 var GAMES_ALL=null, SERVER_GAMES=[];
 var GAME_EDITS={};
 
@@ -8025,9 +8027,15 @@ function viewRanking(){
 // ---- 나만의 퍼즐 ----
 // ---- 퍼즐 (v2.1: 하이라이트 국면) ----
 // ---- 퍼즐 (v2.2: 수 번호·푸는 입장) ----
+function gamePuzzles(g){
+  if(Array.isArray(g.puzzles) && g.puzzles.length) return g.puzzles;
+  if(Number(g.puzzle_start)>0 && Number(g.puzzle_end)>=Number(g.puzzle_start)) return [{idx:0, key:g.id+"#0", s:Number(g.puzzle_start), e:Number(g.puzzle_end), side:(g.puzzle_side==="b"?"b":"w"), tag:"", why:""}];
+  return [];
+}
+function puzzlePool(){ var out=[]; GAMES.forEach(function(g){ gamePuzzles(g).forEach(function(p){ out.push({g:g, pz:p, key:g.id+"#"+(p.idx||0)}); }); }); return out; }
 function viewPuzzle(){
   cleanupView();
-  const pool=GAMES.filter(g=>Number(g.puzzle_start)>0 && Number(g.puzzle_end)>=Number(g.puzzle_start));
+  const pool=puzzlePool();
   if(!pool.length){
     appEl.innerHTML=`
       <div class="section-title">${t('pz.title')}</div>
@@ -8041,17 +8049,19 @@ function viewPuzzle(){
   }
   let cur=null;
   const saved=store.data.puzzleCur;
-  if(saved){ cur=pool.filter(x=>x.id===saved)[0]||null; }
-  if(!cur){ cur=pool[Math.floor(Math.random()*pool.length)]; store.data.puzzleCur=cur.id; store.save(); }
-  startPuzzle(cur);
+  if(saved){ cur=pool.filter(x=>x.key===saved)[0]||null; }
+  if(!cur){ cur=pool[Math.floor(Math.random()*pool.length)]; store.data.puzzleCur=cur.key; store.save(); }
+  startPuzzle(cur.g, cur.pz);
 }
 
-function startPuzzle(g){
+function startPuzzle(g, pz){
   cleanupView();
   const d=gameData(g);
-  const side=(g.puzzle_side==='b')?'b':'w';
-  const sMove=Math.max(1, Number(g.puzzle_start)||1);
-  const eMove=Math.max(sMove, Number(g.puzzle_end)||sMove);
+  pz = pz || gamePuzzles(g)[0] || null;
+  if(!pz) return;
+  const side=(pz.side==='b')?'b':'w';
+  const sMove=Math.max(1, Number(pz.s)||1);
+  const eMove=Math.max(sMove, Number(pz.e)||sMove);
   let a,b;
   if(side==='w'){ a=(sMove-1)*2; b=(eMove-1)*2+1; }
   else if(side==='b'){ a=(sMove-1)*2+1; b=eMove*2; }
@@ -8088,6 +8098,8 @@ function startPuzzle(g){
             ${v21Stars(g)}
           </div>
           <p class="muted" style="margin-top:8px">${gBlurb(g)}</p>
+          ${pz.tag?`<div class="badge gold-soft" style="margin-top:8px">${pz.tag}</div>`:''}
+          ${pz.why?`<p class="muted" style="margin-top:6px">${pz.why}</p>`:''}
           <div class="pz-range">${sMove}\u2013${eMove}${t('unit.moves')} \u00b7 ${t('study.side.'+side)}</div>
           <button class="btn" id="pz-study" style="width:100%;margin-top:12px">${t('pz.studyGame')}</button>
         </div>
@@ -8151,12 +8163,14 @@ function startPuzzle(g){
     board.setHint(m==='both'? [u.slice(0,2), u.slice(2,4)] : [u.slice(0,2)]);
   }
   function nextPuzzle(){
-    const pool=GAMES.filter(x=>Number(x.puzzle_start)>0 && Number(x.puzzle_end)>=Number(x.puzzle_start));
+    const pool=puzzlePool();
     if(!pool.length) return;
-    const others=pool.filter(x=>x.id!==g.id);
-    const pick=(others.length?others:pool)[Math.floor(Math.random()*(others.length?others.length:pool.length))];
-    store.data.puzzleCur=pick.id; store.save();
-    startPuzzle(pick);
+    let cand=pool.filter(function(x){ return x.g.id===g.id && x.key!==(pz&&pz.key); });
+    if(!cand.length) cand=pool.filter(function(x){ return x.g.id!==g.id; });
+    const others=cand.length?cand:pool;
+    const pick=others[Math.floor(Math.random()*others.length)];
+    store.data.puzzleCur=pick.key; store.save();
+    startPuzzle(pick.g, pick.pz);
   }
   function prelude(){
     clearTimeout(timer);
@@ -8195,6 +8209,7 @@ function startPuzzle(g){
     const infoEl=document.getElementById('pz-info'); if(infoEl) infoEl.style.display='block';
     showModal('<h3 style="justify-content:center">'+t('pz.done')+'</h3>'+
       '<p class="muted" style="text-align:center;margin-top:8px">'+t('pz.doneDesc')+'</p>'+
+      ((pz&&pz.why)?'<div class="card" style="margin-top:10px;text-align:left"><div class="dim" style="font-size:11px">'+(pz.tag||'')+'</div><p class="muted" style="margin-top:4px">'+pz.why+'</p></div>':'')+
       '<div style="display:flex;gap:8px;margin-top:14px">'+
         '<button class="btn" id="pz-go-study" style="flex:1">'+t('pz.studyGame')+'</button>'+
         '<button class="btn outline" id="pz-next" style="flex:1">'+t('pz.next')+'</button>'+
