@@ -5293,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.7.1';
+const APP_VERSION='2.7.2';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -6541,7 +6541,7 @@ Object.assign(Cloud, {
         var g={ id:r.id, title:r.title, white:r.white, black:r.black, whiteEn:r.white, blackEn:r.black,
           year:r.year||'', event:r.event||'', blurb:r.blurb||'', opening:r.opening||'', eco:r.eco||'',
           result:r.result||'*', plies:0, endgamePly:null, pgn:r.pgn,
-          puzzle_start:r.puzzle_start||null, puzzle_end:r.puzzle_end||null, puzzle_side:r.puzzle_side||'both',
+          puzzle_start:r.puzzle_start||null, puzzle_end:r.puzzle_end||null, puzzle_side:(r.puzzle_side==='b'?'b':'w'),
           addedAt: Date.parse(r.created_at)||0, server:true };
         var ex=null;
         for(var i=0;i<SERVER_GAMES.length;i++) if(SERVER_GAMES[i].id===r.id) ex=SERVER_GAMES[i];
@@ -8016,7 +8016,7 @@ function viewPuzzle(){
 function startPuzzle(g){
   cleanupView();
   const d=gameData(g);
-  const side=(g.puzzle_side==='w'||g.puzzle_side==='b')?g.puzzle_side:'both';
+  const side=(g.puzzle_side==='b')?'b':'w';
   const sMove=Math.max(1, Number(g.puzzle_start)||1);
   const eMove=Math.max(sMove, Number(g.puzzle_end)||sMove);
   let a,b;
@@ -8066,7 +8066,7 @@ function startPuzzle(g){
 
   const boardEl=document.getElementById('pz-board');
   const board=createBoard(boardEl, {
-    enabled:true, fen:d.fens[a],
+    enabled:true, flipped:(side==='b'), fen:(a>0? d.fens[a-1] : d.startFen),
     getMoves:sq=> userPly(k)&&k<b ? chess.moves({square:sq, verbose:true}) : [],
     onMove:(mv)=>{
       if(done || !userPly(k) || k>=b) return;
@@ -8101,11 +8101,24 @@ function startPuzzle(g){
       advanceAuto();
     },300);
   }
+  function prelude(){
+    clearTimeout(timer);
+    if(a<=0){ board.setFen(d.fens[a]||d.startFen, {}); board.setEnabled(userPly(k)&&k<b); advanceAuto(); return; }
+    board.setFen(d.fens[a-1], {});
+    board.setEnabled(false);
+    timer=setTimeout(()=>{
+      if(done) return;
+      const u=d.uci[a-1]||'';
+      board.setFen(d.fens[a], {lastMove: u? [u.slice(0,2), u.slice(2,4)] : null});
+      Sfx.play('move');
+      updateProgress();
+      advanceAuto();
+    }, 700);
+  }
   function resetPuzzle(){
     clearTimeout(timer);
     k=a; solved=0; done=false; chess=new Chess(d.fens[a]);
     board.setFen(d.fens[a], {});
-    board.setEnabled(userPly(k));
     document.getElementById('pz-done').style.display='none';
     updateProgress();
     advanceAuto();
@@ -8129,7 +8142,7 @@ function startPuzzle(g){
   document.getElementById('pz-study2').onclick=goStudy;
   document.getElementById('pz-reset').onclick=resetPuzzle;
   updateProgress();
-  advanceAuto();
+  prelude();
 }
 // ---- 설정 ----
 const SETTING_DEFS={
@@ -8200,7 +8213,7 @@ function viewAdmin(){
           <select class="adm-in" id="adm-pz-side">
             <option value="w">${t('adm.pzSideW')}</option>
             <option value="b">${t('adm.pzSideB')}</option>
-            <option value="both">${t('adm.pzSideBoth')}</option>
+            
           </select>
           <div class="dim" style="font-size:11px;align-self:center">${t('adm.pzHint')}</div>
         </div>
@@ -8366,7 +8379,7 @@ function viewAdmin(){
     const result=document.getElementById('adm-result').value.trim();
     const pzStart=parseInt((document.getElementById('adm-pz-start')||{}).value||'0',10)||0;
     const pzEnd=parseInt((document.getElementById('adm-pz-end')||{}).value||'0',10)||0;
-    const pzSide=(document.getElementById('adm-pz-side')||{}).value||'both';
+    const pzSide=(document.getElementById('adm-pz-side')||{}).value==='b'?'b':'w';
     if(!title||!white||!black){ toast(t('adm.needFields')); return; }
     if(!pgn){ toast(t('adm.invalid',{m:'PGN'})); return; }
     let hd={}, plies=0;
@@ -8381,7 +8394,7 @@ function viewAdmin(){
       id: admSlug(title, year||(hd.Date||'').slice(0,4)),
       title, white, black, blurb: blurb||'', year: year||(hd.Date||'').slice(0,4),
       event: hd.Event||'', opening: opening||'', eco: hd.ECO||'', result: result||hd.Result||'*',
-      pgn, plies, puzzle_start: pzStart||null, puzzle_end: pzEnd||null, puzzle_side: pzSide||'both', created_by: (Cloud.session()||{}).user_id
+      pgn, plies, puzzle_start: pzStart||null, puzzle_end: pzEnd||null, puzzle_side: pzSide, created_by: (Cloud.session()||{}).user_id
     };
     try{
       await Cloud.adminAddGame(row);
