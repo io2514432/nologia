@@ -5293,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.8.1';
+const APP_VERSION='2.8.2';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -8084,6 +8084,7 @@ function startPuzzle(g){
       k++; solved++;
       board.setFen(chess.fen(), {lastMove:[mv.from,mv.to], checkSq:kingSqIfCheck(chess)});
       updateProgress();
+      applyPzHint();
       if(k>=b) finishPuzzle(); else advanceAuto();
     }
   });
@@ -8138,6 +8139,7 @@ function startPuzzle(g){
       board.setFen(d.fens[a], {lastMove: u? [u.slice(0,2), u.slice(2,4)] : null});
       Sfx.play('move');
       updateProgress();
+      applyPzHint();
       advanceAuto();
     }, 700);
   }
@@ -8147,6 +8149,7 @@ function startPuzzle(g){
     board.setFen(d.fens[a], {});
     document.getElementById('pz-done').style.display='none';
     updateProgress();
+    applyPzHint();
     advanceAuto();
   }
   function finishPuzzle(){
@@ -8186,6 +8189,7 @@ function startPuzzle(g){
   };
   const rf=document.getElementById('pz-refresh'); if(rf) rf.onclick=nextPuzzle;
   updateProgress();
+  applyPzHint();
   prelude();
 }
 // ---- 설정 ----
