@@ -469,6 +469,7 @@ html,body{max-width:100%; overflow-x:hidden;}
 .mini-board .mb-sq{min-width:0; min-height:0; overflow:hidden; display:flex; align-items:center; justify-content:center;}
 .mini-board .mb-pc{position:relative; width:100%; height:100%; margin:0; display:flex; align-items:center; justify-content:center; line-height:0;}
 .mini-board .mb-pc svg{width:88%; height:88%; display:block; margin:0;}
+.gal-modal{padding-bottom:28px;}
 .grades-link{font-size:11px; color:var(--text-sub); margin-top:6px; cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px;}
 .grades-link:hover{color:var(--gold);}
 .sc-opt.sel{border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset;}
@@ -5309,7 +5310,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.6.0';
+const APP_VERSION='2.6.1';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -6397,7 +6398,7 @@ function v2Overlay(html){
   el._esc=function(e){ if(e.key==='Escape') v2CloseOverlay(); };
   document.addEventListener('keydown', el._esc);
   el.addEventListener('click', function(e){ if(e.target===el) v2CloseOverlay(); });
-  var x=el.querySelector('[data-ov-close]'); if(x) x.onclick=v2CloseOverlay;
+  el.querySelectorAll('[data-ov-close]').forEach(function(b){ b.onclick=v2CloseOverlay; });
   return el;
 }
 function v2CloseOverlay(){
@@ -6447,7 +6448,6 @@ function v2OpenGallery(it){
         '<div><div class="gk">'+t('gal.bestTime')+'</div><div class="gv">'+fmtTime(it.best.ms)+'</div></div>'+
       '</div>'+
       '<div class="gal-note">'+t('gal.final')+'</div>'+
-      '<button class="btn" data-ov-close style="width:100%;margin-top:14px">'+t('gal.close')+'</button>'+
     '</div>');
 }
 // --- 서버: game_meta(폴더·숨김) · 게임별 극한 랭킹 ---
