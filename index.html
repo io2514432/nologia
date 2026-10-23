@@ -3921,7 +3921,7 @@ function gradeOf(progress, elapsedMs, plies, extreme){
   const p = Number(progress)||0;
   if (p >= 100){
     const tpm = elapsedMs / Math.max(1, plies) / 1000;
-    if (extreme !== false && tpm <= 4) return { code:'P+', color:'var(--gold)', desc:'100% · 평균 4초/수 이하' };
+    if (extreme !== false && tpm <= 2) return { code:'P+', color:'var(--gold)', desc:'100% · 평균 2초/수 이하' };
     if (extreme !== false) return { code:'P', color:'var(--gold)', desc:'100% 완주 (시간 무제한)' };
     return { code:'S', color:'var(--green)', desc:'일반 모드 최고 등급 (100%)' };
   }
@@ -5293,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.7.0';
+const APP_VERSION='2.7.1';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -5821,7 +5821,7 @@ Object.assign(I18N.ko, {
  'col.helpTitle':'컬렉션 얻는 방법',
  'col.helpBody':'도전 모드에서 기보를 처음부터 끝까지 한 번도 틀리지 않고 두면(진행도 100%) 그 기보가 컬렉션에 걸립니다.<br><br>등급은 진행도 기준이며, 3개를 모으면 나만의 퍼즐이 열립니다.',
  'set.gradeNote':'진행도 = 틀리기 전까지 맞춘 수 ÷ 기보 전체 수. 한 번 틀리면 그 뒤는 모두 틀린 것으로 계산합니다. P·P+는 극한 모드에서만 가능하고, 일반 모드의 최고 등급은 S입니다.',
- 'share.btn':'공유하기','share.text':'체스놀로지아에서 「{g}」 진행도 100% · {grade} 달성!',
+ 'share.btn':'공유하기','share.hint':'카카오톡·디스코드 등 설치된 앱으로 바로 공유됩니다','share.text':'체스놀로지아에서 「{g}」 진행도 100% · {grade} 달성!',
  'share.copied':'공유 문구를 복사했습니다'
 });
 Object.assign(I18N.en, {
@@ -5833,8 +5833,18 @@ Object.assign(I18N.en, {
  'col.helpTitle':'How to collect',
  'col.helpBody':'Finish a challenge with no mistakes from the first move to the last (100% progress) and the game is framed in your collection.<br><br>Grades are based on progress, and 3 collected games unlock My Puzzle.',
  'set.gradeNote':'Progress = moves you matched before your first mistake ÷ all moves. After one mistake, everything counts as wrong. P and P+ are only possible in Extreme mode; the best grade in normal mode is S.',
- 'share.btn':'Share','share.text':'Beat «{g}» with 100% progress · {grade} on Chessnology!',
+ 'share.btn':'Share','share.hint':'Shares straight to KakaoTalk, Discord and other installed apps','share.text':'Beat «{g}» with 100% progress · {grade} on Chessnology!',
  'share.copied':'Share text copied'
+});
+Object.assign(I18N.ko, {
+ 'res.streakPerfect':'완벽',
+ 'set.gradeNote':'진행도 = 틀리기 전까지 맞춘 수 ÷ 기보 전체 수. 한 번 틀리면 그 뒤는 모두 틀린 것으로 계산합니다. P·P+는 극한 모드에서만 가능하고, 일반 모드의 최고 등급은 S입니다. P+는 평균 2초/수 이하.',
+ 'share.text':"체스놀로지아에서 '{g}' 완벽 암기 완료! 나를 지금부터 '{p}'으로 불러다오.\n\n체스놀로지아에서 역대급 명경기 학습하기\n{url}"
+});
+Object.assign(I18N.en, {
+ 'res.streakPerfect':'Perfect',
+ 'set.gradeNote':'Progress = moves you matched before your first mistake ÷ all moves. After one mistake, everything counts as wrong. P and P+ are only possible in Extreme mode; the best grade in normal mode is S. P+ needs 2s per move or faster.',
+ 'share.text':"Perfect recall of '{g}' on Chessnology! From now on, call me '{p}'.\n\nStudy the greatest games on Chessnology\n{url}"
 });
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
@@ -6407,7 +6417,7 @@ function v2Overlay(html){
   el.addEventListener('click', function(e){ if(e.target===el) v2CloseOverlay(); });
   el.querySelectorAll('[data-ov-close]').forEach(function(b){ b.onclick=v2CloseOverlay; });
   const sh=el.querySelector('#gal-share');
-  if(sh){ sh.onclick=function(){ try{ shareCollection(el); }catch(e){ console.warn('share fail', e); } }; }
+  if(sh){ sh.onclick=function(){ try{ shareCollection(el, el.__game||null); }catch(e){ console.warn('share fail', e); } }; }
   return el;
 }
 function v2CloseOverlay(){
@@ -6443,7 +6453,7 @@ function v2Ask(opts){
 function v2OpenGallery(it){
   var g=it.g;
   var meta=[g.year, gOpening(g)].filter(Boolean).join(' \u00b7 ');
-  v2Overlay(
+  var el=v2Overlay(
     '<div class="v2-modal gal-modal">'+
       '<button class="vm-x" data-ov-close aria-label="close">\u00d7</button>'+
       '<div class="gal-eyebrow">'+t('col.title')+'</div>'+
@@ -6457,7 +6467,9 @@ function v2OpenGallery(it){
         '<div><div class="gk">'+t('gal.bestTime')+'</div><div class="gv">'+fmtTime(it.best.ms)+'</div></div>'+
       '</div>'+
       '<button class="btn" id="gal-share" style="width:100%;margin-top:12px">'+t('share.btn')+'</button>'+
+      '<div class="dim" style="font-size:11px;margin-top:6px">'+t('share.hint')+'</div>'+
     '</div>');
+  el.__game = g;
 }
 // --- 서버: game_meta(폴더·숨김) · 게임별 극한 랭킹 ---
 Object.assign(Cloud, {
@@ -7022,7 +7034,7 @@ function viewStudy(gidRaw){
 }
 // ---- 도전 모드 ----
 const GRADE_INFO = {
-  'P+':'진행도 100% · 평균 4초/수 이하 (극한 모드)',
+  'P+':'진행도 100% · 평균 2초/수 이하 (극한 모드)',
   'P':'진행도 100% (극한 모드)',
   'S':'진행도 90% 이상 — 일반 모드의 최고 등급',
   'A':'진행도 80% 이상',
@@ -7030,16 +7042,20 @@ const GRADE_INFO = {
   'C':'진행도 50% 이상',
   'D':'진행도 30% 이상'
 };
-function shareCollection(el){
-  const ttl=(el.querySelector('.gal-title')||{}).textContent||'';
-  const sub=(el.querySelector('.gal-sub2')||{}).textContent||'';
-  const grade=(el.querySelector('.gal-seal')||{}).textContent||'';
-  const txt=t('share.text',{g:ttl,grade:grade})+'\n'+sub+'\n'+location.origin+location.pathname;
+function shareCollection(el, g){
+  const ttl=g? gTitle(g) : ((el.querySelector('.gal-title')||{}).textContent||'');
+  const grader=g? (gResultGrade(g)||'') : ((el.querySelector('.gal-seal')||{}).textContent||'');
+  let p='';
+  if(g){ p = (g.result==='0-1') ? gBlack(g) : gWhite(g); }
+  const txt=t('share.text',{g:ttl, p:p||'—', url:location.origin+location.pathname});
   if(navigator.share){
-    navigator.share({title:t('col.title'), text:txt, url:location.href}).catch(function(){});
+    navigator.share({title:t('col.title'), text:txt}).catch(function(){});
   } else if(navigator.clipboard){
     navigator.clipboard.writeText(txt).then(function(){ toast(t('share.copied')); }).catch(function(){});
-  }
+  } else { toast(t('share.copied')); }
+}
+function gResultGrade(g){
+  try{ const b=bestOf(g.id); return b? b.grade : ''; }catch(e){ return ''; }
 }
 function openGrades(){
   const G=['P+','P','S','A','B','C','D'];
@@ -7149,17 +7165,32 @@ function viewChallenge(gid, opts={}){
     document.getElementById('ch-progress').textContent=t('ch.progress',{a:Math.ceil(state.played.length/2), b:Math.ceil(cut/2)});
   }
   function playedListHTML(){
-    const hist=chess.history();
+    const hist=state.played.map(u=>{
+      try{
+        const rc=new Chess();
+        return u;
+      }catch(e){ return u; }
+    });
+    const sans=[];
+    try{
+      const rc=new Chess();
+      for(let i=0;i<state.played.length;i++){
+        const u=state.played[i];
+        let mv=null;
+        try{ mv=rc.move({from:u.slice(0,2), to:u.slice(2,4), promotion:u[4]||undefined}); }catch(e){ mv=null; }
+        sans.push(mv? mv.san : '?');
+      }
+    }catch(e){}
     let html='';
-    for(let i=0;i<hist.length;i+=2){
-      const n=i/2+1;
-      const w=hist[i], b=hist[i+1]||'';
-      const offW=state.offPlys.includes(i+1), offB=state.offPlys.includes(i+2);
-      html+=`<div class="ml-row"><div class="ml-num">${n}</div>
-        <div class="ml-move ${offW?'off':''}">${w||''}</div>
-        <div class="ml-move ${offB?'off':''}">${b}</div></div>`;
+    for(let i=0;i<sans.length;i+=2){
+      const n=Math.floor(i/2)+1;
+      const w=sans[i]||'', b=sans[i+1]||'';
+      const offW=state.offPlys.indexOf(i+1)>=0, offB=state.offPlys.indexOf(i+2)>=0;
+      html+='<div class="ml-row"><div class="ml-num">'+n+'</div>'+
+        '<div class="ml-move'+(offW?' off':'')+'">'+w+'</div>'+
+        '<div class="ml-move'+(offB?' off':'')+'">'+b+'</div></div>';
     }
-    if(!hist.length) html=`<div class="muted" style="padding:12px">${t('ch.empty')}</div>`;
+    if(!sans.length) html='<div class="muted" style="padding:12px">'+t('ch.empty')+'</div>';
     return html;
   }
   function renderPanel(){
@@ -7284,7 +7315,7 @@ function viewChallenge(gid, opts={}){
         </div>
         <div style="margin-top:14px;text-align:left">
           <div class="set-row"><div><div class="t">${t('res.time')}</div></div><div style="font-weight:800">${fmtTime(ms)}</div></div>
-          ${gr.code==='P'?`<div class="set-row"><div><div class="t">${t('res.pPlus')}</div></div><div style="font-weight:800">${fmtTime(4*res.targetCount*1000)} 이내</div></div>`:''}
+          ${gr.code==='P'?`<div class="set-row"><div><div class="t">${t('res.pPlus')}</div></div><div style="font-weight:800">${fmtTime(2*res.targetCount*1000)} 이내</div></div>`:''}
           <div class="set-row"><div><div class="t">${t('res.streak')}</div></div><div style="font-weight:800">${streakText}</div></div>
           <div class="set-row"><div><div class="t">${t('res.played')}</div></div><div style="font-weight:800">${res.playedCount}</div></div>
           ${state.hintUsed?`<div class="set-row"><div><div class="t">${t('res.hintUsed')}</div></div><div class="badge gray">${t('res.used')}</div></div>`:''}
@@ -7303,7 +7334,9 @@ function viewChallenge(gid, opts={}){
       });
     }
     if(reason!=='manual') fxGrade(gr.code);
-    document.getElementById('rs-close').onclick=()=>{ closeModal(); viewReview(); };
+    document.getElementById('rs-close').onclick=()=>{ closeModal();
+      if(pendingNav){ const h=pendingNav; pendingNav=null; if(location.hash===h) route(); else location.hash=h; return; }
+      viewReview(); };
   }
   document.getElementById('ch-end').onclick=()=>{
     if(state.done || !state.started){ finish('manual'); return; }
@@ -8519,6 +8552,7 @@ function renderGate(){
 
 // ---- 라우터 ----
 let liveRun=null;
+let pendingNav=null;
 function updateLiveTab(){
   const el=document.getElementById('tab-lib'); if(!el) return;
   const btn=el.closest('.tab-btn')||el;
@@ -8568,7 +8602,15 @@ function route(){
       <div style="display:flex;gap:8px;justify-content:center">
         <button class="btn danger" id="nv-leave">${t('nav.leave')}</button>
         <button class="btn outline" id="nv-stay">${t('nav.stay')}</button></div>`);
-    document.getElementById('nv-leave').onclick=()=>{ closeModal(); liveRun=null; updateLiveTab(); renderRoute(parts, nav); };
+    document.getElementById('nv-leave').onclick=()=>{
+      closeModal();
+      if(liveRun && liveRun.type==='challenge' && document.getElementById('ch-end')){
+        pendingNav=location.hash;
+        document.getElementById('ch-end').click();
+        return;
+      }
+      pendingNav=null; liveRun=null; updateLiveTab(); renderRoute(parts, nav);
+    };
     document.getElementById('nv-stay').onclick=()=>{ closeModal(); const h2=liveRun&&liveRun.hash; if(h2 && location.hash!==h2){ try{ history.replaceState(null,'',h2); }catch(e){ location.hash=h2; } } };
     return;
   }
