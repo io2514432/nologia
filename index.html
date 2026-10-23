@@ -8190,7 +8190,7 @@ function startPuzzle(g, pz){
     clearTimeout(timer);
     k=a; solved=0; done=false; chess=new Chess(d.fens[a]);
     board.setFen(d.fens[a], {});
-    document.getElementById('pz-done').style.display='none';
+    var _pdz=document.getElementById('pz-done'); if(_pdz) _pdz.style.display='none';
     updateProgress();
     applyPzHint();
     advanceAuto();
