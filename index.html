@@ -434,6 +434,29 @@ textarea.adm-in{min-height:150px; resize:vertical; font-family:ui-monospace,SFMo
 .pz-count{font-size:12px; font-weight:800; color:var(--gold);}
 .pz-range{font-size:11px; color:var(--text-dim); margin-top:10px; letter-spacing:.04em;}
 
+
+/* ===== v2.2 ===== */
+.ctrl-row{flex-wrap:nowrap;}
+.hint-toggle{width:112px; min-width:112px; flex:0 0 112px; font-size:12px; padding-left:4px; padding-right:4px; justify-content:center; white-space:nowrap;}
+
+.lib-folders{display:grid; grid-template-columns:repeat(3,1fr); gap:7px;}
+.lib-folder{display:flex; align-items:center; gap:6px; padding:9px 10px; border-radius:9px; background:var(--card);
+  border:1px solid var(--border); color:var(--text-sub); font-size:12px; font-weight:700; min-width:0;}
+.lib-folder svg{width:14px; height:14px; flex-shrink:0; opacity:.75;}
+.lib-folder span{flex:1; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; text-align:left;}
+.lib-folder i{font-style:normal; font-size:10px; color:var(--text-dim);}
+.lib-folder.active{border-color:var(--gold); color:var(--gold); background:rgba(232,184,58,.08);}
+.lib-folder.active svg{opacity:1;}
+.lib-sortrow{display:flex; align-items:center; gap:8px; margin-top:10px;}
+.lib-sortrow .dim{font-size:11px; letter-spacing:.04em;}
+.lib-sortrow select{flex:1; padding:7px 10px; font-size:12px;}
+
+.daily-len{display:flex; align-items:baseline; gap:8px; margin-top:10px;}
+.daily-len .dl-total{font-size:15px; font-weight:800; color:var(--text-strong); letter-spacing:.01em;}
+.daily-len i{margin-left:auto; font-style:normal; font-size:11px; color:var(--text-dim);}
+
+.tab-btn[data-live-lock]{pointer-events:none;}
+
 </style>
 </head>
 <body data-board="green">
@@ -5271,7 +5294,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.1.0';
+const APP_VERSION='2.2.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5601,7 +5624,6 @@ ko:{
  'ch.end':'종료','ch.desc':'양쪽 기물을 모두 <b>내가 직접</b> 둡니다. 첫 수부터 기억을 더뎌 보세요.','ch.fbOff':'(즉시 피드백 꺼짐 — 틀려도 알려주지 않아요!)','ch.mylist':'내가 둔 수','ch.empty':'아직 둔 수가 없어요','ch.progress':'{a}수 둠 · 목표 {b}수','ch.transpo':'우회 도달! 기보에 다시 합류했어요','ch.mode.normal':'일반 모드','ch.mode.extreme':'극한 모드','ch.cut':'엔드게임 {n}수까지','ch.daily':'오늘의 게임',
  'ch.reason.mate':'체크메이트!','ch.reason.stalemate':'스테일메이트','ch.reason.draw':'무승부 (규칙 종료)','ch.reason.cutoff':'엔드게임 컷오프 도달','ch.reason.complete':'기보의 마지막 수 도달','ch.reason.manual':'직접 종료',
  'res.newbest':'신기록!','res.hintUsed':'힌트 사용','res.used':'사용함','res.time':'걸린 시간','res.streak':'연속 일치','res.streakPerfect':'처음부터 끝까지 완벽 일치!','res.streakFirst':'첫 수부터 어긋났어요','res.streakN':'{n}수까지 일치했습니다','res.played':'총 둔 수','res.accline':'정확도 — {a}/{b}수 일치','res.cutNote':' (엔드게임 제외 · 전체 {n}수)','res.closeTitle':'기보 검토로 넘어가기','ch.hintGrade':'힌트 사용 — P 등급은 힌트 없이 100%일 때만 부여돼요',
- 'rv.badge':'기보 검토','rv.matched':'맞춘 수 {a}/{b}','rv.legend':'초록 = 맞춘 수 · 빨강 = 놓친 수','rv.legendCut':' · 회색 = 엔드게임(미채점)','rv.status':'{a}/{b}수', 'set.online':'온라인 (전체 통계·랭킹)','set.onlineDesc':'Supabase 주소와 anon 키를 붙여넣으면 전 세계 통계·랭킹이 켜집니다. 설정 방법은 SUPABASE_SETUP.md 를 참고하세요.','set.url':'Supabase URL','set.key':'anon key','set.connect':'연결','set.connected':'연결됨','set.disconnect':'연결 해제','set.account':'계정','set.email':'이메일','set.pw':'비밀번호 (6자 이상)','set.name':'표시 이름','set.login':'로그인','set.signup':'회원가입','set.logout':'로그아웃','set.uploadAll':'지금까지 기록 올리기','set.uploadDone':'{n}개 기록을 올렸어요','set.needInput':'값을 입력해 주세요','set.pwShort':'비밀번호는 6자 이상이어야 해요','set.welcome':'{name} 님, 환영해요!','set.checkEmail':'확인 메일을 보냈어요 — 메일함에서 확인 후 로그인해 주세요','set.global':'전체','set.based':'전체 사용자 기준','set.mine':'내 기록 기준','set.hardest':'가장 많이 틀리는 수','set.pct':'성공률 {n}%','err.urlWrong':'주소가 올바르지 않아요 — Settings → API의 Project URL(https://xxxx.supabase.co 형태)을 다시 복사해 주세요','err.dashUrl':'그건 대시보드 주소예요 — Project URL(https://xxxx.supabase.co)을 넣어주세요','err.keyWrong':'anon key가 올바르지 않아요 — Settings → API의 anon public 키를 다시 복사해 주세요','err.badLogin':'이메일 또는 비밀번호가 틀렸어요','err.confirm':'이메일 확인이 아직 안 됐어요 — 메일함(스팸함 포함)에서 링크를 눌러주세요','err.exists':'이미 가입된 이메일이에요 — 로그인을 눌러주세요','err.network':'서버에 연결할 수 없어요 — 인터넷 상태와 주소를 확인해 주세요','gate.tagline':'유명한 명경기를 통째로 외우는 가장 재미있는 방법','gate.toSignup':'계정이 없으신가요? 회원가입','gate.toLogin':'이미 계정이 있으신가요? 로그인','gate.needAccount':'전체 통계와 랭킹 참여하려면 로그인이 필요해요','res.graph':'수별 성공률 — 그 수를 시도한 사람 중 성공한 비율','res.graphC':'초록 막대 = 전체 사용자 성공률 · 빨간 점 = 내가 틀린 수','set.offline':'오프라인 모드','set.offlineDesc':'온라인 통계·랭킹은 운영자가 연결하면 켜져요. 지금은 내 기록으로 즐기세요!','set.data':'데이터 백업','set.export':'내보내기','set.exportD':'기록·북마크·설정을 파일로 저장합니다. 기기를 바꾸기 전에 꼭 해두세요.','set.exportDone':'백업 파일을 내려받았어요','set.import':'가져오기','set.importD':'백업 파일로 기록을 되돌립니다 (현재 기록을 대체).','set.importDone':'기록을 복원했어요 — 새로고침합니다','set.importFail':'파일을 읽지 못했어요','set.version':'버전','toast.updated':'새 버전으로 업데이트했어요'
 },
 en:{
  'tab.home':'Home','tab.library':'Games','tab.collection':'Collection','tab.ranking':'Ranking','tab.puzzle':'Puzzle','tab.settings':'Settings',
@@ -5629,7 +5651,6 @@ en:{
  'ch.end':'End','ch.desc':'You move <b>both sides yourself</b>. Recall the game from move one.','ch.fbOff':'(Instant feedback off — no warnings!)','ch.mylist':'My moves','ch.empty':'No moves yet','ch.progress':'{a} plies · target {b}','ch.transpo':'Back on track! You re-joined the game.','ch.mode.normal':'Normal mode','ch.mode.extreme':'Extreme mode','ch.cut':'up to move {n}','ch.daily':'Daily Game',
  'ch.reason.mate':'Checkmate!','ch.reason.stalemate':'Stalemate','ch.reason.draw':'Draw (rule finish)','ch.reason.cutoff':'Endgame cutoff reached','ch.reason.complete':'Reached the final move','ch.reason.manual':'Ended manually',
  'res.newbest':'New best!','res.hintUsed':'Hint used','res.used':'used','res.time':'Time','res.streak':'Matching streak','res.streakPerfect':'Perfect from the first move to the last!','res.streakFirst':'First move already differs','res.streakN':'Matched through move {n}','res.played':'Total moves played','res.accline':'Accuracy — {a}/{b} moves matched','res.cutNote':' (endgame excluded · {n} total)','res.closeTitle':'Go to review','ch.hintGrade':'Hints used — P grades require a hint-free 100%',
- 'rv.badge':'Review','rv.matched':'Matched {a}/{b}','rv.legend':'Green = matched · Red = missed','rv.legendCut':' · Grey = endgame (unscored)','rv.status':'{a}/{b}', 'set.online':'Online (global stats & ranking)','set.onlineDesc':'Paste your Supabase URL and anon key to enable global stats and rankings. See SUPABASE_SETUP.md.','set.url':'Supabase URL','set.key':'anon key','set.connect':'Connect','set.connected':'Connected','set.disconnect':'Disconnect','set.account':'Account','set.email':'Email','set.pw':'Password (6+ chars)','set.name':'Display name','set.login':'Log in','set.signup':'Sign up','set.logout':'Log out','set.uploadAll':'Upload my past records','set.uploadDone':'Uploaded {n} records','set.needInput':'Please fill in the fields','set.pwShort':'Password must be at least 6 characters','set.welcome':'Welcome, {name}!','set.checkEmail':'Confirmation email sent — check your inbox, then log in','set.global':'Global','set.based':'All players','set.mine':'My records','set.hardest':'Moves missed the most','set.pct':'{n}% success','err.urlWrong':'That URL does not look right — copy the Project URL (https://xxxx.supabase.co) from Settings → API again','err.dashUrl':"That's the dashboard address — use the Project URL (https://xxxx.supabase.co)",'err.keyWrong':'That anon key does not look right — copy the anon public key from Settings → API again','err.badLogin':'Wrong email or password','err.confirm':'Email not confirmed yet — click the link in your inbox (check spam)','err.exists':'That email is already registered — use Log in','err.network':'Cannot reach the server — check your internet and the URL','gate.tagline':'The most fun way to memorize famous chess games','gate.toSignup':'No account? Sign up','gate.toLogin':'Already have an account? Log in','gate.needAccount':'Log in to join global stats and rankings','res.graph':'Per-move success rate — of players who attempted the move','res.graphC':'Green bars = all players success rate · red dot = my missed move','set.offline':'Offline mode','set.offlineDesc':'Global stats turn on once the site owner connects Supabase. For now, enjoy with your own records!','set.data':'Data backup','set.export':'Export','set.exportD':'Save your records, bookmarks and settings to a file. Do this before switching devices.','set.exportDone':'Backup downloaded','set.import':'Import','set.importD':'Restore records from a backup file (replaces current records).','set.importDone':'Records restored — refreshing','set.importFail':'Could not read that file','set.version':'Version','toast.updated':'Updated to a new version'
 }};
 // V19_I18N
 Object.assign(I18N.ko, {
@@ -5719,7 +5740,6 @@ Object.assign(I18N.ko, {
  'rank.local':'랭킹은 극한 모드 기록만 등재됩니다. 온라인 연결 시 전 세계 랭킹에 참여해요.',
  'rank.speedEmpty':'아직 극한 모드 100% 기록이 없어요. 극한 모드에서 완벽하게 완주해보세요!',
  'set.extremeD':'켜면 힌트 없이 도전하고, 완주한 기록만 랭킹에 등재됩니다. 끄면 도전에서 힌트 3개를 사용할 수 있어요(랭킹 미등재).',
- 'set.fetchAll':'기록 가져오기 (서버 → 이 기기)','set.fetchAllD':'다른 기기·브라우저에서 둔 기록을 가져와 이 기기의 컬렉션·통계에 합칩니다.',
  'set.fetchDone':'{n}개 기록을 가져왔어요','set.fetchEmpty':'가져올 새 기록이 없어요',
  'ch.hintBtn':'힌트 ({n})','ch.hintMax':'힌트를 모두 사용했어요','ch.hintExtreme':'힌트 없음 · 극한'
 });
@@ -5728,7 +5748,6 @@ Object.assign(I18N.en, {
  'rank.local':'Only Extreme-mode runs are ranked. Connect online to join the global ranking.',
  'rank.speedEmpty':'No Extreme-mode 100% records yet. Finish a game perfectly in Extreme mode!',
  'set.extremeD':'On: no hints — finished runs go on the ranking. Off: 3 hints per run (not ranked).',
- 'set.fetchAll':'Fetch my records (server → this device)','set.fetchAllD':'Pull records played on other devices or browsers into this device\u2019s collection and stats.',
  'set.fetchDone':'Fetched {n} records','set.fetchEmpty':'Nothing new to fetch',
  'ch.hintBtn':'Hint ({n})','ch.hintMax':'No hints left','ch.hintExtreme':'No hints · Extreme'
 });
@@ -6055,7 +6074,7 @@ Object.assign(Cloud, {
   async loadServerGames(){
     if(!this.enabled()) return 0;
     try{
-      const rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn,puzzle_start,puzzle_end&active=eq.true&order=created_at.asc');
+      const rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn,puzzle_start,puzzle_end,puzzle_side,created_at&active=eq.true&order=created_at.asc');
       let n=0;
       (rows||[]).forEach(r=>{
         if(!r.pgn) return;
@@ -6371,7 +6390,7 @@ Object.assign(Cloud, {
   async loadServerGames(){
     if(!this.enabled()) return 0;
     try{
-      var rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn,puzzle_start,puzzle_end&active=eq.true&order=created_at.asc');
+      var rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn,puzzle_start,puzzle_end,puzzle_side,created_at&active=eq.true&order=created_at.asc');
       var self=this, n=0;
       (rows||[]).forEach(function(r){
         if(!r.pgn) return;
@@ -6379,7 +6398,8 @@ Object.assign(Cloud, {
         var g={ id:r.id, title:r.title, white:r.white, black:r.black, whiteEn:r.white, blackEn:r.black,
           year:r.year||'', event:r.event||'', blurb:r.blurb||'', opening:r.opening||'', eco:r.eco||'',
           result:r.result||'*', plies:0, endgamePly:null, pgn:r.pgn,
-          puzzle_start:r.puzzle_start||null, puzzle_end:r.puzzle_end||null, server:true };
+          puzzle_start:r.puzzle_start||null, puzzle_end:r.puzzle_end||null, puzzle_side:r.puzzle_side||'both',
+          addedAt: Date.parse(r.created_at)||0, server:true };
         var ex=null;
         for(var i=0;i<SERVER_GAMES.length;i++) if(SERVER_GAMES[i].id===r.id) ex=SERVER_GAMES[i];
         if(ex){ Object.assign(ex, g); return; }
@@ -6562,6 +6582,42 @@ Object.assign(Cloud, {
     }catch(e){ console.warn('daily load fail:', e.message); return null; }
   }
 });
+
+// === v2.2 === 문구·정렬·퍼즐 입장·설정 정리 ===
+Object.assign(I18N.ko, {
+  'pz.title':'퍼즐',
+  'home.totalMoves':'총 {n}수',
+  'study.hint.both':'출발·도착','study.hint.from':'출발만','study.hint.off':'힌트 끔',
+  'study.modeBothDesc':'양쪽 기물을 모두 내가 직접 둡니다.',
+  'study.modeDesc':'상대 수는 자동으로 진행됩니다.',
+  'rank.extremeNote':'극한 모드 결과만 반영됩니다.',
+  'set.extremeD':'힌트 없이 도전합니다.',
+  'lib.all':'전체','lib.sort.label':'정렬',
+  'lib.sort.added':'신규 등록순','lib.sort.diff':'난이도순','lib.sort.new':'최신순','lib.sort.old':'과거순',
+  'adm.pzStart':'시작 수','adm.pzEnd':'종료 수','adm.pzHint':'수 번호 기준 · 비워두면 퍼즐 제외',
+  'adm.pzSide':'푸는 입장','adm.pzSideW':'백','adm.pzSideB':'흑','adm.pzSideBoth':'양쪽'
+});
+Object.assign(I18N.en, {
+  'pz.title':'Puzzle',
+  'home.totalMoves':'{n} moves',
+  'study.hint.both':'From+To','study.hint.from':'From only','study.hint.off':'Hints off',
+  'study.modeBothDesc':'You play both sides yourself.',
+  'study.modeDesc':'The opponent moves automatically.',
+  'rank.extremeNote':'Only Extreme mode results count.',
+  'set.extremeD':'Challenge without hints.',
+  'lib.all':'All','lib.sort.label':'Sort',
+  'lib.sort.added':'Recently added','lib.sort.diff':'Difficulty','lib.sort.new':'Newest game','lib.sort.old':'Oldest game',
+  'adm.pzStart':'Start move','adm.pzEnd':'End move','adm.pzHint':'Move numbers · leave empty to skip',
+  'adm.pzSide':'Solver side','adm.pzSideW':'White','adm.pzSideB':'Black','adm.pzSideBoth':'Both'
+});
+
+function v22Year(g){
+  var m=String(g.year||'').match(/\d{4}/);
+  return m? parseInt(m[0],10):0;
+}
+function v22Moves(g){
+  try{ return Math.ceil(gameData(g).N/2); }catch(e){ return 0; }
+}
 
 function cleanupView(){ if(viewCleanup){ try{viewCleanup();}catch(e){} viewCleanup=null; } }
 
@@ -6809,7 +6865,7 @@ function viewStudy(gidRaw){
         '<div class="gal-sub2">'+gWhite(g)+' '+t('side.vs')+' '+gBlack(g)+'</div>'+
         '<div class="sc-result"><span>'+t('study.resultLabel')+'</span><b>'+res+'</b></div>'+
         '<div class="sc-opts">'+
-          '<button class="sc-opt" data-sc="both"><b>'+t('study.side.both')+'</b><span>'+t('ch.desc').replace(/<[^>]+>/g,'')+'</span></button>'+
+          '<button class="sc-opt" data-sc="both"><b>'+t('study.side.both')+'</b><span>'+t('study.modeBothDesc')+'</span></button>'+
           '<button class="sc-opt" data-sc="w"><b>'+t('study.side.w')+'</b><span>'+t('study.modeDesc')+'</span></button>'+
           '<button class="sc-opt" data-sc="b"><b>'+t('study.side.b')+'</b><span>'+t('study.modeDesc')+'</span></button>'+
         '</div>'+
@@ -6964,7 +7020,7 @@ function viewChallenge(gid, opts={}){
     if(state.hintUsed && gr.code.startsWith('P'))
       gr={code:'S', color:'var(--green)', desc:t('ch.hintGrade')};
     const auto = reason!=='manual';
-    const saveRec = auto || store.data.settings.savePartial;
+    const saveRec = true;
     let isBest=false, rec=null;
     if(saveRec){
       rec={ts:Date.now(), acc:res.accuracy, ms, grade:gr.code, mode:extreme?'extreme':'normal', hint:state.hintUsed, cut:cut<d.N, played:res.playedCount, moves:movesToString(res.targetMatched)};
@@ -7394,7 +7450,7 @@ function viewHome(){
               <span class="dp-vs">${t('side.vs')}</span>
               <span><span class="dp-side">${t('side.black')}</span>${gBlack(g)}</span>
             </div>
-            <div class="daily-len"><b>${Math.ceil(dd.N/2)}</b><span>${t('unit.moves')}</span>${gOpening(g)?`<i>${gOpening(g)}</i>`:''}</div>
+            <div class="daily-len"><span class="dl-total">${t('home.totalMoves',{n:Math.ceil(dd.N/2)})}</span>${gOpening(g)?`<i>${gOpening(g)}</i>`:''}</div>
             <div class="gc-meta" style="margin:12px 0 14px">
               ${doneToday?`<span class="badge green">${t('home.doneToday')}</span>`:''}
               ${successRateBadge(g.id)}
@@ -7441,16 +7497,46 @@ function viewHome(){
 // ---- 대쉬보드 (v2.0: 폴더별 기보) ----
 // ---- 라이브러리 (v2.1: 별 난이도 · 정보 팝업) ----
 let libQuery='';
+// ---- 라이브러리 (v2.2: 정렬 · 폴더 필터) ----
+var libSort='added', libFolder='__all__';
 function viewLibrary(){
   cleanupView();
+  const folders=v2Folders();
+  if(libFolder!=='__all__' && folders.indexOf(libFolder)<0) libFolder='__all__';
+  const chips=['__all__'].concat(folders);
   appEl.innerHTML=`
     <div class="section-title">${t('dash.title')} <span class="badge gray">${t('dash.count',{n:GAMES.length})}</span></div>
-    <div style="margin-bottom:16px">
+    <div style="margin-bottom:12px">
       <input id="lib-q" placeholder="${t('dash.search')}" value="${libQuery}"
         style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:14px;outline:none">
     </div>
-    <div id="lib-grid"></div>`;
+    <div class="lib-folders">${chips.map(f=>`
+      <button class="lib-folder ${libFolder===f?'active':''}" data-folder="${f}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2.2h7.4A2.5 2.5 0 0 1 21 9.7v7.8A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/></svg>
+        <span>${f==='__all__'?t('lib.all'):f}</span>
+        <i>${f==='__all__'?GAMES.length:GAMES.filter(g=>(g.folder||'')===f).length}</i>
+      </button>`).join('')}</div>
+    <div class="lib-sortrow">
+      <span class="dim">${t('lib.sort.label')}</span>
+      <select id="lib-sort" class="adm-in">
+        <option value="added" ${libSort==='added'?'selected':''}>${t('lib.sort.added')}</option>
+        <option value="diff" ${libSort==='diff'?'selected':''}>${t('lib.sort.diff')}</option>
+        <option value="new" ${libSort==='new'?'selected':''}>${t('lib.sort.new')}</option>
+        <option value="old" ${libSort==='old'?'selected':''}>${t('lib.sort.old')}</option>
+      </select>
+    </div>
+    <div id="lib-grid" style="margin-top:14px"></div>`;
+
   const grid=document.getElementById('lib-grid');
+
+  function sorted(list){
+    const arr=list.slice();
+    if(libSort==='diff') arr.sort((a,b)=>(v21StarCount(b)-v21StarCount(a)) || (v22Moves(b)-v22Moves(a)));
+    else if(libSort==='new') arr.sort((a,b)=>{ const x=v22Year(b), y=v22Year(a); if(!x&&y) return 1; if(x&&!y) return -1; return x-y; });
+    else if(libSort==='old') arr.sort((a,b)=>{ const x=v22Year(a), y=v22Year(b); if(!x&&y) return 1; if(x&&!y) return -1; return x-y; });
+    else arr.sort((a,b)=>(b.addedAt||0)-(a.addedAt||0));
+    return arr;
+  }
   function gameCard(g){
     return `<div class="game-card" data-open="${g.id}">
       <div style="display:flex;gap:12px">${miniBoardHTML(g)}
@@ -7458,7 +7544,7 @@ function viewLibrary(){
         <div class="gc-players">${gWhite(g)} vs ${gBlack(g)}</div>
         <div class="gc-meta" style="margin-top:6px">
           <span class="badge gray">${g.year||''}</span>
-          <span class="badge gold-soft">${t('lib.movesStrong',{n:Math.ceil(gameData(g).N/2)})}</span>
+          <span class="badge gold-soft">${t('lib.movesStrong',{n:v22Moves(g)})}</span>
           ${v21Stars(g)}
           ${successRateBadge(g.id)}
         </div></div>
@@ -7474,28 +7560,25 @@ function viewLibrary(){
   }
   function renderGrid(){
     const q=libQuery.trim().toLowerCase();
-    const list=GAMES.filter(g=>{
+    let list=GAMES.filter(g=>{
+      if(libFolder!=='__all__' && (g.folder||'')!==libFolder) return false;
       if(!q) return true;
       return `${gTitle(g)} ${gWhite(g)} ${gBlack(g)} ${g.whiteEn||''} ${g.blackEn||''} ${g.event||''} ${g.folder||''}`.toLowerCase().includes(q);
     });
     if(!list.length){ grid.innerHTML=`<div class="card muted">${t('dash.empty')}</div>`; return; }
-    const folders=v2Folders();
-    const groups=[];
-    folders.forEach(f=>{
+    list=sorted(list);
+    const foldersNow=[];
+    list.forEach(g=>{ const f=g.folder||''; if(foldersNow.indexOf(f)<0) foldersNow.push(f); });
+    grid.innerHTML=foldersNow.map(f=>{
       const items=list.filter(g=>(g.folder||'')===f);
-      if(items.length) groups.push({name:f, items});
-    });
-    const loose=list.filter(g=>!g.folder);
-    if(loose.length) groups.push({name:'', items:loose});
-    grid.innerHTML=groups.map(gr=>`
-      <div class="fold-sec">
+      return `<div class="fold-sec">
         <div class="fold-head">
           <svg class="fold-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2.2h7.4A2.5 2.5 0 0 1 21 9.7v7.8A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/></svg>
-          <span>${gr.name?gr.name:t('dash.ungrouped')}</span>
-          <span class="fold-n">${gr.items.length}</span>
+          <span>${f?f:t('dash.ungrouped')}</span><span class="fold-n">${items.length}</span>
         </div>
-        <div class="stack">${gr.items.map(gameCard).join('')}</div>
-      </div>`).join('');
+        <div class="stack">${items.map(gameCard).join('')}</div>
+      </div>`;
+    }).join('');
     grid.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{ location.hash=`#/challenge/${b.dataset.ch}`; });
     grid.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ location.hash=`#/study/${b.dataset.st}`; });
     grid.querySelectorAll('[data-open]').forEach(el=>el.onclick=(e)=>{
@@ -7504,6 +7587,12 @@ function viewLibrary(){
     });
   }
   document.getElementById('lib-q').addEventListener('input', e=>{ libQuery=e.target.value; renderGrid(); });
+  document.getElementById('lib-sort').onchange=e=>{ libSort=e.target.value; renderGrid(); };
+  appEl.querySelectorAll('[data-folder]').forEach(b=>b.onclick=()=>{
+    libFolder=b.dataset.folder;
+    appEl.querySelectorAll('[data-folder]').forEach(x=>x.classList.toggle('active', x===b));
+    renderGrid();
+  });
   renderGrid();
   if(Cloud.enabled()){
     Cloud.fetchGameStats().then(map=>{
@@ -7599,9 +7688,10 @@ function viewRanking(){
 }
 // ---- 나만의 퍼즐 ----
 // ---- 퍼즐 (v2.1: 하이라이트 국면) ----
+// ---- 퍼즐 (v2.2: 수 번호·푸는 입장) ----
 function viewPuzzle(){
   cleanupView();
-  const pool=GAMES.filter(g=>Number(g.puzzle_start)>0 && Number(g.puzzle_end)>Number(g.puzzle_start));
+  const pool=GAMES.filter(g=>Number(g.puzzle_start)>0 && Number(g.puzzle_end)>=Number(g.puzzle_start));
   if(!pool.length){
     appEl.innerHTML=`
       <div class="section-title">${t('pz.title')}</div>
@@ -7610,11 +7700,7 @@ function viewPuzzle(){
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.4 2.5h5.2c.1-1 .6-1.8 1.4-2.5A6 6 0 0 0 12 3z"/></svg>
         </div>
         <h3>${t('pz.soon')}</h3>
-        <p class="muted">${t('pz.soonDesc')}</p>
-        <div class="dim" style="margin-top:10px">${t('pz.free')}</div>
-        <div style="margin-top:14px"><button class="btn" id="pz-golib">${t('pz.go')}</button></div>
       </div>`;
-    document.getElementById('pz-golib').onclick=()=>{ location.hash='#/library'; };
     return;
   }
   startPuzzle(pool[Math.floor(Math.random()*pool.length)]);
@@ -7623,18 +7709,32 @@ function viewPuzzle(){
 function startPuzzle(g){
   cleanupView();
   const d=gameData(g);
-  const a=Math.max(0, Math.min(Number(g.puzzle_start)||0, d.N-2));
-  const b=Math.max(a+1, Math.min(Number(g.puzzle_end)||a+1, d.N));
-  let k=a, done=false;
-  const total=b-a;
+  const side=(g.puzzle_side==='w'||g.puzzle_side==='b')?g.puzzle_side:'both';
+  const sMove=Math.max(1, Number(g.puzzle_start)||1);
+  const eMove=Math.max(sMove, Number(g.puzzle_end)||sMove);
+  let a,b;
+  if(side==='w'){ a=(sMove-1)*2; b=(eMove-1)*2+1; }
+  else if(side==='b'){ a=(sMove-1)*2+1; b=eMove*2; }
+  else { a=(sMove-1)*2; b=eMove*2; }
+  a=Math.max(0, Math.min(a, d.N-1));
+  b=Math.max(a+1, Math.min(b, d.N));
+
+  function userPly(k){ return side==='both' || (side==='w'? k%2===0 : k%2===1); }
+  let total=0;
+  for(let k=a;k<b;k++) if(userPly(k)) total++;
+  total=Math.max(1,total);
+
+  let k=a, solved=0, done=false, timer=null;
+  let chess=new Chess(d.fens[a]);
+
   appEl.innerHTML=`
     <div class="section-title">${t('pz.title')} <span class="badge green">${t('pz.streak',{n:store.data.puzzle.streak})}</span></div>
     <div class="board-layout">
       <div>
         <div id="pz-board"></div>
-        <div class="pz-bar"><span id="pz-progress" class="pz-count">${t('pz.progress2',{a:0,b:total})}</span>
+        <div class="pz-bar"><span id="pz-progress" class="pz-count"></span>
           <button class="btn sm ghost" id="pz-reset">${t('pz.reset')}</button></div>
-        <div class="muted" id="pz-status" style="margin-top:8px">${t('pz.desc')}</div>
+        <div class="muted" id="pz-status" style="margin-top:8px"></div>
       </div>
       <div>
         <div class="card">
@@ -7646,7 +7746,7 @@ function startPuzzle(g){
             ${v21Stars(g)}
           </div>
           <p class="muted" style="margin-top:8px">${gBlurb(g)}</p>
-          <div class="pz-range">${t('adm.pzStart')} ${a+1} \u2013 ${b}</div>
+          <div class="pz-range">${sMove}\u2013${eMove}${t('unit.moves')} \u00b7 ${t('study.side.'+side)}</div>
           <button class="btn" id="pz-study" style="width:100%;margin-top:12px">${t('pz.studyGame')}</button>
         </div>
         <div class="card" id="pz-done" style="display:none">
@@ -7656,38 +7756,56 @@ function startPuzzle(g){
         </div>
       </div>
     </div>`;
+
   const boardEl=document.getElementById('pz-board');
-  const puzzleChess=new Chess(d.fens[a]);
   const board=createBoard(boardEl, {
     enabled:true, fen:d.fens[a],
-    getMoves:sq=>puzzleChess.moves({square:sq, verbose:true}),
+    getMoves:sq=> userPly(k)&&k<b ? chess.moves({square:sq, verbose:true}) : [],
     onMove:(mv)=>{
-      if(done) return;
-      let promo=null; const pc=puzzleChess.get(mv.from);
+      if(done || !userPly(k) || k>=b) return;
+      let promo=null; const pc=chess.get(mv.from);
       if(pc && pc.type==='p' && (mv.to[1]==='8'||mv.to[1]==='1')) promo='q';
       const u=mv.from+mv.to+(promo||'');
-      if(u!==d.uci[k]){
-        Sfx.play('err'); toast(t('pz.wrong2'));
-        resetPuzzle();
-        return;
-      }
-      puzzleChess.move({from:mv.from,to:mv.to,promotion:promo||undefined});
+      if(u!==d.uci[k]){ Sfx.play('err'); toast(t('pz.wrong2')); resetPuzzle(); return; }
+      chess.move({from:mv.from,to:mv.to,promotion:promo||undefined});
       Sfx.play('move');
-      k++;
-      board.setFen(puzzleChess.fen(), {lastMove:[mv.from,mv.to], checkSq:kingSqIfCheck(puzzleChess)});
-      document.getElementById('pz-progress').textContent=t('pz.progress2',{a:k-a,b:total});
-      if(k>=b) finishPuzzle();
+      k++; solved++;
+      board.setFen(chess.fen(), {lastMove:[mv.from,mv.to], checkSq:kingSqIfCheck(chess)});
+      updateProgress();
+      if(k>=b) finishPuzzle(); else advanceAuto();
     }
   });
+
+  function updateProgress(){
+    document.getElementById('pz-progress').textContent=t('pz.progress2',{a:solved,b:total});
+    const st=document.getElementById('pz-status');
+    if(st && !done) st.textContent=(side==='both')? t('pz.desc') : t('study.modeDesc');
+  }
+  function advanceAuto(){
+    clearTimeout(timer);
+    if(done) return;
+    if(k>=b){ finishPuzzle(); return; }
+    if(side==='both' || userPly(k)){ board.setEnabled(true); return; }
+    board.setEnabled(false);
+    timer=setTimeout(()=>{
+      if(done || k>=b) return;
+      chess.move({from:d.uci[k].slice(0,2), to:d.uci[k].slice(2,4), promotion:d.uci[k][4]||undefined});
+      k++; board.setFen(chess.fen(), {lastMove:[d.uci[k-1].slice(0,2), d.uci[k-1].slice(2,4)]});
+      advanceAuto();
+    },300);
+  }
   function resetPuzzle(){
-    k=a; puzzleChess.load(d.fens[a]);
+    clearTimeout(timer);
+    k=a; solved=0; done=false; chess=new Chess(d.fens[a]);
     board.setFen(d.fens[a], {});
-    document.getElementById('pz-progress').textContent=t('pz.progress2',{a:0,b:total});
+    board.setEnabled(userPly(k));
+    document.getElementById('pz-done').style.display='none';
+    updateProgress();
+    advanceAuto();
   }
   function finishPuzzle(){
     if(done) return;
-    done=true;
-    board.setEnabled(false);
+    done=true; board.setEnabled(false); clearTimeout(timer);
     store.data.puzzle.done++;
     store.data.puzzle.streak++;
     store.save(); updateChip(); Cloud.pushSoon();
@@ -7696,11 +7814,15 @@ function startPuzzle(g){
     showDonePop();
     const card=document.getElementById('pz-done');
     if(card) card.style.display='block';
+    const st=document.getElementById('pz-status');
+    if(st) st.innerHTML=`<span style="color:var(--green);font-weight:800">${t('pz.done')}</span>`;
   }
   const goStudy=()=>{ location.hash='#/study/'+g.id+'?side=both'; };
   document.getElementById('pz-study').onclick=goStudy;
   document.getElementById('pz-study2').onclick=goStudy;
   document.getElementById('pz-reset').onclick=resetPuzzle;
+  updateProgress();
+  advanceAuto();
 }
 // ---- 설정 ----
 const SETTING_DEFS={
@@ -7709,7 +7831,6 @@ const SETTING_DEFS={
     ['instantFeedback','set.fb','set.fbD'],
     ['showTimer','set.timer','set.timerD'],
     ['autoFlip','set.flip','set.flipD'],
-    ['savePartial','set.savePartial','set.savePartialD'],
   ],
   screen:[
     ['coords','set.coords','set.coordsD'],
@@ -7764,11 +7885,18 @@ function viewAdmin(){
           <input class="adm-in" id="adm-opening" placeholder="${t('adm.fOpening')}">
           <input class="adm-in" id="adm-result" placeholder="${t('adm.fResult')}">
         </div>
-<div class="adm-grid">
+        <div class="adm-grid">
           <input class="adm-in" id="adm-pz-start" type="number" min="1" placeholder="${t('adm.pzStart')}">
-          <input class="adm-in" id="adm-pz-end" type="number" min="2" placeholder="${t('adm.pzEnd')}">
+          <input class="adm-in" id="adm-pz-end" type="number" min="1" placeholder="${t('adm.pzEnd')}">
         </div>
-        <div class="dim" style="font-size:11px">${t('adm.pzHint')}</div>
+        <div class="adm-grid">
+          <select class="adm-in" id="adm-pz-side">
+            <option value="w">${t('adm.pzSideW')}</option>
+            <option value="b">${t('adm.pzSideB')}</option>
+            <option value="both">${t('adm.pzSideBoth')}</option>
+          </select>
+          <div class="dim" style="font-size:11px;align-self:center">${t('adm.pzHint')}</div>
+        </div>
 
         <div class="adm-row"><button class="btn" id="adm-save">${t('adm.validate')}</button></div>
       </div>
@@ -7931,6 +8059,7 @@ function viewAdmin(){
     const result=document.getElementById('adm-result').value.trim();
     const pzStart=parseInt((document.getElementById('adm-pz-start')||{}).value||'0',10)||0;
     const pzEnd=parseInt((document.getElementById('adm-pz-end')||{}).value||'0',10)||0;
+    const pzSide=(document.getElementById('adm-pz-side')||{}).value||'both';
     if(!title||!white||!black){ toast(t('adm.needFields')); return; }
     if(!pgn){ toast(t('adm.invalid',{m:'PGN'})); return; }
     let hd={}, plies=0;
@@ -7945,7 +8074,7 @@ function viewAdmin(){
       id: admSlug(title, year||(hd.Date||'').slice(0,4)),
       title, white, black, blurb: blurb||'', year: year||(hd.Date||'').slice(0,4),
       event: hd.Event||'', opening: opening||'', eco: hd.ECO||'', result: result||hd.Result||'*',
-      pgn, plies, puzzle_start: pzStart||null, puzzle_end: pzEnd||null, created_by: (Cloud.session()||{}).user_id
+      pgn, plies, puzzle_start: pzStart||null, puzzle_end: pzEnd||null, puzzle_side: pzSide||'both', created_by: (Cloud.session()||{}).user_id
     };
     try{
       await Cloud.adminAddGame(row);
@@ -8021,26 +8150,12 @@ ${Cloud.isAdmin?adminCardHTML():''}
       ` : (Cloud.loggedIn() ? `
       <div class="set-row"><div><div class="t">${t('set.welcome',{name:Cloud.session().name||''})}</div></div>
         <button class="btn ghost sm" id="srv-out">${t('set.logout')}</button></div>
-      <div class="set-row"><div><div class="t">${t('set.uploadAll')}</div></div>
-        <button class="btn sm" id="srv-sync">${t('set.uploadAll')}</button></div>
-      <div class="set-row"><div><div class="t">${t('set.fetchAll')}</div><div class="d">${t('set.fetchAllD')}</div></div>
-        <button class="btn ghost sm" id="srv-fetch">${t('set.fetchAll')}</button></div>
       ` : `
       <div class="set-row"><div style="flex:1"><div class="t">${t('gate.needAccount')}</div></div>
         <button class="btn sm" id="srv-open-gate">${t('set.login')}</button></div>
       `)}
     </div>
     <div class="card">
-      <h3>${t('set.data')}</h3>
-      <div class="set-row">
-        <div><div class="t">${t('set.export')}</div><div class="d">${t('set.exportD')}</div></div>
-        <button class="btn sm" id="set-export">${t('set.export')}</button>
-      </div>
-      <div class="set-row">
-        <div><div class="t">${t('set.import')}</div><div class="d">${t('set.importD')}</div></div>
-        <button class="btn ghost sm" id="set-import-btn">${t('set.import')}</button>
-        <input type="file" id="set-import" accept="application/json,.json" style="display:none">
-      </div>
       <div class="dim" style="margin-top:6px">${t('set.version')} ${APP_VERSION}</div>
     </div>`;
   appEl.querySelectorAll('[data-lang]').forEach(b=>b.onclick=()=>{
@@ -8059,10 +8174,7 @@ ${Cloud.isAdmin?adminCardHTML():''}
     document.querySelectorAll('[data-th]').forEach(x=>x.classList.toggle('active',x===b));
   });
   appEl.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>{ location.hash=b.dataset.go; });
-  document.getElementById('set-export').onclick=exportData;
-  document.getElementById('set-import-btn').onclick=()=>document.getElementById('set-import').click();
-  document.getElementById('set-import').addEventListener('change', e=>{ const f=e.target.files[0]; if(f) importData(f); });
-  document.getElementById('srv-connect') && (document.getElementById('srv-connect').onclick=()=>{
+    document.getElementById('srv-connect') && (document.getElementById('srv-connect').onclick=()=>{
     const u=document.getElementById('srv-url').value.trim(), k=document.getElementById('srv-key').value.trim();
     if(!u||!k){ toast(t('set.needInput')); return; }
     try{ Cloud.saveCfg(u,k); toast(t('set.connected')); route(); }
@@ -8071,15 +8183,6 @@ ${Cloud.isAdmin?adminCardHTML():''}
   document.getElementById('srv-off') && (document.getElementById('srv-off').onclick=()=>{ store.data.server=null; store.save(); route(); });
   document.getElementById('srv-open-gate') && (document.getElementById('srv-open-gate').onclick=()=>renderGate());
   document.getElementById('srv-out') && (document.getElementById('srv-out').onclick=async ()=>{ await Cloud.signOut(); route(); });
-  document.getElementById('srv-sync') && (document.getElementById('srv-sync').onclick=async ()=>{
-    const n2=await Cloud.syncAllLocal(); toast(t('set.uploadDone',{n:n2}));
-  });
-  document.getElementById('srv-fetch') && (document.getElementById('srv-fetch').onclick=async ()=>{
-    const n2=await Cloud.fetchMyAttempts();
-    if(n2<0){ toast(t('err.network')); return; }
-    toast(n2? t('set.fetchDone',{n:n2}) : t('set.fetchEmpty'));
-    if(n2) updateChip();
-  });
   document.getElementById('set-reset').onclick=()=>{
     showModal(`<h3 style="justify-content:center">${t('set.resetQ')}</h3>
       <p class="muted" style="margin:10px 0">${t('set.resetWarn')}</p>
@@ -8139,7 +8242,20 @@ function renderGate(){
 let liveRun=null;
 function updateLiveTab(){
   const el=document.getElementById('tab-lib'); if(!el) return;
-  el.textContent=(liveRun && liveRun.isLive && liveRun.isLive())? t(liveRun.type==='study'?'live.study':'live.challenge') : t('tab.library');
+  const btn=el.closest('.tab-btn')||el;
+  const live=!!(liveRun && liveRun.isLive && liveRun.isLive());
+  el.textContent=live? t(liveRun.type==='study'?'live.study':'live.challenge') : t('tab.library');
+  if(live){
+    btn.style.pointerEvents='none';
+    btn.style.opacity='.45';
+    btn.dataset.liveLock='1';
+    btn.setAttribute('aria-disabled','true');
+  } else {
+    btn.style.pointerEvents='';
+    btn.style.opacity='';
+    delete btn.dataset.liveLock;
+    btn.setAttribute('aria-disabled','false');
+  }
 }
 function sameLiveRun(nav, parts){
   return !!liveRun && (
@@ -8184,6 +8300,7 @@ document.querySelectorAll('[data-nav]').forEach(b=>b.addEventListener('click',()
     const h2=liveRun.hash; if(location.hash===h2) route(); else location.hash=h2;
     return;
   }
+  if(b.dataset.liveLock) return;
   const h2='#/'+b.dataset.nav;
   if(location.hash===h2) route(); else location.hash=h2;
 }));
