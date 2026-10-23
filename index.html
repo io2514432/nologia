@@ -330,6 +330,63 @@ textarea.adm-in{min-height:150px; resize:vertical; font-family:ui-monospace,SFMo
 .adm-item .grow{flex:1; min-width:0;}
 @media(max-width:400px){.wk-c{width:29px; height:29px; font-size:10px;} .stat-card.v2{padding:12px; gap:10px;} .sc-ico{width:34px; height:34px;}}
 
+
+/* ===== v2.0 · 대쉬보드 폴더 · 컬렉션 갤러리 · 관리자 폴더 ===== */
+.topbar .user-chip{background:transparent;border:0;padding:6px 4px;border-radius:8px;gap:0;color:var(--text-strong);font-size:14px;font-weight:800;letter-spacing:.01em;}
+.topbar .user-chip:hover{color:var(--gold);background:var(--card-hover);}
+.topbar .user-chip #chip-name{max-width:130px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+
+.fold-sec{margin-top:16px;}
+.fold-head{display:flex;align-items:center;gap:8px;font-size:11.5px;font-weight:800;letter-spacing:.06em;color:var(--gold);margin-bottom:8px;text-transform:uppercase;}
+.fold-ico{width:16px;height:16px;flex-shrink:0;opacity:.9;}
+.fold-n{font-size:10px;font-weight:700;color:var(--text-dim);border:1px solid var(--border);border-radius:999px;padding:1px 7px;letter-spacing:0;}
+
+.col-sub{font-size:12.5px;color:var(--text-sub);line-height:1.6;margin:-2px 0 18px;}
+.gal-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;}
+.gal-item{cursor:pointer;position:relative;}
+.gal-mat{position:relative;padding:6px;border-radius:5px;background:linear-gradient(150deg,#2c2823 0%,#1a1815 55%,#242019 100%);
+  border:1px solid rgba(232,184,58,.26);box-shadow:0 10px 20px rgba(0,0,0,.45), inset 0 0 0 1px rgba(255,255,255,.03);
+  transition:transform .18s ease, border-color .18s ease, box-shadow .18s ease;}
+.gal-item:hover .gal-mat{transform:translateY(-3px);border-color:rgba(232,184,58,.6);box-shadow:0 16px 26px rgba(0,0,0,.55);}
+.gal-frame{padding:3px;background:#0d0c0b;border:1px solid rgba(232,184,58,.22);border-radius:2px;}
+.v2-board{display:grid;grid-template-columns:repeat(8,1fr);grid-template-rows:repeat(8,1fr);width:100%;aspect-ratio:1/1;border-radius:0;overflow:hidden;box-shadow:none;}
+.v2-board .mb-sq{position:relative;}
+.v2-board .mb-pc{position:absolute;inset:0;width:100%;height:100%;margin:0;}
+.v2-board .mb-pc svg{width:100%;height:100%;display:block;}
+.gal-seal{position:absolute;right:-6px;bottom:-7px;min-width:24px;height:24px;padding:0 5px;border-radius:999px;
+  background:#141210;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;
+  font-size:10.5px;font-weight:900;letter-spacing:.02em;box-shadow:0 3px 8px rgba(0,0,0,.5);}
+.gal-cap{margin-top:9px;font-size:10.5px;font-weight:700;color:#e7dfd0;line-height:1.35;text-align:center;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.gal-sub{margin-top:2px;font-size:9px;color:#96907f;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+
+.v2-ov{position:fixed;inset:0;z-index:9998;background:rgba(8,7,6,.78);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;padding:18px;animation:v2fade .16s ease-out;}
+@keyframes v2fade{from{opacity:0}to{opacity:1}}
+.v2-modal{width:min(380px,94vw);max-height:90vh;overflow:auto;background:linear-gradient(170deg,#242019 0%,#151312 60%,#1d1a16 100%);
+  border:1px solid rgba(232,184,58,.35);border-radius:16px;padding:22px 20px 20px;box-shadow:0 24px 60px rgba(0,0,0,.65);
+  animation:v2rise .22s cubic-bezier(.2,.7,.3,1);color:var(--text);}
+@keyframes v2rise{from{opacity:0;transform:translateY(14px) scale(.97)}to{opacity:1;transform:none}}
+.gal-eyebrow{font-size:9.5px;font-weight:800;letter-spacing:.22em;color:rgba(232,184,58,.8);text-transform:uppercase;text-align:center;}
+.gal-title{font-size:21px;line-height:1.3;font-weight:900;color:#f4ecdc;text-align:center;margin:8px 0 4px;letter-spacing:-.01em;}
+.gal-sub2{font-size:11.5px;color:#b7ae9c;text-align:center;margin-top:2px;}
+.gal-big{position:relative;margin:16px auto 6px;padding:8px;background:#0d0c0b;border:1px solid rgba(232,184,58,.3);
+  border-radius:4px;box-shadow:0 12px 30px rgba(0,0,0,.55);}
+.gal-big .mb-pc svg{width:100%;height:100%;display:block;}
+.gal-seal.big{right:-9px;bottom:-9px;min-width:40px;height:40px;font-size:16px;background:#12100e;}
+.gal-grid2{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px;}
+.gal-grid2>div{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:9px;padding:9px 10px;}
+.gal-grid2 .gk{font-size:9.5px;color:#8f8879;letter-spacing:.06em;text-transform:uppercase;}
+.gal-grid2 .gv{font-size:14px;font-weight:800;color:#efe7d7;margin-top:3px;}
+.gal-note{margin-top:14px;text-align:center;font-size:10px;color:#7f796c;letter-spacing:.14em;text-transform:uppercase;}
+.v2-ask h3{font-size:16px;margin-bottom:12px;}
+.v2-ask-row{display:flex;gap:8px;justify-content:flex-end;margin-top:12px;}
+
+.rk-head{font-size:12px;font-weight:800;letter-spacing:.05em;color:var(--gold);text-transform:uppercase;display:flex;align-items:center;gap:8px;}
+.adm-folder-list{margin-bottom:6px;}
+.adm-game{flex-wrap:wrap;}
+.adm-sel{width:118px;padding:6px 8px;font-size:12px;flex-shrink:0;}
+
 </style>
 </head>
 <body data-board="green">
@@ -337,7 +394,7 @@ textarea.adm-in{min-height:150px; resize:vertical; font-family:ui-monospace,SFMo
 <header class="topbar">
   <div class="logo"><svg class="logo-ic" viewBox="0 0 45 45" aria-label="체스놀로지아"><rect width="45" height="45" rx="10" fill="#1e1c1a"/><g transform="translate(0.6,2.4) scale(0.97)"><use href="#pc-wN"/></g><path d="M33.5 5.5l1.6 4.6 4.6 1.6-4.6 1.6-1.6 4.6-1.6-4.6-4.6-1.6 4.6-1.6z" fill="#81b64c"/><circle cx="40.2" cy="6.4" r="1.4" fill="#81b64c" opacity=".85"/></svg><span id="app-title">체스놀로지아</span></div>
   <div class="nav-right">
-    <div class="user-chip"><span class="avatar" id="avatar-me">나</span><span id="chip-summary">도전 0회</span></div>
+    <button class="user-chip" id="user-chip" type="button"><span id="chip-name">나</span></button>
   </div>
 </header>
 <main id="app" class="container"></main>
@@ -5167,7 +5224,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='1.9.2';
+const APP_VERSION='2.0.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5213,8 +5270,10 @@ function toggleBookmark(gid, ply){
 function bookmarksOf(gid){ return store.data.bookmarks[gid]||[]; }
 function updateChip(){
   applyAppName();
-  const el=document.getElementById('chip-summary'); if(!el) return;
-  el.textContent = t('chip', {a:store.data.stats.challenges, b:perfectGames().length});
+  const el=document.getElementById('chip-name'); if(!el) return;
+  const s=(typeof Cloud!=='undefined' && Cloud.session)? Cloud.session():null;
+  el.textContent=(s && s.name)?s.name:t('avatar.me');
+  if(!el._bound){ el._bound=1; el.onclick=()=>{ location.hash='#/settings'; }; }
 }
 function applySettings(){
   document.body.classList.toggle('light', store.data.settings.theme==='light');
@@ -6017,6 +6076,272 @@ function scrollToEl(list, el){
 function gradeDesc(code){ return t('grade.'+code); }
 
 let viewCleanup=null;
+// === v2.0 === 대쉬보드 폴더 · 컬렉션 갤러리 · 게임별 극한 랭킹 · 관리자 폴더/숨김
+var GAMES_ALL=null, SERVER_GAMES=[];
+
+function gameRegistryInit(){
+  if(GAMES_ALL) return;
+  GAMES_ALL=GAMES.filter(function(g){ return !g.server; });
+  SERVER_GAMES=GAMES.filter(function(g){ return !!g.server; });
+}
+function gameRegistry(){ gameRegistryInit(); return GAMES_ALL.concat(SERVER_GAMES); }
+function gameByIdAny(id){ var all=gameRegistry(); for(var i=0;i<all.length;i++){ if(all[i].id===id) return all[i]; } return null; }
+function v2MetaOf(id){ return (Cloud.meta && Cloud.meta[id]) || null; }
+function v2IsHidden(id){ var m=v2MetaOf(id); return !!(m && m.hidden); }
+function v2FolderOf(g){ var m=g?v2MetaOf(g.id):null; return (m && m.folder) || ''; }
+
+function v2ApplyMeta(){
+  gameRegistryInit();
+  var all=gameRegistry(), out=[];
+  for(var i=0;i<all.length;i++){
+    var g=all[i], m=v2MetaOf(g.id)||{};
+    if(m.hidden) continue;
+    g.folder=m.folder||'';
+    g._ord=(typeof m.sort==='number')?m.sort:i;
+    out.push(g);
+  }
+  out.sort(function(a,b){ return a._ord-b._ord; });
+  GAMES.length=0;
+  for(var j=0;j<out.length;j++) GAMES.push(out[j]);
+}
+function v2Folders(){
+  var all=gameRegistry(), seen={}, out=[];
+  for(var i=0;i<all.length;i++){
+    var f=(v2MetaOf(all[i].id)||{}).folder||'';
+    if(f && !seen[f]){ seen[f]=1; out.push(f); }
+  }
+  out.sort(function(a,b){ return a.localeCompare(b, LANG==='en'?'en':'ko'); });
+  return out;
+}
+function v2GradeOrder(g){ return ({'P+':7,'P':6,'S':5,'A':4,'B':3,'C':2,'D':1})[g]||0; }
+function v2Date(ts){ try{ return new Date(ts).toLocaleDateString(LANG==='en'?'en-US':'ko-KR'); }catch(e){ return ''; } }
+
+function v2Entry(g){
+  var rs=recs(g.id).filter(function(r){ return r.acc>=100 && !r.cut; });
+  if(!rs.length) return null;
+  var sorted=rs.slice().sort(function(a,b){ return a.ts-b.ts; });
+  var best=rs.slice().sort(function(a,b){
+    return (v2GradeOrder(b.grade)-v2GradeOrder(a.grade)) || (a.ms-b.ms);
+  })[0];
+  var fen='';
+  try{ var d=gameData(g); fen=d.fens[d.N]; }catch(e){}
+  return { g:g, first:sorted[0], best:best, count:rs.length, fen:fen };
+}
+
+function v2FenBoard(fen){
+  var map=boardMap(fenBoard(fen));
+  var files=['a','b','c','d','e','f','g','h'], ranks=['8','7','6','5','4','3','2','1'];
+  var html='<div class="board v2-board">';
+  for(var i=0;i<ranks.length;i++){
+    for(var j=0;j<files.length;j++){
+      var sq=files[j]+ranks[i], dark=((j+i)%2===1), p=map[sq];
+      html+='<div class="mb-sq '+(dark?'d':'l')+'">'+(p?'<div class="mb-pc"><svg viewBox="0 0 45 45"><use href="#pc-'+PIECE_ID[p]+'"/></svg></div>':'')+'</div>';
+    }
+  }
+  return html+'</div>';
+}
+
+function v2Overlay(html){
+  var el=document.createElement('div');
+  el.className='v2-ov';
+  el.innerHTML=html;
+  document.body.appendChild(el);
+  document.body.style.overflow='hidden';
+  el._esc=function(e){ if(e.key==='Escape') v2CloseOverlay(); };
+  document.addEventListener('keydown', el._esc);
+  el.addEventListener('click', function(e){ if(e.target===el) v2CloseOverlay(); });
+  var x=el.querySelector('[data-ov-close]'); if(x) x.onclick=v2CloseOverlay;
+  return el;
+}
+function v2CloseOverlay(){
+  var el=document.querySelector('.v2-ov'); if(!el) return;
+  if(el._esc) document.removeEventListener('keydown', el._esc);
+  el.remove();
+  document.body.style.overflow='';
+}
+
+function v2Ask(opts){
+  var el=v2Overlay(
+    '<div class="v2-modal v2-ask">'+
+      '<h3>'+opts.title+'</h3>'+
+      '<input class="adm-in" id="v2-ask-in" value="'+(opts.value||'').replace(/"/g,'&quot;')+'" placeholder="'+(opts.placeholder||'')+'">'+
+      '<div class="v2-ask-row">'+
+        '<button class="btn" id="v2-ask-ok">'+t('btn.ok')+'</button>'+
+        '<button class="btn outline" id="v2-ask-no">'+t('btn.close')+'</button>'+
+      '</div>'+
+    '</div>');
+  var inp=el.querySelector('#v2-ask-in');
+  setTimeout(function(){ if(inp){ inp.focus(); inp.select(); } }, 50);
+  function done(){
+    var v=(inp.value||'').trim();
+    if(!v){ inp.focus(); return; }
+    v2CloseOverlay();
+    if(opts.ok) opts.ok(v);
+  }
+  el.querySelector('#v2-ask-ok').onclick=done;
+  el.querySelector('#v2-ask-no').onclick=v2CloseOverlay;
+  if(inp) inp.addEventListener('keydown', function(e){ if(e.key==='Enter') done(); });
+}
+
+function v2OpenGallery(it){
+  var g=it.g;
+  var meta=[g.year, gOpening(g)].filter(Boolean).join(' \u00b7 ');
+  v2Overlay(
+    '<div class="v2-modal gal-modal">'+
+      '<div class="gal-eyebrow">'+t('col.title')+'</div>'+
+      '<h2 class="gal-title">'+gTitle(g)+'</h2>'+
+      '<div class="gal-sub2">'+gWhite(g)+' '+t('side.vs')+' '+gBlack(g)+'</div>'+
+      '<div class="gal-sub2 dim">'+meta+'</div>'+
+      '<div class="gal-big">'+v2FenBoard(it.fen)+'<div class="gal-seal big" style="color:'+gradeOf(it.best.acc,it.best.ms,1).color+'">'+it.best.grade+'</div></div>'+
+      '<div class="gal-grid2">'+
+        '<div><div class="gk">'+t('gal.doneOn')+'</div><div class="gv">'+v2Date(it.first.ts)+'</div></div>'+
+        '<div><div class="gk">'+t('gal.runs')+'</div><div class="gv">'+it.count+'</div></div>'+
+        '<div><div class="gk">'+t('gal.bestAcc')+'</div><div class="gv">'+it.best.acc+'%</div></div>'+
+        '<div><div class="gk">'+t('gal.bestTime')+'</div><div class="gv">'+fmtTime(it.best.ms)+'</div></div>'+
+      '</div>'+
+      '<div class="gal-note">'+t('gal.final')+'</div>'+
+      '<button class="btn" data-ov-close style="width:100%;margin-top:14px">'+t('gal.close')+'</button>'+
+    '</div>');
+}
+
+// --- 서버: game_meta(폴더·숨김) · 게임별 극한 랭킹 ---
+Object.assign(Cloud, {
+  meta:{},
+  metaError:null,
+
+  metaLoadLocal(){
+    try{ this.meta=JSON.parse(localStorage.getItem('chessnologia.gamemeta')||'{}')||{}; }
+    catch(e){ this.meta={}; }
+  },
+  metaSaveLocal(){
+    try{ localStorage.setItem('chessnologia.gamemeta', JSON.stringify(this.meta)); }catch(e){}
+  },
+  async loadGameMeta(){
+    if(!this.enabled()){ v2ApplyMeta(); return 0; }
+    try{
+      var rows=await this._rest('game_meta?select=game_id,folder,hidden,sort');
+      var m={};
+      (rows||[]).forEach(function(r){
+        m[r.game_id]={ folder:r.folder||'', hidden:!!r.hidden,
+          sort:(r.sort===null||r.sort===undefined)?null:r.sort };
+      });
+      this.meta=m; this.metaError=null; this.metaSaveLocal(); v2ApplyMeta();
+      return (rows||[]).length;
+    }catch(e){
+      this.metaError=e.message||'meta';
+      console.warn('game_meta load fail:', e.message);
+      v2ApplyMeta();
+      return -1;
+    }
+  },
+  async setMeta(id, patch){
+    var cur=Object.assign({folder:'',hidden:false,sort:null}, this.meta[id]||{}, patch);
+    this.meta[id]=cur; this.metaSaveLocal(); v2ApplyMeta();
+    if(!this.enabled() || !this.loggedIn() || !this.isAdmin) throw new Error('admin only');
+    await this._rest('game_meta?on_conflict=game_id', {
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body: JSON.stringify({ game_id:id, folder:cur.folder||null, hidden:!!cur.hidden, sort:cur.sort })
+    });
+    return true;
+  },
+  async fetchGameRanking(gameId){
+    if(!this.enabled() || !this.loggedIn()) return null;
+    try{
+      var rows=await this._rest('attempts?select=user_id,ms,grade,acc,created_at&game_id=eq.'+encodeURIComponent(gameId)+'&mode=eq.extreme&acc=eq.100&order=ms.asc&limit=50');
+      var ids=[];
+      (rows||[]).forEach(function(r){ if(r.user_id && ids.indexOf(r.user_id)<0) ids.push(r.user_id); });
+      var names={};
+      if(ids.length){
+        try{
+          var ps=await this._rest('players?select=id,name&id=in.('+ids.join(',')+')');
+          (ps||[]).forEach(function(p){ names[p.id]=p.name; });
+        }catch(e2){}
+      }
+      return (rows||[]).map(function(r,i){
+        return { rank:i+1, user_id:r.user_id, name:names[r.user_id]||'Player', game_id:gameId, ms:r.ms, grade:r.grade, ts:r.created_at };
+      });
+    }catch(e){ console.warn('game ranking fail:', e.message); return null; }
+  },
+  async loadServerGames(){
+    if(!this.enabled()) return 0;
+    try{
+      var rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn&active=eq.true&order=created_at.asc');
+      var self=this, n=0;
+      (rows||[]).forEach(function(r){
+        if(!r.pgn) return;
+        if(self.serverGameIds.indexOf(r.id)<0) self.serverGameIds.push(r.id);
+        var g={ id:r.id, title:r.title, white:r.white, black:r.black, whiteEn:r.white, blackEn:r.black,
+          year:r.year||'', event:r.event||'', blurb:r.blurb||'', opening:r.opening||'', eco:r.eco||'',
+          result:r.result||'*', plies:0, endgamePly:null, pgn:r.pgn, server:true };
+        var ex=null;
+        for(var i=0;i<SERVER_GAMES.length;i++) if(SERVER_GAMES[i].id===r.id) ex=SERVER_GAMES[i];
+        if(ex){ Object.assign(ex, g); return; }
+        SERVER_GAMES.push(g); n++;
+      });
+      v2ApplyMeta();
+      return n;
+    }catch(e){ console.warn('games load fail:', e.message); return -1; }
+  }
+});
+
+(function(){
+  var origAfter=Cloud.afterLogin.bind(Cloud);
+  Cloud.afterLogin=async function(){
+    await origAfter();
+    await Cloud.loadGameMeta();
+    v2ApplyMeta();
+    try{ updateChip(); }catch(e){}
+  };
+})();
+
+Object.assign(I18N.ko, {
+  'tab.library':'대쉬보드',
+  'dash.title':'대쉬보드','dash.search':'선수 · 대회 · 경기명 검색','dash.count':'{n}개 기보',
+  'dash.ungrouped':'미분류','dash.empty':'아직 기보가 없어요.','dash.folderEmpty':'이 폴더에 기보가 없어요.',
+  'gal.final':'마지막 국면','gal.doneOn':'완료일','gal.bestAcc':'최고 정확도','gal.bestTime':'최고 기록',
+  'gal.runs':'도전 횟수','gal.close':'닫기',
+  'col.desc':'100%로 완주한 기보를 액자에 걸어두었습니다. 액자를 누르면 완료일과 등급이 보여요.',
+  'rank.extremeNote':'극한 모드에서 100%로 완주한 기록만 순위에 올라갑니다.',
+  'rank.selectGame':'기보 선택','rank.global':'전체 순위','rank.mine':'내 극한 기록',
+  'rank.players':'{n}명 참가','rank.noGlobal':'로그인하면 전체 순위를 볼 수 있어요.',
+  'rank.noMine':'이 기보의 극한 모드 기록이 아직 없어요.','rank.colPlayer':'플레이어',
+  'adm.folders':'폴더 정리','adm.foldersDesc':'기보를 폴더로 묶으면 대쉬보드에 폴더별로 표시됩니다. 변경은 즉시 모든 플레이어에게 적용됩니다.',
+  'adm.folder':'폴더','adm.newFolder':'새 폴더','adm.none':'미분류','adm.folderNewPh':'폴더 이름',
+  'adm.hiddenTitle':'숨긴 기보','adm.hiddenDesc':'삭제한 기보는 모든 플레이어의 목록에서 숨겨지고, 여기에서 복구할 수 있습니다.',
+  'adm.hide':'삭제','adm.restore':'복구',
+  'adm.confirmHide':'이 기보를 모든 플레이어의 목록에서 숨길까요? 기록은 그대로 남습니다.',
+  'adm.hiddenBadge':'숨김','adm.builtin':'기본','adm.server':'서버',
+  'adm.folderRename':'이름 변경','adm.folderDelete':'폴더 삭제',
+  'adm.folderDeleteQ':'이 폴더를 없앨까요? 안에 있던 기보는 미분류로 이동합니다.',
+  'adm.savedFolder':'폴더를 저장했어요','adm.metaFail':'저장 실패 — 서버 연결과 supabase/v2.0.sql 적용을 확인하세요',
+  'adm.metaNote':'폴더·숨김은 game_meta 테이블에 저장됩니다. Supabase SQL Editor에서 supabase/v2.0.sql을 먼저 실행하세요.',
+  'btn.ok':'확인'
+});
+Object.assign(I18N.en, {
+  'tab.library':'Dashboard',
+  'dash.title':'Dashboard','dash.search':'Search players, events, games','dash.count':'{n} games',
+  'dash.ungrouped':'Unsorted','dash.empty':'No games yet.','dash.folderEmpty':'This folder is empty.',
+  'gal.final':'Final position','gal.doneOn':'Completed','gal.bestAcc':'Best accuracy','gal.bestTime':'Best time',
+  'gal.runs':'Runs','gal.close':'Close',
+  'col.desc':'Every game you finished at 100% hangs here like a framed piece. Tap a frame to see the date and grade.',
+  'rank.extremeNote':'Only 100% runs finished in Extreme mode make the ranking.',
+  'rank.selectGame':'Game','rank.global':'Global ranking','rank.mine':'My extreme runs',
+  'rank.players':'{n} players','rank.noGlobal':'Log in to see the global ranking.',
+  'rank.noMine':'No extreme-mode runs for this game yet.','rank.colPlayer':'Player',
+  'adm.folders':'Folders','adm.foldersDesc':'Group games into folders — the dashboard shows them folder by folder. Changes apply to every player instantly.',
+  'adm.folder':'Folder','adm.newFolder':'New folder','adm.none':'Unsorted','adm.folderNewPh':'Folder name',
+  'adm.hiddenTitle':'Hidden games','adm.hiddenDesc':'Deleted games disappear from every player list and can be restored here.',
+  'adm.hide':'Delete','adm.restore':'Restore',
+  'adm.confirmHide':'Hide this game from every player? Records stay intact.',
+  'adm.hiddenBadge':'Hidden','adm.builtin':'built-in','adm.server':'server',
+  'adm.folderRename':'Rename','adm.folderDelete':'Delete folder',
+  'adm.folderDeleteQ':'Delete this folder? Its games move to Unsorted.',
+  'adm.savedFolder':'Folder saved','adm.metaFail':'Save failed — check the server and run supabase/v2.0.sql',
+  'adm.metaNote':'Folders and hidden flags live in game_meta. Run supabase/v2.0.sql in the Supabase SQL Editor first.',
+  'btn.ok':'OK'
+});
+
 function cleanupView(){ if(viewCleanup){ try{viewCleanup();}catch(e){} viewCleanup=null; } }
 
 // ---- 폭죽·컨페티 (v1.6: 학습 완주 약한 폭죽 / 도전 등급별 축하) ----
@@ -6801,8 +7126,6 @@ function viewHome(){
         <div><div class="v">${perfect.length}</div><div class="k">${t('home.memorized')}</div></div></div>
     </div>
     ${recentCardHTML(latest)}
-    <div class="section-title">${t('home.categories')}</div>
-    <div class="card muted" style="padding:12px 16px">${t('home.catSoon')}</div>
     <div class="section-title">${t('home.recent')}</div>
     ${recent.length?`<div class="card" style="padding:6px 14px">
       <table class="rank-table"><tr><th>${t('th.game')}</th><th>${t('th.acc')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.when')}</th></tr>
@@ -6815,58 +7138,74 @@ function viewHome(){
 }
 
 
-// ---- 라이브러리 ----
-let libFilter={type:'all', value:null}, libQuery='';
+// ---- 대쉬보드 (v2.0: 폴더별 기보) ----
+let libQuery='';
 function viewLibrary(){
   cleanupView();
-  libFilter={type:'all', value:null}; window.__libFilter=null;
   appEl.innerHTML=`
-    <div class="section-title">${t('lib.title')} <span class="badge gray">${t('lib.games',{n:GAMES.length})}</span></div>
-    <div class="dim" style="margin-bottom:12px">${t('lib.serverNote')}</div>
-    <div style="margin-bottom:14px">
-      <input id="lib-q" placeholder="${t('lib.search')}" value="${libQuery}"
+    <div class="section-title">${t('dash.title')} <span class="badge gray">${t('dash.count',{n:GAMES.length})}</span></div>
+    <div style="margin-bottom:16px">
+      <input id="lib-q" placeholder="${t('dash.search')}" value="${libQuery}"
         style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:14px;outline:none">
     </div>
-    <div id="lib-grid" class="stack"></div>`;
+    <div id="lib-grid"></div>`;
   const grid=document.getElementById('lib-grid');
+  function gameCard(g){
+    return `<div class="game-card">
+      <div style="display:flex;gap:12px">${miniBoardHTML(g)}
+        <div><div class="gc-title">${gTitle(g)}</div>
+        <div class="gc-players">${gWhite(g)} vs ${gBlack(g)}</div>
+        <div class="gc-meta" style="margin-top:6px">
+          <span class="badge gray">${g.year||''}</span>
+          <span class="badge gray">${Math.ceil(gameData(g).N/2)} ${t('unit.moves')}</span>
+          ${successRateBadge(g.id)}
+        </div></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${bestBadge(g.id)}
+        ${bookmarksOf(g.id).length?`<span class="badge gray">${t('lib.marks',{n:bookmarksOf(g.id).length})}</span>`:''}
+      </div>
+      <div class="gc-actions">
+        <button class="btn sm" data-st="${g.id}">${t('btn.study')}</button>
+        <button class="btn challenge sm" data-ch="${g.id}">\u2694 ${t('btn.challenge')}</button>
+      </div>
+    </div>`;
+  }
   function renderGrid(){
     const q=libQuery.trim().toLowerCase();
     const list=GAMES.filter(g=>{
-      if(q && !(`${gTitle(g)} ${gWhite(g)} ${gBlack(g)} ${g.whiteEn} ${g.blackEn} ${g.event}`.toLowerCase().includes(q))) return false;
-      return true;
+      if(!q) return true;
+      return `${gTitle(g)} ${gWhite(g)} ${gBlack(g)} ${g.whiteEn||''} ${g.blackEn||''} ${g.event||''} ${g.folder||''}`.toLowerCase().includes(q);
     });
-    grid.innerHTML=list.length? list.map(g=>`
-      <div class="game-card">
-        <div style="display:flex;gap:12px">${miniBoardHTML(g)}
-          <div><div class="gc-title">${gTitle(g)}</div>
-          <div class="gc-players">${gWhite(g)} vs ${gBlack(g)}</div>
-          <div class="gc-meta" style="margin-top:6px">
-            <span class="badge gray">${g.year}</span>
-            <span class="badge gray">${Math.ceil(gameData(g).N/2)} ${t('unit.moves')}</span>
-            ${successRateBadge(g.id)}
-          </div></div>
+    if(!list.length){ grid.innerHTML=`<div class="card muted">${t('dash.empty')}</div>`; return; }
+    const folders=v2Folders();
+    const groups=[];
+    folders.forEach(f=>{
+      const items=list.filter(g=>(g.folder||'')===f);
+      if(items.length) groups.push({name:f, items});
+    });
+    const loose=list.filter(g=>!g.folder);
+    if(loose.length) groups.push({name:'', items:loose});
+    grid.innerHTML=groups.map(gr=>`
+      <div class="fold-sec">
+        <div class="fold-head">
+          <svg class="fold-ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7.5A2.5 2.5 0 0 1 5.5 5h3.6l2 2.2h7.4A2.5 2.5 0 0 1 21 9.7v7.8A2.5 2.5 0 0 1 18.5 20h-13A2.5 2.5 0 0 1 3 17.5z"/></svg>
+          <span>${gr.name?gr.name:t('dash.ungrouped')}</span>
+          <span class="fold-n">${gr.items.length}</span>
         </div>
-        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${bestBadge(g.id)}
-          ${bookmarksOf(g.id).length?`<span class="badge gray">${t('lib.marks',{n:bookmarksOf(g.id).length})}</span>`:''}
-        </div>
-        <div class="gc-actions">
-          <button class="btn sm" data-st="${g.id}">${t('btn.study')}</button>
-          <button class="btn challenge sm" data-ch="${g.id}">⚔ ${t('btn.challenge')}</button>
-        </div>
-      </div>`).join('') : `<div class="card muted">${t('lib.none')}</div>`;
+        <div class="stack">${gr.items.map(gameCard).join('')}</div>
+      </div>`).join('');
     grid.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{ location.hash=`#/challenge/${b.dataset.ch}`; });
     grid.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ location.hash=`#/study/${b.dataset.st}`; });
   }
   document.getElementById('lib-q').addEventListener('input', e=>{ libQuery=e.target.value; renderGrid(); });
   renderGrid();
-  // 서버 연결 시 전체 성공률로 배지 교체
   if(Cloud.enabled()){
     Cloud.fetchGameStats().then(map=>{
       if(!map) return;
       document.querySelectorAll('[data-sr]').forEach(el=>{
         const gs=map[el.dataset.sr];
         if(gs && gs.attempts>0){
-          el.textContent=`${t('set.global')} ${gs.success_pct}% · ${gs.attempts}`;
+          el.textContent=`${t('set.global')} ${gs.success_pct}% \u00b7 ${gs.attempts}`;
           el.classList.add('green');
           el.title=t('set.based');
         }
@@ -6875,104 +7214,84 @@ function viewLibrary(){
   }
 }
 
-// ---- 나의 컬렉션 (100% 완료 게임만) ----
+// ---- 나의 컬렉션 (v2.0: 갤러리) ----
 function viewCollection(){
   cleanupView();
-  const list=GAMES.filter(g=>recs(g.id).some(r=>r.acc>=100));
+  const items=gameRegistry().filter(g=>!v2IsHidden(g.id)).map(v2Entry).filter(Boolean);
   appEl.innerHTML=`
-    <div class="section-title">${t('col.title')} <span class="badge gold">${t('col.count',{n:list.length})}</span></div>
-    <div class="dim" style="margin-bottom:14px">${t('col.desc')}</div>
-    ${list.length? `<div class="stack">${list.map(g=>{
-      const rs=recs(g.id);
-      return `<div class="game-card">
-        <div class="gc-title">${gTitle(g)}</div>
-        <div class="gc-players">${gWhite(g)} vs ${gBlack(g)} · ${g.year}</div>
-        <div style="display:flex;gap:6px;flex-wrap:wrap">${successRateBadge(g.id)}<span class="badge gray">${t('lib.challenges',{n:rs.length})}</span>${bookmarksOf(g.id).length?`<span class="badge gray">${t('lib.marks',{n:bookmarksOf(g.id).length})}</span>`:''}</div>
-        <div class="gc-actions">
-          <button class="btn sm" data-st="${g.id}">${t('btn.study')}</button>
-          <button class="btn challenge sm" data-ch="${g.id}">⚔ ${t('btn.challenge')}</button>
+    <div class="section-title">${t('col.title')}</div>
+    <div class="col-sub">${t('col.desc')}</div>
+    ${items.length? `<div class="gal-grid">${items.map((it,i)=>`
+      <div class="gal-item" data-gal="${i}">
+        <div class="gal-mat">
+          <div class="gal-frame">${v2FenBoard(it.fen)}</div>
+          <div class="gal-seal" style="color:${gradeOf(it.best.acc,it.best.ms,1).color}">${it.best.grade}</div>
         </div>
-      </div>`;}).join('')}</div>`
+        <div class="gal-cap">${gTitle(it.g)}</div>
+        <div class="gal-sub">${gWhite(it.g)} \u00b7 ${it.g.year||''}</div>
+      </div>`).join('')}</div>`
     : `<div class="card muted">${t('col.empty')}</div>`}`;
-  appEl.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{ location.hash=`#/challenge/${b.dataset.ch}`; });
-  appEl.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ location.hash=`#/study/${b.dataset.st}`; });
+  appEl.querySelectorAll('[data-gal]').forEach(el=>{
+    el.onclick=()=>{ const it=items[Number(el.dataset.gal)]; if(it) v2OpenGallery(it); };
+  });
 }
 
-// ---- 랭킹 ----
-let rankTab='speed', rankGame=null;
+// ---- 랭킹 (v2.0: 게임별 · 극한 모드 전용) ----
+let rankGame=null;
 function viewRanking(){
   cleanupView();
-  const allRecs=GAMES.flatMap(g=>recs(g.id).map(r=>({g, r})));
-  const perfect=allRecs.filter(x=>x.r.acc>=100);
-  const extremeLocal=perfect.filter(x=>x.r.mode==='extreme');
-  const pCounts={}; perfect.forEach(x=>{ pCounts[x.r.grade]=(pCounts[x.r.grade]||0)+1; });
-  const avg=allRecs.length? Math.round(allRecs.reduce((a,x)=>a+x.r.acc,0)/allRecs.length*10)/10 : null;
+  if(!GAMES.length){ appEl.innerHTML=`<div class="card muted">${t('dash.empty')}</div>`; return; }
+  if(!rankGame || !GAMES.some(g=>g.id===rankGame)) rankGame=GAMES[0].id;
+  const opts=GAMES.map(g=>`<option value="${g.id}" ${rankGame===g.id?'selected':''}>${gTitle(g)}</option>`).join('');
   appEl.innerHTML=`
     <div class="section-title">${t('tab.ranking')}</div>
-    <div class="stats-row" style="margin-bottom:14px">
-      <div class="stat-card"><div class="v" style="color:var(--gold)">${perfectGames().length}</div><div class="k">${t('stat.perfect')}</div></div>
-      <div class="stat-card"><div class="v">${avg===null?'-':avg+'%'}</div><div class="k">${t('stat.avg')}</div></div>
-      <div class="stat-card"><div class="v" style="font-size:16px">${pCounts['P+']||0} / ${pCounts['P']||0}</div><div class="k">P+ · P 기록</div></div>
+    <div class="dim" style="margin-bottom:12px">${t('rank.extremeNote')}</div>
+    <div class="card" style="padding:12px 14px">
+      <div class="dim" style="margin-bottom:6px">${t('rank.selectGame')}</div>
+      <select id="rank-gsel" style="width:100%;background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:8px;padding:9px 12px;font-size:14px">${opts}</select>
     </div>
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <button class="chip ${rankTab==='speed'?'active':''}" data-rt="speed">${t('rank.speed')}</button>
-      <button class="chip ${rankTab==='game'?'active':''}" data-rt="game">${t('rank.byGame')}</button>
-    </div>
-    <div class="card dim" style="margin-bottom:14px">${t('rank.local')}</div>
-    <!-- 랭킹: 극한 모드 전용 (v1.7) -->
-    <div id="rank-body"></div>`;
-  document.querySelectorAll('[data-rt]').forEach(b=>b.onclick=()=>{ rankTab=b.dataset.rt; viewRanking(); });
-  const body=document.getElementById('rank-body');
-  if(rankTab==='speed'){
+    <div id="rank-body" style="margin-top:12px"></div>`;
+  document.getElementById('rank-gsel').onchange=e=>{ rankGame=e.target.value; renderRank(); };
+  renderRank();
+
+  function renderRank(){
+    const g=gameByIdAny(rankGame); const body=document.getElementById('rank-body'); if(!g||!body) return;
+    const mine=recs(g.id).filter(r=>r.mode==='extreme').slice().sort((a,b)=> (b.acc-a.acc) || (a.ms-b.ms));
+    const perfectMine=mine.filter(r=>r.acc>=100);
+    body.innerHTML=`
+      <div class="card" style="padding:14px">
+        <div class="rk-head">${t('rank.global')}</div>
+        <div id="rank-global" class="dim" style="font-size:12px;margin-top:8px">${Cloud.enabled()&&Cloud.loggedIn()?t('rank.loading'):t('rank.noGlobal')}</div>
+      </div>
+      <div class="card" style="padding:14px;margin-top:12px">
+        <div class="rk-head">${t('rank.mine')} <span class="badge gray">${perfectMine.length}</span></div>
+        ${mine.length? `<table class="rank-table" style="margin-top:10px">
+          <tr><th>#</th><th>${t('th.acc')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.date')}</th></tr>
+          ${mine.map((r,i)=>`<tr><td class="num">${i+1}</td><td><b>${r.acc}%</b></td>
+            <td><span class="badge" style="background:${gradeOf(r.acc,r.ms,1).color}22;color:${gradeOf(r.acc,r.ms,1).color}">${r.grade}</span></td>
+            <td>${fmtTime(r.ms)}</td><td class="dim">${v2Date(r.ts)}</td></tr>`).join('')}
+        </table>` : `<div class="dim" style="font-size:12px;margin-top:8px">${t('rank.noMine')}</div>`}
+      </div>`;
     if(Cloud.enabled() && Cloud.loggedIn()){
-      body.innerHTML=`<div class="card muted">${t('rank.loading')}</div>`;
-      Cloud.fetchSpeedRanking().then(rows=>{
-        const b2=document.getElementById('rank-body'); if(!b2) return;
-        if(rows===null){ b2.innerHTML=`<div class="card muted">${t('err.network')}</div>`; return; }
+      Cloud.fetchGameRanking(g.id).then(rows=>{
+        const box=document.getElementById('rank-global'); if(!box) return;
+        if(rows===null){ box.innerHTML=t('err.network'); return; }
+        if(!rows.length){ box.innerHTML=t('rank.noMine'); return; }
         const uid=(Cloud.session()||{}).user_id;
-        const mineRow=(rows||[]).find(x=>x.user_id===uid);
-        const localBest=Math.min(...extremeLocal.map(x=>x.r.ms).concat([Infinity]));
-        b2.innerHTML=(rows&&rows.length)? `<div class="card" style="padding:6px 14px"><table class="rank-table">
-          <tr><th>${t('th.n')}</th><th>${t('th.name')}</th><th>${t('th.game')}</th><th>${t('th.time')}</th></tr>
-          ${rows.map(x=>`<tr${x.user_id===uid?' style="background:rgba(129,182,76,.10)"':''}><td class="num">${x.rank}</td>
+        box.classList.remove('dim');
+        box.innerHTML=`<div class="dim" style="font-size:11px;margin-bottom:6px">${t('rank.players',{n:rows.length})}</div>
+          <table class="rank-table">
+          <tr><th>#</th><th>${t('rank.colPlayer')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.date')}</th></tr>
+          ${rows.map(x=>`<tr${x.user_id===uid?' style="background:rgba(129,182,76,.10)"':''}>
+            <td class="num">${x.rank}</td>
             <td>${x.name}${x.user_id===uid?` <span class="badge green">${t('rank.you')}</span>`:''}</td>
-            <td>${gById(x.game_id)? gTitle(gById(x.game_id)) : x.game_id}</td><td><b>${fmtTime(x.ms)}</b></td></tr>`).join('')}
-          </table></div>
-          <div class="card dim" style="margin-top:10px">${t('rank.myBest',{t:isFinite(Math.min(mineRow?mineRow.ms:Infinity, localBest))? fmtTime(Math.min(mineRow?mineRow.ms:Infinity, localBest)):'-'})}</div>`
-        : `<div class="card muted">${t('rank.speedEmpty')}</div>`;
+            <td><span class="badge gold">${x.grade||'-'}</span></td>
+            <td><b>${fmtTime(x.ms)}</b></td><td class="dim">${x.ts?v2Date(Date.parse(x.ts)):''}</td></tr>`).join('')}
+          </table>`;
       });
-    } else {
-      const sorted=[...extremeLocal].sort((a,b)=>a.r.ms-b.r.ms);
-      body.innerHTML=sorted.length? `<div class="card" style="padding:6px 14px"><table class="rank-table">
-        <tr><th>${t('th.n')}</th><th>${t('th.game')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.date')}</th></tr>
-        ${sorted.map((x,i)=>`<tr><td class="num">${i+1}</td><td>${gTitle(x.g)}</td>
-          <td><span class="badge gold">${x.r.grade}</span></td><td><b>${fmtTime(x.r.ms)}</b></td>
-          <td class="dim">${new Date(x.r.ts).toLocaleDateString('ko-KR')}</td></tr>`).join('')}
-        </table></div>`
-      : `<div class="card muted">${t('rank.speedEmpty')}</div>`;
     }
-  } else {
-    const options=GAMES.map(g=>`<option value="${g.id}" ${rankGame===g.id?'selected':''}>${gTitle(g)}</option>`).join('');
-    body.innerHTML=`<div class="card">
-      <select id="rank-gsel" style="background:var(--card2);border:1.5px solid var(--border);color:var(--text);border-radius:8px;padding:8px 12px;font-size:14px">${options}</select>
-      <div id="rank-table" style="margin-top:12px"></div></div>`;
-    function renderGameRank(){
-      const g=gById(rankGame||GAMES[0].id);
-      const rs=[...recs(g.id)].sort((a,b)=> b.acc-a.acc || a.ms-b.ms);
-      document.getElementById('rank-table').innerHTML=rs.length? `<table class="rank-table">
-        <tr><th>${t('th.n')}</th><th>${t('th.acc')}</th><th>${t('th.grade')}</th><th>${t('th.time')}</th><th>${t('th.mode')}</th><th>${t('th.hint')}</th><th>${t('th.date')}</th></tr>
-        ${rs.map((r,i)=>`<tr><td class="num">${i+1}</td><td><b>${r.acc}%</b></td>
-          <td><span class="badge" style="background:${gradeOf(r.acc,r.ms,1).color}22;color:${gradeOf(r.acc,r.ms,1).color}">${r.grade}</span></td>
-          <td>${fmtTime(r.ms)}</td><td>${r.mode==='extreme'?(LANG==='en'?'Extreme':'극한'):(LANG==='en'?'Normal':'일반')}${r.cut?(LANG==='en'?' (cut)':' (컷오프)'):''}</td><td>${r.hint?(LANG==='en'?'used':'사용'):'-'}</td>
-          <td class="dim">${new Date(r.ts).toLocaleDateString('ko-KR')}</td></tr>`).join('')}</table>`
-      : `<div class="muted">${t('rank.gameEmpty')}</div>`;
-    }
-    document.getElementById('rank-gsel').onchange=e=>{ rankGame=e.target.value; renderGameRank(); };
-    if(!rankGame) rankGame=GAMES[0].id;
-    renderGameRank();
   }
 }
-
 // ---- 나만의 퍼즐 ----
 function viewPuzzle(){
   cleanupView();
@@ -7115,9 +7434,15 @@ function admSlug(title, year){
 function viewAdmin(){
   cleanupView();
   if(!Cloud.isAdmin){ appEl.innerHTML=`<div class="card muted">${t('adm.notAdmin')}</div>`; return; }
-  const opts=GAMES.map(g=>`<option value="${g.id}">${gTitle(g)} (${g.year||''})</option>`).join('');
+  const registry=gameRegistry();
+  const visible=GAMES.slice();
+  const hidden=registry.filter(g=>v2IsHidden(g.id));
+  const opts=visible.map(g=>`<option value="${g.id}">${gTitle(g)} (${g.year||''})</option>`).join('');
+  const folders=v2Folders();
+
   appEl.innerHTML=`
     <div class="section-title">${t('adm.title')} <span class="badge gold">admin</span></div>
+    <div class="card dim" style="font-size:12px;margin-bottom:12px">${t('adm.metaNote')}</div>
 
     <div class="card">
       <h3>${t('adm.add')}</h3>
@@ -7148,39 +7473,128 @@ function viewAdmin(){
         </div>
         <div class="adm-row"><button class="btn sm" id="adm-daily-save">${t('adm.save')}</button></div>
       </div>
-      <div id="adm-picks" class="dim" style="margin-top:10px">…</div>
+      <div id="adm-picks" class="dim" style="margin-top:10px">\u2026</div>
     </div>
 
     <div class="card">
-      <h3>${t('adm.list')}</h3>
-      <div id="adm-list"></div>
+      <h3>${t('adm.folders')}</h3>
+      <div class="dim" style="margin-bottom:10px">${t('adm.foldersDesc')}</div>
+      <div id="adm-folder-list" class="adm-folder-list"></div>
+      <div id="adm-games" style="margin-top:8px"></div>
+    </div>
+
+    <div class="card">
+      <h3>${t('adm.hiddenTitle')} <span class="badge gray">${hidden.length}</span></h3>
+      <div class="dim" style="margin-bottom:8px">${t('adm.hiddenDesc')}</div>
+      <div id="adm-hidden"></div>
     </div>`;
 
-  function fillList(){
-    const el=document.getElementById('adm-list'); if(!el) return;
-    el.innerHTML=GAMES.slice().reverse().map(g=>{
-      const server=Cloud.serverGameIds.includes(g.id);
-      return `<div class="adm-item">
-        <div class="grow"><div class="t2">${gTitle(g)}</div>
-          <div class="d2">${gWhite(g)} ${t('side.vs')} ${gBlack(g)} · ${g.year||''} · ${server?'server':'built-in'}</div></div>
-        ${server?`<button class="btn xs ghost" data-del="${g.id}">${t('adm.delete')}</button>`:''}
-      </div>`;
+  function folderOptions(cur){
+    const list=['', '__new__'].concat(folders);
+    return list.map(f=>{
+      if(f==='') return `<option value="" ${!cur?'selected':''}>${t('adm.none')}</option>`;
+      if(f==='__new__') return `<option value="__new__">+ ${t('adm.newFolder')}</option>`;
+      return `<option value="${f}" ${cur===f?'selected':''}>${f}</option>`;
     }).join('');
-    el.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{
-      if(!confirm(t('adm.confirmDel'))) return;
-      try{
-        await Cloud.adminArchiveGame(b.dataset.del);
-        Cloud.serverGameIds=Cloud.serverGameIds.filter(x=>x!==b.dataset.del);
-        toast(t('adm.deleted')); viewAdmin();
-      }catch(e){ toast(t('adm.addFail',{m:e.message})); }
+  }
+
+  function renderFolderList(){
+    const el=document.getElementById('adm-folder-list'); if(!el) return;
+    el.innerHTML=folders.length? folders.map(f=>{
+      const n=registry.filter(g=>(v2MetaOf(g.id)||{}).folder===f).length;
+      return `<div class="adm-item"><div class="grow"><div class="t2">${f}</div><div class="d2">${t('dash.count',{n})}</div></div>
+        <button class="btn xs ghost" data-ren="${f}">${t('adm.folderRename')}</button>
+        <button class="btn xs ghost" data-del-folder="${f}">${t('adm.folderDelete')}</button></div>`;
+    }).join('') : `<div class="dim" style="font-size:12px">${t('adm.none')}</div>`;
+
+    el.querySelectorAll('[data-ren]').forEach(b=>b.onclick=()=>{
+      const old=b.dataset.ren;
+      v2Ask({title:t('adm.folderRename'), value:old, placeholder:t('adm.folderNewPh'), ok:async(name)=>{
+        if(name===old) return;
+        try{
+          for(const g of registry){
+            if((v2MetaOf(g.id)||{}).folder===old) await Cloud.setMeta(g.id,{folder:name});
+          }
+          toast(t('adm.savedFolder')); viewAdmin();
+        }catch(e){ toast(t('adm.metaFail')); }
+      }});
+    });
+    el.querySelectorAll('[data-del-folder]').forEach(b=>b.onclick=()=>{
+      const f=b.dataset.delFolder;
+      if(!confirm(t('adm.folderDeleteQ'))) return;
+      (async()=>{
+        try{
+          for(const g of registry){
+            if((v2MetaOf(g.id)||{}).folder===f) await Cloud.setMeta(g.id,{folder:''});
+          }
+          toast(t('adm.savedFolder')); viewAdmin();
+        }catch(e){ toast(t('adm.metaFail')); }
+      })();
     });
   }
-  fillList();
+
+  function renderGameList(){
+    const el=document.getElementById('adm-games'); if(!el) return;
+    const all=registry.slice().sort((a,b)=>{
+      const fa=v2FolderOf(a), fb=v2FolderOf(b);
+      if(fa!==fb) return (fa||'\uffff').localeCompare(fb||'\uffff', LANG==='en'?'en':'ko');
+      return 0;
+    });
+    el.innerHTML=all.map(g=>{
+      const cur=v2FolderOf(g), hid=v2IsHidden(g.id);
+      return `<div class="adm-item adm-game"${hid?' style="opacity:.5"':''}>
+        <div class="grow"><div class="t2">${gTitle(g)} ${hid?`<span class="badge gray">${t('adm.hiddenBadge')}</span>`:''}</div>
+          <div class="d2">${gWhite(g)} ${t('side.vs')} ${gBlack(g)} \u00b7 ${g.year||''} \u00b7 ${g.server?t('adm.server'):t('adm.builtin')}</div></div>
+        <select class="adm-in adm-sel" data-fold="${g.id}">${folderOptions(cur)}</select>
+        ${hid?`<button class="btn xs ghost" data-restore="${g.id}">${t('adm.restore')}</button>`
+             :`<button class="btn xs ghost" data-hide="${g.id}">${t('adm.hide')}</button>`}
+      </div>`;
+    }).join('');
+
+    el.querySelectorAll('[data-fold]').forEach(sel=>{
+      sel.onchange=async()=>{
+        const gid=sel.dataset.fold, v=sel.value;
+        const assign=async(val)=>{
+          try{ await Cloud.setMeta(gid,{folder:val}); toast(t('adm.savedFolder')); viewAdmin(); }
+          catch(e){ toast(t('adm.metaFail')); Cloud.loadGameMeta().then(v2ApplyMeta); }
+        };
+        if(v==='__new__'){
+          v2Ask({title:t('adm.newFolder'), placeholder:t('adm.folderNewPh'), ok:assign});
+        } else {
+          await assign(v);
+        }
+      };
+    });
+    el.querySelectorAll('[data-hide]').forEach(b=>b.onclick=async()=>{
+      if(!confirm(t('adm.confirmHide'))) return;
+      try{ await Cloud.setMeta(b.dataset.hide,{hidden:true}); toast(t('adm.savedFolder')); viewAdmin(); }
+      catch(e){ toast(t('adm.metaFail')); }
+    });
+    el.querySelectorAll('[data-restore]').forEach(b=>b.onclick=async()=>{
+      try{ await Cloud.setMeta(b.dataset.restore,{hidden:false}); toast(t('adm.savedFolder')); viewAdmin(); }
+      catch(e){ toast(t('adm.metaFail')); }
+    });
+  }
+
+  function renderHidden(){
+    const el=document.getElementById('adm-hidden'); if(!el) return;
+    el.innerHTML=hidden.length? hidden.map(g=>`
+      <div class="adm-item"><div class="grow"><div class="t2">${gTitle(g)}</div>
+        <div class="d2">${gWhite(g)} ${t('side.vs')} ${gBlack(g)} \u00b7 ${g.year||''}</div></div>
+        <button class="btn xs ghost" data-restore2="${g.id}">${t('adm.restore')}</button></div>`).join('')
+      : `<div class="dim" style="font-size:12px">${t('adm.none')}</div>`;
+    el.querySelectorAll('[data-restore2]').forEach(b=>b.onclick=async()=>{
+      try{ await Cloud.setMeta(b.dataset.restore2,{hidden:false}); toast(t('adm.savedFolder')); viewAdmin(); }
+      catch(e){ toast(t('adm.metaFail')); }
+    });
+  }
+
+  renderFolderList(); renderGameList(); renderHidden();
 
   Cloud.adminPicks().then(rows=>{
     const el=document.getElementById('adm-picks'); if(!el) return;
     el.innerHTML = (rows&&rows.length)
-      ? rows.map(r=>{ const g=GAMES.find(x=>x.id===r.game_id); return `<div class="adm-item"><div class="grow"><div class="t2">${r.day}</div><div class="d2">${g?gTitle(g):r.game_id}</div></div></div>`; }).join('')
+      ? rows.map(r=>{ const g=gameByIdAny(r.game_id); return `<div class="adm-item"><div class="grow"><div class="t2">${r.day}</div><div class="d2">${g?gTitle(g):r.game_id}</div></div></div>`; }).join('')
       : t('adm.none');
   });
 
@@ -7223,14 +7637,15 @@ function viewAdmin(){
     try{
       await Cloud.adminAddGame(row);
       Cloud.serverGameIds.push(row.id);
-      if(!GAMES.some(g=>g.id===row.id)){
-        GAMES.push(Object.assign({}, row, {whiteEn:row.white, blackEn:row.black, endgamePly:null, server:true}));
+      if(!SERVER_GAMES.some(g=>g.id===row.id)){
+        const g=Object.assign({}, row, {whiteEn:row.white, blackEn:row.black, endgamePly:null, server:true});
+        SERVER_GAMES.push(g);
       }
+      v2ApplyMeta();
       toast(t('adm.added')); viewAdmin();
     }catch(e){ toast(t('adm.addFail',{m:e.message})); }
   };
 }
-
 function viewSettings(){
   cleanupView();
   const st=store.data.settings;
@@ -7511,6 +7926,9 @@ Cloud.fetchMyAttempts = async function(incremental){
       if(deep){
         await Cloud.pullProfile();
         await Cloud.loadDailyPick();
+        await Cloud.loadGameMeta();
+        if(!(liveRun && liveRun.isLive && liveRun.isLive()) &&
+           (h==='#/library'||h==='#/admin'||h==='#/collection'||h==='#/home')) route();
       }
       const h=location.hash||'#/home';
       const live=!!(liveRun && liveRun.isLive && liveRun.isLive());
@@ -7529,6 +7947,7 @@ Cloud.fetchMyAttempts = async function(incremental){
 store.load();
 try{
   applySettings();
+  try{ Cloud.metaLoadLocal(); v2ApplyMeta(); }catch(e){}
   updateChip();
   applyStaticI18n();
   route();
@@ -7537,7 +7956,7 @@ try{
   appEl.innerHTML='<div class="card"><h3>Error</h3><p class="muted">'+e.message+'</p></div>';
 }
 if(Cloud.enabled() && Cloud.loggedIn()){
-  Cloud.afterLogin().then(()=>{ try{ updateChip(); if(!location.hash || location.hash==='#/home') route(); }catch(e){} }).catch(()=>{});
+  Cloud.afterLogin().then(()=>{ try{ updateChip(); route(); }catch(e){} }).catch(()=>{});
 }
 window.addEventListener('error', e=>console.error('window error:', e.message));
 
