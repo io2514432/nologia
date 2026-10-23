@@ -450,6 +450,9 @@ textarea.adm-in{min-height:150px; resize:vertical; font-family:ui-monospace,SFMo
 .lib-sortrow{display:flex; align-items:center; gap:8px; margin-top:10px;}
 .lib-sortrow .dim{font-size:11px; letter-spacing:.04em;}
 .lib-sortrow select{flex:1; padding:7px 10px; font-size:12px;}
+.lib-dir{display:flex; align-items:center; gap:5px; padding:7px 10px; border-radius:8px; background:var(--card); border:1.5px solid var(--border); color:var(--text-dim); font-size:11px; white-space:nowrap; cursor:pointer;}
+.lib-dir:hover{border-color:var(--gold); color:var(--gold);}
+.lib-dir svg{width:13px; height:13px; flex-shrink:0;}
 
 .daily-len{display:flex; align-items:baseline; gap:8px; margin-top:10px;}
 .daily-len .dl-total{font-size:15px; font-weight:800; color:var(--text-strong); letter-spacing:.01em;}
@@ -5294,7 +5297,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.2.0';
+const APP_VERSION='2.3.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -6593,7 +6596,7 @@ Object.assign(I18N.ko, {
   'rank.extremeNote':'극한 모드 결과만 반영됩니다.',
   'set.extremeD':'힌트 없이 도전합니다.',
   'lib.all':'전체','lib.sort.label':'정렬',
-  'lib.sort.added':'신규 등록순','lib.sort.diff':'난이도순','lib.sort.new':'최신순','lib.sort.old':'과거순',
+  'lib.sort.date':'날짜순','lib.sort.diff':'난이도순','lib.sort.asc':'오름차순','lib.sort.desc':'내림차순','lib.sort.order':'정렬 방향',
   'adm.pzStart':'시작 수','adm.pzEnd':'종료 수','adm.pzHint':'수 번호 기준 · 비워두면 퍼즐 제외',
   'adm.pzSide':'푸는 입장','adm.pzSideW':'백','adm.pzSideB':'흑','adm.pzSideBoth':'양쪽'
 });
@@ -6606,7 +6609,7 @@ Object.assign(I18N.en, {
   'rank.extremeNote':'Only Extreme mode results count.',
   'set.extremeD':'Challenge without hints.',
   'lib.all':'All','lib.sort.label':'Sort',
-  'lib.sort.added':'Recently added','lib.sort.diff':'Difficulty','lib.sort.new':'Newest game','lib.sort.old':'Oldest game',
+  'lib.sort.date':'Date','lib.sort.diff':'Difficulty','lib.sort.asc':'Ascending','lib.sort.desc':'Descending','lib.sort.order':'Sort direction',
   'adm.pzStart':'Start move','adm.pzEnd':'End move','adm.pzHint':'Move numbers · leave empty to skip',
   'adm.pzSide':'Solver side','adm.pzSideW':'White','adm.pzSideB':'Black','adm.pzSideBoth':'Both'
 });
@@ -7498,12 +7501,13 @@ function viewHome(){
 // ---- 라이브러리 (v2.1: 별 난이도 · 정보 팝업) ----
 let libQuery='';
 // ---- 라이브러리 (v2.2: 정렬 · 폴더 필터) ----
-var libSort='added', libFolder='__all__';
+var libSort='date', libDir='desc', libFolder='__all__';
 function viewLibrary(){
   cleanupView();
   const folders=v2Folders();
   if(libFolder!=='__all__' && folders.indexOf(libFolder)<0) libFolder='__all__';
   const chips=['__all__'].concat(folders);
+  const dirMarkup=()=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(libDir==='asc'?'<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>':'<path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/>')+'</svg><span>'+(libDir==='asc'?t('lib.sort.asc'):t('lib.sort.desc'))+'</span>';
   appEl.innerHTML=`
     <div class="section-title">${t('dash.title')} <span class="badge gray">${t('dash.count',{n:GAMES.length})}</span></div>
     <div style="margin-bottom:12px">
@@ -7519,11 +7523,10 @@ function viewLibrary(){
     <div class="lib-sortrow">
       <span class="dim">${t('lib.sort.label')}</span>
       <select id="lib-sort" class="adm-in">
-        <option value="added" ${libSort==='added'?'selected':''}>${t('lib.sort.added')}</option>
+        <option value="date" ${libSort==='date'?'selected':''}>${t('lib.sort.date')}</option>
         <option value="diff" ${libSort==='diff'?'selected':''}>${t('lib.sort.diff')}</option>
-        <option value="new" ${libSort==='new'?'selected':''}>${t('lib.sort.new')}</option>
-        <option value="old" ${libSort==='old'?'selected':''}>${t('lib.sort.old')}</option>
       </select>
+      <button id="lib-dir" class="lib-dir" type="button" aria-label="${t('lib.sort.order')}">${dirMarkup()}</button>
     </div>
     <div id="lib-grid" style="margin-top:14px"></div>`;
 
@@ -7531,10 +7534,18 @@ function viewLibrary(){
 
   function sorted(list){
     const arr=list.slice();
-    if(libSort==='diff') arr.sort((a,b)=>(v21StarCount(b)-v21StarCount(a)) || (v22Moves(b)-v22Moves(a)));
-    else if(libSort==='new') arr.sort((a,b)=>{ const x=v22Year(b), y=v22Year(a); if(!x&&y) return 1; if(x&&!y) return -1; return x-y; });
-    else if(libSort==='old') arr.sort((a,b)=>{ const x=v22Year(a), y=v22Year(b); if(!x&&y) return 1; if(x&&!y) return -1; return x-y; });
-    else arr.sort((a,b)=>(b.addedAt||0)-(a.addedAt||0));
+    const s=libDir==='asc'?1:-1;
+    if(libSort==='diff'){
+      arr.sort((a,b)=>s*((v21StarCount(a)-v21StarCount(b)) || (v22Moves(a)-v22Moves(b))));
+    }else{
+      arr.sort((a,b)=>{
+        const x=v22Year(a), y=v22Year(b);
+        if(!x&&y) return 1;
+        if(x&&!y) return -1;
+        if(!x&&!y) return 0;
+        return s*(x-y);
+      });
+    }
     return arr;
   }
   function gameCard(g){
@@ -7588,6 +7599,7 @@ function viewLibrary(){
   }
   document.getElementById('lib-q').addEventListener('input', e=>{ libQuery=e.target.value; renderGrid(); });
   document.getElementById('lib-sort').onchange=e=>{ libSort=e.target.value; renderGrid(); };
+  document.getElementById('lib-dir').onclick=()=>{ libDir=(libDir==='asc'?'desc':'asc'); document.getElementById('lib-dir').innerHTML=dirMarkup(); renderGrid(); };
   appEl.querySelectorAll('[data-folder]').forEach(b=>b.onclick=()=>{
     libFolder=b.dataset.folder;
     appEl.querySelectorAll('[data-folder]').forEach(x=>x.classList.toggle('active', x===b));
