@@ -5306,7 +5306,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.5.0';
+const APP_VERSION='2.5.1';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5802,6 +5802,8 @@ Object.assign(I18N.en, {
 });
 Object.assign(I18N.ko, {'ch.end':'포기','ch.quitSave':'지금 나가도 지금까지의 기록은 저장됩니다.','home.streakTitle':'연속 도전','home.streakHint':'도전을 S 등급 이상으로 마치면 그날이 체크됩니다','home.streakZero':'오늘 도전을 S 이상으로 마치면 시작됩니다'});
 Object.assign(I18N.en, {'ch.end':'Give up','ch.quitSave':'Your progress so far is saved even if you leave.','home.streakTitle':'Challenge streak','home.streakHint':'A day counts when you finish a challenge with grade S or better','home.streakZero':'Finish a challenge with S or better to start'});
+Object.assign(I18N.ko, {'ch.quitQ':'정말 포기하시겠습니까?','home.streakZero':'오늘부터 시작','home.streakNote':'S 등급 이상 달성 시 체크','toast.resetSync':'다른 기기의 기록도 함께 초기화되었습니다'});
+Object.assign(I18N.en, {'ch.quitQ':'Give up this challenge?','home.streakZero':'Start today','home.streakNote':'Checked when you reach grade S or better','toast.resetSync':'Records on your other devices were reset too'});
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
   if(vars) for(const kk in vars) s = s.split('{'+kk+'}').join(String(vars[kk]));
@@ -6089,7 +6091,7 @@ Object.assign(Cloud, {
     const s=this.session(); if(!s) return false;
     const at=Date.now();
     const data={ bookmarks:store.data.bookmarks, settings:store.data.settings, daily:store.data.daily,
-                 puzzle:store.data.puzzle, stats:store.data.stats, activity:store.data.activity, at };
+                 puzzle:store.data.puzzle, stats:store.data.stats, activity:store.data.activity, wipeAt:store.data.wipeAt||0, at };
     try{
       await this._rest('players?on_conflict=id', {
         method:'POST',
@@ -6105,6 +6107,18 @@ Object.assign(Cloud, {
     }
   },
 
+  async resetCloud(){
+    const s=this.session(); if(!s) return false;
+    await this._rest('attempts?user_id=eq.'+s.user_id, {method:'DELETE', headers:{'Prefer':'return=minimal'}});
+    const wipeAt=Date.now();
+    await this._rest('players?on_conflict=id', {
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body: JSON.stringify({ id:s.user_id, name:s.name||'', data:{ settings:store.data.settings||{}, bookmarks:{}, daily:{streak:0,lastDone:null}, puzzle:{streak:0,done:0}, stats:{challenges:0}, activity:{}, at:wipeAt, wipeAt } })
+    });
+    return wipeAt;
+  },
+
   async pullProfile(){
     if(!this.enabled() || !this.loggedIn() || this.profileBroken) return false;
     try{
@@ -6112,6 +6126,14 @@ Object.assign(Cloud, {
       const rows=await this._rest('players?select=data&id=eq.'+uid);
       const rem=(rows && rows[0] && rows[0].data) || null;
       if(!rem) return false;
+      if(rem.wipeAt && rem.wipeAt > (store.data.wipeAt||0)){
+        store.data.records={}; store.data.bookmarks={}; store.data.streak={}; store.data.study={};
+        store.data.daily={streak:0,lastDone:null}; store.data.puzzle={streak:0,done:0}; store.data.stats={challenges:0};
+        if(rem.settings) store.data.settings=Object.assign({}, store.data.settings, rem.settings);
+        store.data.wipeAt=rem.wipeAt; store.data.profileAt=rem.at||0; store.save();
+        try{ toast(t('toast.resetSync')); }catch(e){}
+        return true;
+      }
       const localAt=store.data.profileAt||0;
       if((rem.at||0) > localAt){
         if(rem.settings) store.data.settings=Object.assign({}, store.data.settings, rem.settings);
@@ -6954,7 +6976,7 @@ function viewStudy(gidRaw){
       if(location.hash===h) viewStudy(gid+'?side='+v); else location.hash=h;
     });
     const closeChooser=el.querySelector('[data-ov-close]');
-    if(closeChooser) closeChooser.onclick=()=>{ v2CloseOverlay(); if(history.length>1) history.back(); else location.hash='#/library'; };
+    if(closeChooser) closeChooser.onclick=()=>{ v2CloseOverlay(); liveRun=null; updateLiveTab(); if(history.length>1) history.back(); else location.hash='#/library'; };
   }
 
   render();
@@ -7161,7 +7183,6 @@ function viewChallenge(gid, opts={}){
   document.getElementById('ch-end').onclick=()=>{
     if(state.done || !state.started){ finish('manual'); return; }
     showModal(`<h3 style="justify-content:center">${t('ch.quitQ')}</h3>
-      ${state.started?'<div class="muted" style="margin-top:8px;font-size:13px">'+t('ch.quitSave')+'</div>':''}
       <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
         <button class="btn danger" id="qt-yes">${t('ch.quitYes')}</button>
         <button class="btn outline" id="qt-no">${t('ch.quitNo')}</button></div>`);
@@ -7375,7 +7396,7 @@ function quoteTexts(i){
 // ---- 미니 보드 썸네일 / 배지 ----
 function miniBoardHTML(g){
   const d=gameData(g);
-  const fen=d.fens[Math.min(6,d.N)];
+  const fen=d.fens[d.N]||d.fens[Math.min(6,d.N)];
   const map=boardMap(fenBoard(fen));
   let html='<div class="mini-board"><div class="board">';
   const files=['a','b','c','d','e','f','g','h'], ranks=['8','7','6','5','4','3','2','1'];
@@ -7569,6 +7590,7 @@ function viewHome(){
           <div class="streak-week">${t('home.weekShort',{n:weekCount})}</div>
         </div>
         ${weekStripHTML()}
+        <div class="dim" style="font-size:11px;margin-top:8px">${t('home.streakNote')}</div>
       </div>
     </div>
     <div class="home-stats">
@@ -8314,7 +8336,12 @@ ${Cloud.isAdmin?adminCardHTML():''}
       <div style="display:flex;gap:8px;justify-content:center">
         <button class="btn danger" id="rst-yes">${t('set.resetBtn')}</button>
         <button class="btn outline" id="rst-no">${t('btn.close')}</button></div>`);
-    document.getElementById('rst-yes').onclick=()=>{ localStorage.removeItem('chessnologia.v1'); localStorage.removeItem('chessmemo.v1'); location.hash='#/home'; location.reload(); };
+    document.getElementById('rst-yes').onclick=async ()=>{
+      const btn=document.getElementById('rst-yes'); if(btn){ btn.disabled=true; btn.textContent=t('set.resetBtn')+'...'; }
+      try{ if(Cloud.enabled() && Cloud.loggedIn()) await Cloud.resetCloud(); }catch(e){ console.warn('cloud reset fail', e.message); }
+      localStorage.removeItem('chessnologia.v1'); localStorage.removeItem('chessmemo.v1');
+      location.hash='#/home'; location.reload();
+    };
     document.getElementById('rst-no').onclick=closeModal;
   };
 }
