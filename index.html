@@ -5293,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.8.2';
+const APP_VERSION='2.8.3';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -6856,7 +6856,7 @@ function viewStudy(gidRaw){
   const side=mm?mm[1]:null;
   const g=gById(gid); const d=gameData(g);
   const resume=(liveRun && liveRun.type==='study' && liveRun.gid===gid)? liveRun : null;
-  let idx=resume? (resume.idx||0):0, flipped=false, doneShown=resume? !!resume.doneShown : false, prevIdx=-1;
+  let idx=resume? (resume.idx||0):0, flipped=(side==='b'), doneShown=resume? !!resume.doneShown : false, prevIdx=-1;
   let autoT=null;
   liveRun={type:'study', gid, hash:location.hash, isLive:()=>true, idx, doneShown};
   updateLiveTab();
