@@ -463,6 +463,12 @@ html,body{max-width:100%; overflow-x:hidden;}
 
 .tab-btn[data-live-lock]{pointer-events:none;}
 
+/* v2.5: 미니 보드 정사각 고정 (모바일 왜곡 방지) */
+.mini-board{aspect-ratio:1/1; overflow:hidden;}
+.mini-board .board{width:100%; height:100%; aspect-ratio:auto; grid-template-columns:repeat(8,minmax(0,1fr)); grid-template-rows:repeat(8,minmax(0,1fr));}
+.mini-board .mb-sq{min-width:0; min-height:0; overflow:hidden;}
+.mini-board .mb-pc{width:100%; height:100%; display:flex; align-items:center; justify-content:center; line-height:0;}
+.mini-board .mb-pc svg{width:86%; height:86%; display:block;}
 </style>
 </head>
 <body data-board="green">
@@ -5300,7 +5306,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.4.0';
+const APP_VERSION='2.5.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5794,6 +5800,8 @@ Object.assign(I18N.en, {
  'rv.legend':'Darker means more misses.','rv.legendCut':' (remaining moves hidden)','rv.status':'{a}/{b} moves',
  'toast.updated':'Updated to a new version'
 });
+Object.assign(I18N.ko, {'ch.end':'포기','ch.quitSave':'지금 나가도 지금까지의 기록은 저장됩니다.','home.streakTitle':'연속 도전','home.streakHint':'도전을 S 등급 이상으로 마치면 그날이 체크됩니다','home.streakZero':'오늘 도전을 S 이상으로 마치면 시작됩니다'});
+Object.assign(I18N.en, {'ch.end':'Give up','ch.quitSave':'Your progress so far is saved even if you leave.','home.streakTitle':'Challenge streak','home.streakHint':'A day counts when you finish a challenge with grade S or better','home.streakZero':'Finish a challenge with S or better to start'});
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
   if(vars) for(const kk in vars) s = s.split('{'+kk+'}').join(String(vars[kk]));
@@ -6873,6 +6881,7 @@ function viewStudy(gidRaw){
     if(idx===0) return t('study.statusStart2',{turn:turn});
     return t('study.status2',{a:Math.ceil(idx/2), b:Math.ceil(d.N/2), turn:turn});
   }
+  let skipDone=false;
   function render(){
     board.setFen(idx===0? d.startFen : d.fens[idx], {
       lastMove: idx>0? [d.uci[idx-1].slice(0,2), d.uci[idx-1].slice(2,4)] : null,
@@ -6888,14 +6897,16 @@ function viewStudy(gidRaw){
     const list=document.getElementById('st-moves');
     scrollToEl(list, list.querySelector('.ml-move.cur'));
     list.querySelectorAll('.ml-move[data-ply]').forEach(el=>el.addEventListener('click',()=>{ idx=+el.dataset.ply; render(); }));
-    if(idx===d.N && prevIdx!==d.N && !doneShown){ doneShown=true; showDonePop(); logStudyDone(gid); }
+    if(idx===d.N && prevIdx!==d.N && !doneShown && !skipDone){ doneShown=true; showDonePop(); logStudyDone(gid); }
+    if(skipDone) skipDone=false;
+    if(idx>=d.N && liveRun && liveRun.type==='study'){ liveRun=null; updateLiveTab(); }
     prevIdx=idx;
     if(liveRun && liveRun.type==='study' && liveRun.gid===gid){ liveRun.idx=idx; liveRun.doneShown=doneShown; }
   }
   document.getElementById('st-first').onclick=()=>{ idx=0; render(); };
   document.getElementById('st-prev').onclick=()=>{ if(idx>0){ idx--; render(); } };
   document.getElementById('st-next').onclick=()=>{ if(idx<d.N){ Sfx.play('move'); idx++; render(); } };
-  document.getElementById('st-last').onclick=()=>{ idx=d.N; render(); };
+  document.getElementById('st-last').onclick=()=>{ idx=d.N; skipDone=true; render(); };
   document.getElementById('st-flip').onclick=()=>{ flipped=!flipped; board.setFlipped(flipped); };
   document.getElementById('st-hint').onclick=()=>{
     const order=['both','from','off'];
@@ -6914,7 +6925,7 @@ function viewStudy(gidRaw){
     if(e.key==='ArrowLeft'){ idx=Math.max(0,idx-1); render(); }
     else if(e.key==='ArrowRight'){ idx=Math.min(d.N,idx+1); render(); }
     else if(e.key==='Home'){ idx=0; render(); }
-    else if(e.key==='End'){ idx=d.N; render(); }
+    else if(e.key==='End'){ idx=d.N; skipDone=true; render(); }
     else if(e.key==='f'||e.key==='F'){ flipped=!flipped; board.setFlipped(flipped); }
   };
   document.addEventListener('keydown', kh);
@@ -6942,6 +6953,8 @@ function viewStudy(gidRaw){
       const h='#/study/'+gid+'?side='+v;
       if(location.hash===h) viewStudy(gid+'?side='+v); else location.hash=h;
     });
+    const closeChooser=el.querySelector('[data-ov-close]');
+    if(closeChooser) closeChooser.onclick=()=>{ v2CloseOverlay(); if(history.length>1) history.back(); else location.hash='#/library'; };
   }
 
   render();
@@ -7091,6 +7104,7 @@ function viewChallenge(gid, opts={}){
       const prev=bestOf(g.id);
       isBest = !prev || res.accuracy>prev.acc || (res.accuracy===prev.acc && ms<prev.ms);
       addRecord(g.id, rec);
+      if(['P+','P','S'].indexOf(gr.code)>=0) logChallengeDone();
       if(Cloud.enabled() && Cloud.loggedIn()){ Cloud.uploadAttempt(g.id, rec); }
       if(opts.daily && auto) markDailyDone();
     }
@@ -7147,6 +7161,7 @@ function viewChallenge(gid, opts={}){
   document.getElementById('ch-end').onclick=()=>{
     if(state.done || !state.started){ finish('manual'); return; }
     showModal(`<h3 style="justify-content:center">${t('ch.quitQ')}</h3>
+      ${state.started?'<div class="muted" style="margin-top:8px;font-size:13px">'+t('ch.quitSave')+'</div>':''}
       <div style="display:flex;gap:8px;justify-content:center;margin-top:12px">
         <button class="btn danger" id="qt-yes">${t('ch.quitYes')}</button>
         <button class="btn outline" id="qt-no">${t('ch.quitNo')}</button></div>`);
@@ -7470,6 +7485,18 @@ currentStreak = function(){
   if(!has(todayKey(d))) d.setDate(d.getDate()-1);
   let n=0, guard=0;
   while(has(todayKey(d)) && guard<4000){ n++; guard++; d.setDate(d.getDate()-1); }
+  return n;
+};
+// v2.5: 연속 도전 — 도전모드에서 S 이상으로 마친 날만 체크
+function streakMap(){ if(!store.data.streak || typeof store.data.streak!=='object') store.data.streak={}; return store.data.streak; }
+function streakDay(day){ return !!streakMap()[day]; }
+function logChallengeDone(){ try{ streakMap()[todayKey()]=true; store.save(); }catch(e){} }
+activityOf = function(day){ return streakDay(day)?1:0; };
+currentStreak = function(){
+  const d=new Date(); d.setHours(12,0,0,0);
+  if(!streakDay(todayKey(d))) d.setDate(d.getDate()-1);
+  let n=0, guard=0;
+  while(streakDay(todayKey(d)) && guard<4000){ n++; guard++; d.setDate(d.getDate()-1); }
   return n;
 };
 function logStudyDone(gid){
