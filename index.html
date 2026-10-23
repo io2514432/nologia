@@ -5293,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.10.0';
+const APP_VERSION='2.10.1';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -5612,7 +5612,7 @@ ko:{
  'imp.title':'기보 추가 (PGN)','imp.desc':'PGN 텍스트를 붙여넣으세요. lichess·체스닷컴 등에서 복사한 기보도 됩니다. 추가한 기보는 이 브라우저에 저장돼요.','imp.ok':'추가','imp.cancel':'취소','imp.need':'PGN을 붙여넣어 주세요','imp.done':'기보가 추가됐어요!','imp.fail':'PGN 파싱 실패: {m}','imp.noMoves':'이동 수가 없어요',
  'col.title':'나의 컬렉션','col.count':'{n}게임 100% 달성','col.desc':'100%로 완료한 게임만 모아 보여줘요. 3게임을 달성하면 나만의 퍼즐도 열립니다.','col.empty':'아직 100%로 완료한 게임이 없어요. 도전 모드에서 기보를 완벽하게 외워 컬렉션을 채워보세요!',
  'rank.speed':'100% 스피드 랭킹','rank.byGame':'게임별 기록','rank.local':'이 랭킹은 이 브라우저에 저장된 나의 기록입니다. 친구·전 세계 랭킹은 서버 연동이 필요해요.','rank.speedEmpty':'아직 100% 기록이 없어요. 도전 모드에서 기보를 완벽하게 외워보세요!','rank.gameEmpty':'아직 이 게임의 기록이 없어요.',
- 'pz.why':'이 국면인 이유','pz.title':'나만의 퍼즐','pz.streak':'연속 성공 {n}회','pz.locked':'아직 참여할 수 없어요','pz.lockedDesc':'나만의 퍼즐은 <b>100% 완료한 게임이 3개 이상</b>일 때 참여할 수 있어요. 암기를 확실히 한 뒤 풀어야 재미있기 때문이에요. 랜덤한 국면에서 게임과 다음 수를 맞춥니다.','pz.progress':'현재 {n}/3 게임 완료','pz.go':'기보 익히러 가기','pz.desc':'100%로 완료한 기록 중 랜덤한 국면이 나왔어요','pz.q1':'Q1. 이 국면은 어느 게임일까요?','pz.q2':'Q2. 다음 수를 직접 두세요','pz.q2wait':'보드에서 기물을 클릭해 다음 수를 두세요','pz.q1ok':'Q1 정답','pz.q1bad':'Q1 오답','pz.q2ok':'Q2 정답','pz.q2bad':'Q2 오답','pz.answer':'정답 수: {m}','pz.next':'다음 퍼즐','adm.purge':'영구 삭제','adm.edit':'수정','adm.editTitle':'기보 정보 수정','adm.fEvent':'대회/장소','adm.confirmPurge':'이 기보를 서버에서 완전히 삭제합니다. 되돌릴 수 없습니다. 계속할까요?','adm.purged':'기보를 완전히 삭제했어요','adm.purgeFail':'삭제 실패:','pz.pick':'다른 퍼즐 뽑기','pz.q2okMsg':'정답! 다음 수를 맞혔어요','pz.q2badMsg':'아쉽네요 — 정답은 {m} 이었어요','pz.score':'{n}점',
+ 'pz.why':'이 국면인 이유','pz.pickHint':'다음 퍼즐이 준비되어 있어요','pz.title':'나만의 퍼즐','pz.streak':'연속 성공 {n}회','pz.locked':'아직 참여할 수 없어요','pz.lockedDesc':'나만의 퍼즐은 <b>100% 완료한 게임이 3개 이상</b>일 때 참여할 수 있어요. 암기를 확실히 한 뒤 풀어야 재미있기 때문이에요. 랜덤한 국면에서 게임과 다음 수를 맞춥니다.','pz.progress':'현재 {n}/3 게임 완료','pz.go':'기보 익히러 가기','pz.desc':'100%로 완료한 기록 중 랜덤한 국면이 나왔어요','pz.q1':'Q1. 이 국면은 어느 게임일까요?','pz.q2':'Q2. 다음 수를 직접 두세요','pz.q2wait':'보드에서 기물을 클릭해 다음 수를 두세요','pz.q1ok':'Q1 정답','pz.q1bad':'Q1 오답','pz.q2ok':'Q2 정답','pz.q2bad':'Q2 오답','pz.answer':'정답 수: {m}','pz.next':'다음 퍼즐','adm.purge':'영구 삭제','adm.edit':'수정','adm.editTitle':'기보 정보 수정','adm.fEvent':'대회/장소','adm.confirmPurge':'이 기보를 서버에서 완전히 삭제합니다. 되돌릴 수 없습니다. 계속할까요?','adm.purged':'기보를 완전히 삭제했어요','adm.purgeFail':'삭제 실패:','pz.pick':'다른 퍼즐 뽑기','pz.q2okMsg':'정답! 다음 수를 맞혔어요','pz.q2badMsg':'아쉽네요 — 정답은 {m} 이었어요','pz.score':'{n}점',
  'set.title':'설정','set.lang':'언어 · Language','set.challenge':'도전 모드','set.challengeSub':'힌트 등 도전 중 기능은 여기서 켜고 끌 수 있어요','set.difficulty':'암기 난이도','set.screen':'화면 · 소리',
  'set.hint':'힌트','set.hintD':'도전 중 다음에 움직일 기물의 위치를 알려줍니다. 힌트를 쓰면 100%여도 S등급으로 조정돼요.',
  'set.fb':'즉시 정답 피드백','set.fbD':'도전 중 기보와 다른 수를 두면 바로 알려줍니다. 끄면 틀려도 알려주지 않는 긴장감 모드!',
@@ -8049,8 +8049,9 @@ function viewPuzzle(){
   }
   let cur=null;
   const saved=store.data.puzzleCur;
-  if(saved){ cur=pool.filter(x=>x.key===saved)[0]||null; }
-  if(!cur){ cur=pool[Math.floor(Math.random()*pool.length)]; store.data.puzzleCur=cur.key; store.save(); }
+  const solvedList=(store.data.puzzle&&store.data.puzzle.solved)||[];
+  if(saved){ cur=pool.filter(x=>x.key===saved)[0]||null; if(cur && solvedList.indexOf(cur.key)>=0) cur=null; }
+  if(!cur){ const fresh=pool.filter(x=>solvedList.indexOf(x.key)<0); const src=fresh.length?fresh:pool; cur=src[Math.floor(Math.random()*src.length)]; store.data.puzzleCur=cur.key; store.save(); }
   startPuzzle(cur.g, cur.pz);
 }
 
@@ -8101,12 +8102,10 @@ function startPuzzle(g, pz){
           ${pz.tag?`<div class="badge gold-soft" style="margin-top:8px">${pz.tag}</div>`:''}
           ${pz.why?`<p class="muted" style="margin-top:6px">${pz.why}</p>`:''}
           <div class="pz-range">${sMove}\u2013${eMove}${t('unit.moves')} \u00b7 ${t('study.side.'+side)}</div>
-          <button class="btn" id="pz-study" style="width:100%;margin-top:12px">${t('pz.studyGame')}</button>
-        </div>
-        <div class="card" id="pz-done" style="display:none">
-          <h3 style="color:var(--gold)">${t('pz.done')}</h3>
-          <p class="muted">${t('pz.doneDesc')}</p>
-          <button class="btn" id="pz-study2" style="width:100%">${t('pz.studyGame')}</button>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn" id="pz-study" style="flex:1">${t('pz.studyGame')}</button>
+            <button class="btn outline" id="pz-next2" style="flex:1">${t('pz.next')}</button>
+          </div>
         </div>
       </div>
     </div>`;
@@ -8207,23 +8206,12 @@ function startPuzzle(g, pz){
     board.setHint([]);
     if(btnHint2) btnHint2.textContent=t('pz.hint');
     const infoEl=document.getElementById('pz-info'); if(infoEl) infoEl.style.display='block';
-    showModal('<h3 style="justify-content:center">'+t('pz.done')+'</h3>'+
-      '<p class="muted" style="text-align:center;margin-top:8px">'+t('pz.doneDesc')+'</p>'+
-      ((pz&&pz.why)?'<div class="card" style="margin-top:10px;text-align:left"><div class="dim" style="font-size:11px">'+(pz.tag||'')+'</div><p class="muted" style="margin-top:4px">'+pz.why+'</p></div>':'')+
-      '<div style="display:flex;gap:8px;margin-top:14px">'+
-        '<button class="btn" id="pz-go-study" style="flex:1">'+t('pz.studyGame')+'</button>'+
-        '<button class="btn outline" id="pz-next" style="flex:1">'+t('pz.next')+'</button>'+
-      '</div>');
-    document.getElementById('pz-go-study').onclick=function(){ closeModal(); location.hash='#/study/'+g.id; };
-    document.getElementById('pz-next').onclick=function(){ closeModal(); nextPuzzle(); };
-    const card=document.getElementById('pz-done');
-    if(card) card.style.display='block';
     const st=document.getElementById('pz-status');
-    if(st) st.innerHTML=`<span style="color:var(--green);font-weight:800">${t('pz.done')}</span>`;
+    if(st) st.innerHTML='<span style="color:var(--green);font-weight:800">'+t('pz.done')+'</span> <span class="dim" style="font-size:12px">'+t('pz.pickHint')+'</span>';
+    const pn=document.getElementById('pz-next2'); if(pn) pn.onclick=nextPuzzle;
   }
   const goStudy=()=>{ location.hash='#/study/'+g.id; };
   document.getElementById('pz-study').onclick=goStudy;
-  document.getElementById('pz-study2').onclick=goStudy;
   document.getElementById('pz-reset').onclick=resetPuzzle;
   const btnHint2=document.getElementById('pz-hint');
   if(btnHint2) btnHint2.onclick=()=>{
