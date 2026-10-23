@@ -5293,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.8.3';
+const APP_VERSION='2.9.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -5612,7 +5612,7 @@ ko:{
  'imp.title':'기보 추가 (PGN)','imp.desc':'PGN 텍스트를 붙여넣으세요. lichess·체스닷컴 등에서 복사한 기보도 됩니다. 추가한 기보는 이 브라우저에 저장돼요.','imp.ok':'추가','imp.cancel':'취소','imp.need':'PGN을 붙여넣어 주세요','imp.done':'기보가 추가됐어요!','imp.fail':'PGN 파싱 실패: {m}','imp.noMoves':'이동 수가 없어요',
  'col.title':'나의 컬렉션','col.count':'{n}게임 100% 달성','col.desc':'100%로 완료한 게임만 모아 보여줘요. 3게임을 달성하면 나만의 퍼즐도 열립니다.','col.empty':'아직 100%로 완료한 게임이 없어요. 도전 모드에서 기보를 완벽하게 외워 컬렉션을 채워보세요!',
  'rank.speed':'100% 스피드 랭킹','rank.byGame':'게임별 기록','rank.local':'이 랭킹은 이 브라우저에 저장된 나의 기록입니다. 친구·전 세계 랭킹은 서버 연동이 필요해요.','rank.speedEmpty':'아직 100% 기록이 없어요. 도전 모드에서 기보를 완벽하게 외워보세요!','rank.gameEmpty':'아직 이 게임의 기록이 없어요.',
- 'pz.title':'나만의 퍼즐','pz.streak':'연속 성공 {n}회','pz.locked':'아직 참여할 수 없어요','pz.lockedDesc':'나만의 퍼즐은 <b>100% 완료한 게임이 3개 이상</b>일 때 참여할 수 있어요. 암기를 확실히 한 뒤 풀어야 재미있기 때문이에요. 랜덤한 국면에서 게임과 다음 수를 맞춥니다.','pz.progress':'현재 {n}/3 게임 완료','pz.go':'기보 익히러 가기','pz.desc':'100%로 완료한 기록 중 랜덤한 국면이 나왔어요','pz.q1':'Q1. 이 국면은 어느 게임일까요?','pz.q2':'Q2. 다음 수를 직접 두세요','pz.q2wait':'보드에서 기물을 클릭해 다음 수를 두세요','pz.q1ok':'Q1 정답','pz.q1bad':'Q1 오답','pz.q2ok':'Q2 정답','pz.q2bad':'Q2 오답','pz.answer':'정답 수: {m}','pz.next':'다음 퍼즐','adm.purge':'영구 삭제','adm.confirmPurge':'이 기보를 서버에서 완전히 삭제합니다. 되돌릴 수 없습니다. 계속할까요?','adm.purged':'기보를 완전히 삭제했어요','adm.purgeFail':'삭제 실패:','pz.pick':'다른 퍼즐 뽑기','pz.q2okMsg':'정답! 다음 수를 맞혔어요','pz.q2badMsg':'아쉽네요 — 정답은 {m} 이었어요','pz.score':'{n}점',
+ 'pz.title':'나만의 퍼즐','pz.streak':'연속 성공 {n}회','pz.locked':'아직 참여할 수 없어요','pz.lockedDesc':'나만의 퍼즐은 <b>100% 완료한 게임이 3개 이상</b>일 때 참여할 수 있어요. 암기를 확실히 한 뒤 풀어야 재미있기 때문이에요. 랜덤한 국면에서 게임과 다음 수를 맞춥니다.','pz.progress':'현재 {n}/3 게임 완료','pz.go':'기보 익히러 가기','pz.desc':'100%로 완료한 기록 중 랜덤한 국면이 나왔어요','pz.q1':'Q1. 이 국면은 어느 게임일까요?','pz.q2':'Q2. 다음 수를 직접 두세요','pz.q2wait':'보드에서 기물을 클릭해 다음 수를 두세요','pz.q1ok':'Q1 정답','pz.q1bad':'Q1 오답','pz.q2ok':'Q2 정답','pz.q2bad':'Q2 오답','pz.answer':'정답 수: {m}','pz.next':'다음 퍼즐','adm.purge':'영구 삭제','adm.edit':'수정','adm.editTitle':'기보 정보 수정','adm.fEvent':'대회/장소','adm.confirmPurge':'이 기보를 서버에서 완전히 삭제합니다. 되돌릴 수 없습니다. 계속할까요?','adm.purged':'기보를 완전히 삭제했어요','adm.purgeFail':'삭제 실패:','pz.pick':'다른 퍼즐 뽑기','pz.q2okMsg':'정답! 다음 수를 맞혔어요','pz.q2badMsg':'아쉽네요 — 정답은 {m} 이었어요','pz.score':'{n}점',
  'set.title':'설정','set.lang':'언어 · Language','set.challenge':'도전 모드','set.challengeSub':'힌트 등 도전 중 기능은 여기서 켜고 끌 수 있어요','set.difficulty':'암기 난이도','set.screen':'화면 · 소리',
  'set.hint':'힌트','set.hintD':'도전 중 다음에 움직일 기물의 위치를 알려줍니다. 힌트를 쓰면 100%여도 S등급으로 조정돼요.',
  'set.fb':'즉시 정답 피드백','set.fbD':'도전 중 기보와 다른 수를 두면 바로 알려줍니다. 끄면 틀려도 알려주지 않는 긴장감 모드!',
@@ -6164,7 +6164,7 @@ Object.assign(Cloud, {
     await this._rest('players?on_conflict=id', {
       method:'POST',
       headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
-      body: JSON.stringify({ id:s.user_id, name:s.name||'', data:{ settings:store.data.settings||{}, bookmarks:{}, daily:{streak:0,lastDone:null}, puzzle:{streak:0,done:0}, stats:{challenges:0}, activity:{}, at:wipeAt, wipeAt } })
+      body: JSON.stringify({ id:s.user_id, name:s.name||'', data:{ settings:Object.assign({}, DEFAULT_SETTINGS, {modeAsked:false}), bookmarks:{}, daily:{streak:0,lastDone:null}, puzzle:{streak:0,done:0}, stats:{challenges:0}, activity:{}, at:wipeAt, wipeAt } })
     });
     return wipeAt;
   },
@@ -6183,7 +6183,7 @@ Object.assign(Cloud, {
                           (store.data.study&&Object.keys(store.data.study).length));
         store.data.records={}; store.data.bookmarks={}; store.data.streak={}; store.data.study={};
         store.data.daily={streak:0,lastDone:null}; store.data.puzzle={streak:0,done:0}; store.data.stats={challenges:0};
-        if(rem.settings) store.data.settings=Object.assign({}, store.data.settings, rem.settings);
+        store.data.settings=Object.assign({}, DEFAULT_SETTINGS, {modeAsked:false});
         store.data.wipeAt=rem.wipeAt; store.data.profileAt=rem.at||0; store.save();
         if(hasLocal){ try{ toast(t('toast.resetSync')); }catch(e){} }
         return true;
@@ -6266,6 +6266,34 @@ Object.assign(Cloud, {
     store.save();
   },
 
+  async adminUpdateGame(id, patch){
+    if(!this.enabled() || !this.loggedIn() || !this.isAdmin) throw new Error('admin only');
+    const body={};
+    ['title','white','black','year','event','opening','blurb','result'].forEach(function(k){ if(patch[k]!==undefined) body[k]=patch[k]; });
+    if(patch.puzzle_start!==undefined) body.puzzle_start=patch.puzzle_start||null;
+    if(patch.puzzle_end!==undefined) body.puzzle_end=patch.puzzle_end||null;
+    if(patch.puzzle_side!==undefined) body.puzzle_side=patch.puzzle_side;
+    await this._rest('games?id=eq.'+encodeURIComponent(id), {method:'PATCH', headers:{'Prefer':'return=minimal'}, body: JSON.stringify(body)});
+    return true;
+  },
+  async saveGameEdit(id, data){
+    if(!this.enabled() || !this.loggedIn() || !this.isAdmin) throw new Error('admin only');
+    await this._rest('game_edits?on_conflict=game_id', {
+      method:'POST',
+      headers:{'Prefer':'resolution=merge-duplicates,return=minimal'},
+      body: JSON.stringify({ game_id:id, data:data, updated_at:new Date().toISOString() })
+    });
+    return true;
+  },
+  async loadGameEdits(){
+    if(!this.enabled() || !this.loggedIn()) return 0;
+    try{
+      const rows=await this._rest('game_edits?select=game_id,data');
+      GAME_EDITS={};
+      (rows||[]).forEach(function(r){ if(r && r.game_id) GAME_EDITS[r.game_id]=r.data||{}; });
+      return (rows||[]).length;
+    }catch(e){ console.warn('game_edits load fail', e.message); return -1; }
+  },
   async adminDeleteGame(id){
     if(!this.enabled() || !this.loggedIn() || !this.isAdmin) throw new Error('admin only');
     await this._rest('games?id=eq.'+encodeURIComponent(id), {method:'DELETE', headers:{'Prefer':'return:minimal'}});
@@ -6357,6 +6385,7 @@ function gradeDesc(code){ return t('grade.'+code); }
 let viewCleanup=null;
 // === v2.0 === 대쉬보드 폴더 · 컬렉션 갤러리 · 게임별 극한 랭킹 · 관리자 폴더/숨김
 var GAMES_ALL=null, SERVER_GAMES=[];
+var GAME_EDITS={};
 
 function gameRegistryInit(){
   if(GAMES_ALL) return;
@@ -6374,6 +6403,7 @@ function v2ApplyMeta(){
   var all=gameRegistry(), out=[];
   for(var i=0;i<all.length;i++){
     var g=all[i], m=v2MetaOf(g.id)||{};
+    if(GAME_EDITS[g.id]) Object.assign(g, GAME_EDITS[g.id]);
     if(m.hidden) continue;
     g.folder=m.folder||'';
     g._ord=(typeof m.sort==='number')?m.sort:i;
@@ -7143,7 +7173,7 @@ function viewChallenge(gid, opts={}){
   appEl.innerHTML=`
     <div class="section-title">${gTitle(g)} <span class="badge ${extreme?'red':'green'}">${t('ch.mode.'+(extreme?'extreme':'normal'))}</span>
       ${opts.daily?`<span class="badge gold">${t('ch.daily')}</span>`:''}
-      ${extreme? `<span class="badge gray" style="margin-left:auto">${t('ch.hintExtreme')}</span>` : `<button class="btn sm" id="ch-hint" style="margin-left:auto">${t('ch.hintBtn',{n:3})}</button>`}
+      ${extreme? `<span style="margin-left:auto"></span>` : `<button class="btn sm" id="ch-hint" style="margin-left:auto">${t('ch.hintBtn',{n:3})}</button>`}
       <button class="btn danger sm" id="ch-end" style="margin-left:8px">${t('ch.end')}</button></div>
     <div class="board-layout">
       <div>
@@ -7895,7 +7925,7 @@ function viewLibrary(){
     appEl.querySelectorAll('[data-folder]').forEach(x=>x.classList.toggle('active', x===b));
     renderGrid();
   if(window.Cloud && Cloud.enabled && Cloud.enabled() && Cloud.loggedIn && Cloud.loggedIn()){
-    try{ Cloud.loadGameMeta().then(function(){ v2ApplyMeta(); renderGrid(); }).catch(function(){}); }catch(e){}
+    try{ Cloud.loadGameMeta().then(function(){ return Cloud.loadGameEdits(); }).then(function(){ v2ApplyMeta(); renderGrid(); }).catch(function(){}); }catch(e){}
   }
   });
   renderGrid();
@@ -8296,6 +8326,70 @@ function viewAdmin(){
       <div id="adm-hidden"></div>
     </div>`;
 
+  function adminEditGame(g){
+    if(!g) return;
+    const ed=GAME_EDITS[g.id]||{};
+    const get=function(k){ return (ed[k]!==undefined? ed[k] : (g[k]===undefined? '' : g[k])); };
+    const esc=function(v){ return String(v==null?'':v).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); };
+    const field=function(id,label,v,type){
+      return '<div style="margin-top:8px"><div class="dim" style="font-size:11px">'+label+'</div>'+
+             '<input class="adm-in" id="'+id+'" type="'+(type||'text')+'" value="'+esc(v)+'"></div>';
+    };
+    const el=v2Overlay(
+      '<div class="v2-modal"><button class="vm-x" data-ov-close aria-label="close">\u00d7</button>'+
+      '<div class="gal-eyebrow">'+t('adm.editTitle')+'</div>'+
+      '<div class="gc-title" style="margin:6px 0 2px">'+gTitle(g)+'</div>'+
+      '<div class="dim" style="font-size:11px">'+(g.server? t('adm.server') : t('adm.builtin'))+'</div>'+
+      field('ed-title', t('adm.fTitle'), get('title'))+
+      field('ed-white', t('adm.fWhite'), get('white'))+
+      field('ed-black', t('adm.fBlack'), get('black'))+
+      field('ed-year', t('adm.fYear'), get('year'))+
+      field('ed-event', t('adm.fEvent')||'Event', (ed.event!==undefined? ed.event : (g.eventKo||g.event||'')))+
+      field('ed-opening', t('adm.fOpening'), get('opening'))+
+      field('ed-blurb', t('adm.fBlurb'), get('blurb'))+
+      field('ed-result', t('adm.fResult'), get('result'))+
+      '<div class="adm-grid" style="margin-top:8px">'+
+        '<input class="adm-in" id="ed-pz-start" type="number" min="1" value="'+esc(g.puzzle_start||'')+'" placeholder="'+t('adm.pzStart')+'">'+
+        '<input class="adm-in" id="ed-pz-end" type="number" min="1" value="'+esc(g.puzzle_end||'')+'" placeholder="'+t('adm.pzEnd')+'">'+
+      '</div>'+
+      '<select class="adm-in" id="ed-pz-side" style="margin-top:8px">'+
+        '<option value="w">'+t('adm.pzSideW')+'</option><option value="b">'+t('adm.pzSideB')+'</option>'+
+      '</select>'+
+      '<button class="btn" id="ed-save" style="width:100%;margin-top:14px">'+t('adm.save')+'</button>'+
+      '</div>');
+    const sideSel=el.querySelector('#ed-pz-side'); if(sideSel) sideSel.value=(g.puzzle_side==='b')?'b':'w';
+    el.querySelector('#ed-save').onclick=async function(){
+      const v=function(id){ const n=el.querySelector('#'+id); return n? n.value.trim() : ''; };
+      const patch={
+        title:v('ed-title')||g.title,
+        white:v('ed-white')||g.white,
+        black:v('ed-black')||g.black,
+        year:v('ed-year'),
+        event:v('ed-event'),
+        opening:v('ed-opening'),
+        blurb:v('ed-blurb'),
+        result:v('ed-result'),
+        puzzle_start:parseInt(v('ed-pz-start'),10)||0,
+        puzzle_end:parseInt(v('ed-pz-end'),10)||0,
+        puzzle_side:(sideSel&&sideSel.value==='b')?'b':'w'
+      };
+      try{
+        if(g.server){
+          await Cloud.adminUpdateGame(g.id, patch);
+          Object.assign(g, patch);
+          if(g.event!==undefined) g.eventKo=patch.event;
+        }else{
+          const data=Object.assign({}, patch, {eventKo:patch.event, eventEn:patch.event});
+          await Cloud.saveGameEdit(g.id, data);
+          GAME_EDITS[g.id]=data;
+        }
+        v2ApplyMeta();
+        try{ v2CloseOverlay(); }catch(e){}
+        toast(t('adm.saved'));
+        viewAdmin();
+      }catch(e){ toast(t('adm.metaFail')+' '+(e.message||'')); }
+    };
+  }
   function folderOptions(cur){
     const list=['', '__new__'].concat(folders);
     return list.map(f=>{
@@ -8354,7 +8448,8 @@ function viewAdmin(){
           <div class="d2">${gWhite(g)} ${t('side.vs')} ${gBlack(g)} \u00b7 ${g.year||''} \u00b7 ${g.server?t('adm.server'):t('adm.builtin')}</div></div>
         <select class="adm-in adm-sel" data-fold="${g.id}">${folderOptions(cur)}</select>
         ${hid?`<button class="btn xs ghost" data-restore="${g.id}">${t('adm.restore')}</button>`
-             :`<button class="btn xs ghost" data-hide="${g.id}">${t('adm.hide')}</button>`}
+             :`<button class="btn xs ghost" data-edit="${g.id}">${t('adm.edit')}</button>
+             <button class="btn xs ghost" data-hide="${g.id}">${t('adm.hide')}</button>`}
         ${g.server?`<button class="btn xs danger" data-del="${g.id}">${t('adm.purge')}</button>`:''}
       </div>`;
     }).join('');
@@ -8378,6 +8473,7 @@ function viewAdmin(){
       try{ await Cloud.setMeta(b.dataset.hide,{hidden:true}); toast(t('adm.savedFolder')); viewAdmin(); }
       catch(e){ toast(t('adm.metaFail')); }
     });
+    el.querySelectorAll('[data-edit]').forEach(b=>b.onclick=()=>adminEditGame(gameByIdAny(b.dataset.edit)));
     el.querySelectorAll('[data-del]').forEach(b=>b.onclick=async()=>{
       if(!confirm(t('adm.confirmPurge'))) return;
       try{
