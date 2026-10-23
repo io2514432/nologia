@@ -3896,39 +3896,20 @@ export { BISHOP, BLACK, Chess, DEFAULT_POSITION, KING, KNIGHT, Move, PAWN, QUEEN
 
 function computeAccuracy(playedMoves, playedBoards, targetMoves, targetBoards, startBoard){
   const N = targetMoves.length;
-  const matched = new Set();      // 이미 인정한 기보 수 인덱스 (재획득 방지)
-  const targetMatched = new Array(N).fill(false); // 기보 각 수의 일치 여부 (검토 화면용)
-  let ti = 0;                     // 현재 동기화 지점: 다음에 맞춰야 할 기보 수
-  let matchedCount = 0;
-  let firstDiff = null;           // 첫 엇갈림 (1-based 수 번호)
-  let transpositions = 0;         // 우회 도달 횟수
+  const targetMatched = new Array(N).fill(false);
+  let ti = 0;
+  let firstDiff = null;
   const posAfter = k => k === 0 ? startBoard : targetBoards[k - 1];
-  let curPos = startBoard;
-
   for (let j = 0; j < playedMoves.length; j++){
-    const inSync = ti < N && curPos === posAfter(ti);
-    if (inSync && playedMoves[j] === targetMoves[ti]){
-      if (!matched.has(ti)){ matched.add(ti); matchedCount++; targetMatched[ti]=true; }
-      ti++;
-    } else {
-      if (firstDiff === null) firstDiff = j + 1;
-      // 우회 도달 검사: 이 수의 결과 위치가 기보 ti 이후의 위치와 같은가?
-      const newPos = playedBoards[j];
-      let k = -1;
-      for (let x = ti; x < N; x++){
-        if (targetBoards[x] === newPos){ k = x; break; }
-      }
-      if (k >= 0){
-        if (!matched.has(k)){ matched.add(k); matchedCount++; targetMatched[k]=true; }
-        transpositions++;
-        ti = k + 1;
-      }
+    if (firstDiff === null && playedMoves[j] === targetMoves[ti] && ti < N){
+      targetMatched[ti] = true; ti++;
+    } else if (firstDiff === null){
+      firstDiff = j + 1;
     }
-    curPos = playedBoards[j];
   }
-  matchedCount = Math.min(matchedCount, N);
-  const accuracy = Math.round(matchedCount / N * 1000) / 10;
-  return { accuracy, matchedCount, targetCount: N, playedCount: playedMoves.length, firstDiff, transpositions, targetMatched };
+  const matchedCount = ti;
+  const progress = Math.round(matchedCount / N * 1000) / 10;
+  return { accuracy: progress, matchedCount, targetCount: N, playedCount: playedMoves.length, firstDiff, transpositions: 0, targetMatched };
 }
 
 /* 등급 체계
@@ -3936,17 +3917,19 @@ function computeAccuracy(playedMoves, playedBoards, targetMoves, targetBoards, s
  *  P   : 100%                           S  : 95% 이상
  *  A   : 85% 이상    B  : 70% 이상      C  : 50% 이상    D : 그 외
  */
-function gradeOf(accuracy, elapsedMs, plies){
-  if (accuracy >= 100){
+function gradeOf(progress, elapsedMs, plies, extreme){
+  const p = Number(progress)||0;
+  if (p >= 100){
     const tpm = elapsedMs / Math.max(1, plies) / 1000;
-    if (tpm <= 2) return { code:'P+', color:'var(--gold)', desc:'평균 2초/수 이하의 고속 완벽 기억' };
-    return { code:'P', color:'var(--gold)', desc:'완벽한 기억 (100% 일치, 시간 제한 없음)' };
+    if (extreme !== false && tpm <= 4) return { code:'P+', color:'var(--gold)', desc:'100% · 평균 4초/수 이하' };
+    if (extreme !== false) return { code:'P', color:'var(--gold)', desc:'100% 완주 (시간 무제한)' };
+    return { code:'S', color:'var(--green)', desc:'일반 모드 최고 등급 (100%)' };
   }
-  if (accuracy >= 95) return { code:'S', color:'var(--green)',  desc:'거의 완벽 (95% 이상)' };
-  if (accuracy >= 85) return { code:'A', color:'var(--blue)',   desc:'훌륭함 (85% 이상)' };
-  if (accuracy >= 70) return { code:'B', color:'var(--purple)', desc:'좋음 (70% 이상)' };
-  if (accuracy >= 50) return { code:'C', color:'var(--orange)', desc:'절반 이상 (50% 이상)' };
-  return { code:'D', color:'var(--text-dim)', desc:'기억 복습 필요 (50% 미만)' };
+  if (p >= 90) return { code:'S', color:'var(--green)', desc:'진행도 90% 이상' };
+  if (p >= 80) return { code:'A', color:'var(--blue)', desc:'진행도 80% 이상' };
+  if (p >= 65) return { code:'B', color:'var(--purple)', desc:'진행도 65% 이상' };
+  if (p >= 50) return { code:'C', color:'var(--orange)', desc:'진행도 50% 이상' };
+  return { code:'D', color:'var(--text-dim)', desc:'진행도 30% 이상 (그 미만은 복습 필요)' };
 }
 
 /* 수별 결과를 '110101...' 이진 문자열로 인코딩 (i번째 글자 = 기보 i+1수째를 맞췄는지) */
@@ -5310,7 +5293,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.6.1';
+const APP_VERSION='2.7.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
@@ -5828,6 +5811,30 @@ Object.assign(I18N.en, {
  'ch.introGo':'Start with these settings',
  'ch.collect':'Reach 100% accuracy to add it to your collection',
  'lib.collect':'Reach 100% accuracy to collect it · see grade thresholds'
+});
+Object.assign(I18N.ko, {
+ 'lib.gradesBtn':'등급 기준',
+ 'res.done':'완료!','res.progress':'진행도','res.pPlus':'P+ 기준',
+ 'res.accline':'진행도 {a}/{b}수',
+ 'ch.rewound':'기보와 다른 위치입니다. 틀리기 직전 상태로 되돌렸습니다.',
+ 'col.helpBtn':'컬렉션 얻는 방법',
+ 'col.helpTitle':'컬렉션 얻는 방법',
+ 'col.helpBody':'도전 모드에서 기보를 처음부터 끝까지 한 번도 틀리지 않고 두면(진행도 100%) 그 기보가 컬렉션에 걸립니다.<br><br>등급은 진행도 기준이며, 3개를 모으면 나만의 퍼즐이 열립니다.',
+ 'set.gradeNote':'진행도 = 틀리기 전까지 맞춘 수 ÷ 기보 전체 수. 한 번 틀리면 그 뒤는 모두 틀린 것으로 계산합니다. P·P+는 극한 모드에서만 가능하고, 일반 모드의 최고 등급은 S입니다.',
+ 'share.btn':'공유하기','share.text':'체스놀로지아에서 「{g}」 진행도 100% · {grade} 달성!',
+ 'share.copied':'공유 문구를 복사했습니다'
+});
+Object.assign(I18N.en, {
+ 'lib.gradesBtn':'Grade table',
+ 'res.done':'Complete!','res.progress':'Progress','res.pPlus':'P+ target',
+ 'res.accline':'Progress {a}/{b} moves',
+ 'ch.rewound':'You are off the game. Rewound to just before the mistake.',
+ 'col.helpBtn':'How to collect',
+ 'col.helpTitle':'How to collect',
+ 'col.helpBody':'Finish a challenge with no mistakes from the first move to the last (100% progress) and the game is framed in your collection.<br><br>Grades are based on progress, and 3 collected games unlock My Puzzle.',
+ 'set.gradeNote':'Progress = moves you matched before your first mistake ÷ all moves. After one mistake, everything counts as wrong. P and P+ are only possible in Extreme mode; the best grade in normal mode is S.',
+ 'share.btn':'Share','share.text':'Beat «{g}» with 100% progress · {grade} on Chessnology!',
+ 'share.copied':'Share text copied'
 });
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
@@ -6399,6 +6406,8 @@ function v2Overlay(html){
   document.addEventListener('keydown', el._esc);
   el.addEventListener('click', function(e){ if(e.target===el) v2CloseOverlay(); });
   el.querySelectorAll('[data-ov-close]').forEach(function(b){ b.onclick=v2CloseOverlay; });
+  const sh=el.querySelector('#gal-share');
+  if(sh){ sh.onclick=function(){ try{ shareCollection(el); }catch(e){ console.warn('share fail', e); } }; }
   return el;
 }
 function v2CloseOverlay(){
@@ -6447,7 +6456,7 @@ function v2OpenGallery(it){
         '<div><div class="gk">'+t('gal.runs')+'</div><div class="gv">'+it.count+'</div></div>'+
         '<div><div class="gk">'+t('gal.bestTime')+'</div><div class="gv">'+fmtTime(it.best.ms)+'</div></div>'+
       '</div>'+
-      '<div class="gal-note">'+t('gal.final')+'</div>'+
+      '<button class="btn" id="gal-share" style="width:100%;margin-top:12px">'+t('share.btn')+'</button>'+
     '</div>');
 }
 // --- 서버: game_meta(폴더·숨김) · 게임별 극한 랭킹 ---
@@ -7012,6 +7021,26 @@ function viewStudy(gidRaw){
   else if(side==='b') scheduleAuto();
 }
 // ---- 도전 모드 ----
+const GRADE_INFO = {
+  'P+':'진행도 100% · 평균 4초/수 이하 (극한 모드)',
+  'P':'진행도 100% (극한 모드)',
+  'S':'진행도 90% 이상 — 일반 모드의 최고 등급',
+  'A':'진행도 80% 이상',
+  'B':'진행도 65% 이상',
+  'C':'진행도 50% 이상',
+  'D':'진행도 30% 이상'
+};
+function shareCollection(el){
+  const ttl=(el.querySelector('.gal-title')||{}).textContent||'';
+  const sub=(el.querySelector('.gal-sub2')||{}).textContent||'';
+  const grade=(el.querySelector('.gal-seal')||{}).textContent||'';
+  const txt=t('share.text',{g:ttl,grade:grade})+'\n'+sub+'\n'+location.origin+location.pathname;
+  if(navigator.share){
+    navigator.share({title:t('col.title'), text:txt, url:location.href}).catch(function(){});
+  } else if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(function(){ toast(t('share.copied')); }).catch(function(){});
+  }
+}
 function openGrades(){
   const G=['P+','P','S','A','B','C','D'];
   const C={'P+':'var(--gold)','P':'var(--gold)','S':'var(--green)','A':'var(--blue)','B':'var(--purple)','C':'var(--orange)','D':'var(--text-dim)'};
@@ -7145,14 +7174,27 @@ function viewChallenge(gid, opts={}){
     b.classList.toggle('ghost', state.hintsLeft===0);
     b.disabled=state.hintsLeft<=0;
   }
+  function rewindToSync(){
+    try{
+      const fen = state.syncTi===0 ? d.startFen : d.fens[state.syncTi];
+      if(!fen) return;
+      chess.load(fen);
+    }catch(e){ return; }
+    state.played = state.played.slice(0, state.syncTi);
+    state.playedBoards = state.playedBoards.slice(0, state.syncTi);
+    state.offPlys = []; state.hintSqs = null;
+    state.curPos = state.syncTi===0 ? d.startBoard : tBoards[state.syncTi-1];
+    board.setFen(chess.fen(), {});
+    renderPanel(); applyHint(); renderHintBtn();
+  }
   document.getElementById('ch-hint') && (document.getElementById('ch-hint').onclick=()=>{
     if(state.done) return;
+    if(state.syncTi>=cut) return;
+    if(state.curPos!==posAfter(state.syncTi)){ rewindToSync(); toast(t('ch.rewound')); return; }
     if(state.hintsLeft<=0){ toast(t('ch.hintMax')); return; }
-    if(state.syncTi>=cut || state.curPos!==posAfter(state.syncTi)) return;
     state.hintsLeft--; state.hintSqs=[tMoves[state.syncTi].slice(0,2)]; state.hintUsed=true;
     applyHint(); renderHintBtn();
-  });
-  function onUserMove(mv){
+  });  function onUserMove(mv){
     if(state.done) return;
     let promo=null;
     const pc=chess.get(mv.from);
@@ -7198,7 +7240,7 @@ function viewChallenge(gid, opts={}){
     clearInterval(state.timer); board.setEnabled(false); board.setHint([]);
     const ms=state.started? Date.now()-state.t0 : 0;
     const res=computeAccuracy(state.played, state.playedBoards, tMoves, tBoards, d.startBoard);
-    let gr=gradeOf(res.accuracy, ms, res.targetCount);
+    let gr=gradeOf(res.accuracy, ms, res.targetCount, extreme);
     if(state.hintUsed && gr.code.startsWith('P'))
       gr={code:'S', color:'var(--green)', desc:t('ch.hintGrade')};
     const auto = reason!=='manual';
@@ -7216,9 +7258,8 @@ function viewChallenge(gid, opts={}){
     Sfx.play(res.accuracy>=100?'finish':(res.accuracy>=70?'good':'fail'));
     let reasonText;
     if(reason==='gameover'){
-      reasonText = (chess.isCheckmate&&chess.isCheckmate())? t('ch.reason.mate')
-        : (chess.isStalemate&&chess.isStalemate())? t('ch.reason.stalemate')
-        : (chess.isDraw&&chess.isDraw())? t('ch.reason.draw') : t('ch.reason.complete');
+      reasonText = (chess.isStalemate&&chess.isStalemate())? t('ch.reason.stalemate')
+        : (chess.isDraw&&chess.isDraw())? t('ch.reason.draw') : t('res.done');
     }
     else reasonText = t('ch.reason.'+reason);
     const playedSans=[]; { const rc=new Chess(); for(const u of state.played){ try{ const m2=rc.move({from:u.slice(0,2),to:u.slice(2,4),promotion:u[4]||undefined}); playedSans.push(m2? m2.san:'?'); }catch(e){ playedSans.push('?'); } } }
@@ -7243,6 +7284,7 @@ function viewChallenge(gid, opts={}){
         </div>
         <div style="margin-top:14px;text-align:left">
           <div class="set-row"><div><div class="t">${t('res.time')}</div></div><div style="font-weight:800">${fmtTime(ms)}</div></div>
+          ${gr.code==='P'?`<div class="set-row"><div><div class="t">${t('res.pPlus')}</div></div><div style="font-weight:800">${fmtTime(4*res.targetCount*1000)} 이내</div></div>`:''}
           <div class="set-row"><div><div class="t">${t('res.streak')}</div></div><div style="font-weight:800">${streakText}</div></div>
           <div class="set-row"><div><div class="t">${t('res.played')}</div></div><div style="font-weight:800">${res.playedCount}</div></div>
           ${state.hintUsed?`<div class="set-row"><div><div class="t">${t('res.hintUsed')}</div></div><div class="badge gray">${t('res.used')}</div></div>`:''}
@@ -7707,7 +7749,8 @@ function viewLibrary(){
   const chips=['__all__'].concat(folders);
   const dirMarkup=()=>'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">'+(libDir==='asc'?'<path d="M12 19V5"/><path d="M5 12l7-7 7 7"/>':'<path d="M12 5v14"/><path d="M19 12l-7 7-7-7"/>')+'</svg><span>'+(libDir==='asc'?t('lib.sort.asc'):t('lib.sort.desc'))+'</span>';
   appEl.innerHTML=`
-    <div class="section-title">${t('dash.title')} <span class="badge gray">${t('dash.count',{n:GAMES.length})}</span></div>
+    <div class="section-title">${t('dash.title')} <span class="badge gray">${t('dash.count',{n:GAMES.length})}</span>
+      <button class="btn sm ghost" data-grades-open style="margin-left:auto">${t('lib.gradesBtn')}</button></div>
     <div style="margin-bottom:12px">
       <input id="lib-q" placeholder="${t('dash.search')}" value="${libQuery}"
         style="width:100%;background:var(--card);border:1.5px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-size:14px;outline:none">
@@ -7768,7 +7811,6 @@ function viewLibrary(){
           ${v21Stars(g)}
         </div></div>
       </div>
-      <div class="grades-link" data-grades-open>${t('lib.collect')}</div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${bestBadge(g.id)}
         ${bookmarksOf(g.id).length?`<span class="badge gray">${t('lib.marks',{n:bookmarksOf(g.id).length})}</span>`:''}
       </div>
@@ -7844,7 +7886,7 @@ function viewCollection(){
   cleanupView();
   const items=gameRegistry().filter(g=>!v2IsHidden(g.id)).map(v2Entry).filter(Boolean);
   appEl.innerHTML=`
-    <div class="section-title">${t('col.title')}</div>
+    <div class="section-title">${t('col.title')}<button class="col-help" id="col-help" aria-label="?">?</button></div>
     <div class="col-sub">${t('col.desc')}</div>
     ${items.length? `<div class="gal-grid">${items.map((it,i)=>`
       <div class="gal-item" data-gal="${i}">
@@ -7856,6 +7898,7 @@ function viewCollection(){
         <div class="gal-sub">${gWhite(it.g)} \u00b7 ${it.g.year||''}</div>
       </div>`).join('')}</div>`
     : `<div class="card muted">${t('col.empty')}</div>`}`;
+  const ch2=document.getElementById('col-help'); if(ch2) ch2.onclick=()=>{ v2Overlay('<div class="v2-modal"><button class="vm-x" data-ov-close aria-label="close">\u00d7</button><div class="gal-eyebrow">'+t('col.helpTitle')+'</div><div class="gal-sub2" style="margin-top:8px">'+t('col.helpBody')+'</div></div>'); };
   appEl.querySelectorAll('[data-gal]').forEach(el=>{
     el.onclick=()=>{ const it=items[Number(el.dataset.gal)]; if(it) v2OpenGallery(it); };
   });
@@ -8362,7 +8405,7 @@ function viewSettings(){
       <h3>${t('set.grades')}</h3>
       <table class="rank-table">
         <tr><th>${t('th.grade')}</th><th>${t('set.condition')}</th></tr>
-        ${GRADES.map(c=>`<tr><td><span class="badge" style="background:${gcolor[c]}22;color:${gcolor[c]}">${c}</span></td><td>${gradeDesc(c)}</td></tr>`).join('')}
+        ${GRADES.map(c=>`<tr><td><span class="badge" style="background:${gcolor[c]}22;color:${gcolor[c]}">${c}</span></td><td>${GRADE_INFO[c]||''}</td></tr>`).join('')}
       </table>
       <div class="dim" style="margin-top:8px">${t('set.gradeNote')}</div>
     </div>
