@@ -469,6 +469,9 @@ html,body{max-width:100%; overflow-x:hidden;}
 .mini-board .mb-sq{min-width:0; min-height:0; overflow:hidden; display:flex; align-items:center; justify-content:center;}
 .mini-board .mb-pc{position:relative; width:100%; height:100%; margin:0; display:flex; align-items:center; justify-content:center; line-height:0;}
 .mini-board .mb-pc svg{width:88%; height:88%; display:block; margin:0;}
+.grades-link{font-size:11px; color:var(--text-sub); margin-top:6px; cursor:pointer; text-decoration:underline dotted; text-underline-offset:3px;}
+.grades-link:hover{color:var(--gold);}
+.sc-opt.sel{border-color:var(--gold); box-shadow:0 0 0 1px var(--gold) inset;}
 </style>
 </head>
 <body data-board="green">
@@ -5306,10 +5309,10 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.5.2';
+const APP_VERSION='2.6.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
-  studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
+  studyHint:true, instantFeedback:true, showTimer:true, lang:'ko',
   autoFlip:false, savePartial:true, showQuote:true
 };
 const store = {
@@ -5633,7 +5636,7 @@ ko:{
  'set.grades':'등급 기준','set.gradeNote':'정확도 = 맞춘 수 ÷ 기보 전체 수. 중간에 틀려도 다시 기보 위치에 도달하면 그 수부터 다시 인정됩니다.','set.danger':'위험 구역','set.reset':'모든 기록 초기화','set.resetD':'도전 기록 · 북마크 · 연속 기록을 모두 삭제합니다.','set.resetBtn':'초기화','set.resetQ':'모든 기록을 초기화할까요?','set.resetWarn':'이 작업은 되돌릴 수 없어요.','set.condition':'조건','set.theme':'보드 테마','set.screenTheme':'화면 테마','set.dark':'다크','set.light':'라이트',
  'grade.P+':'평균 2초/수 이하의 고속 완벽 기억','grade.P':'완벽한 기억 (100% 일치, 시간 제한 없음)','grade.S':'거의 완벽 (95% 이상)','grade.A':'훌륭함 (85% 이상)','grade.B':'좋음 (70% 이상)','grade.C':'절반 이상 (50% 이상)','grade.D':'기억 복습 필요 (50% 미만)',
  'study.badge':'학습 모드','study.locked':"잠긴 구간(엔드게임) — 설정에서 '극한 모드'를 켜면 도전할 수 있어요 (학습 미리보기는 가능)",'study.desc':'기물을 <b>직접 드래그하거나 눌러서</b> 다음 수를 둬보세요 — 기보와 같으면 진행, 다르면 되돌아가요. ← → 키 이동 · F 키 뒤집기.','study.moves':'기보','study.status0':'시작 위치 — › 를 누르거나 기물을 직접 둬보세요','study.status':'{a}/{b}수 · {c}수째','study.bmAdd':'{n}수째에 북마크를 추가했어요','study.bmRemove':'북마크를 해제했어요','study.bmNone':'수를 선택한 후 북마크할 수 있어요','study.wrong':'기보와 다른 수예요 — 되돌렸어요','study.hint':'힌트','study.endNote':'엔드게임 제외 도전',
- 'ch.end':'종료','ch.desc':'양쪽 기물을 모두 <b>내가 직접</b> 둡니다. 첫 수부터 기억을 더뎌 보세요.','ch.fbOff':'(즉시 피드백 꺼짐 — 틀려도 알려주지 않아요!)','ch.mylist':'내가 둔 수','ch.empty':'아직 둔 수가 없어요','ch.progress':'{a}수 둠 · 목표 {b}수','ch.transpo':'우회 도달! 기보에 다시 합류했어요','ch.mode.normal':'일반 모드','ch.mode.extreme':'극한 모드','ch.cut':'엔드게임 {n}수까지','ch.daily':'오늘의 게임',
+ 'ch.end':'종료','ch.desc':'양쪽 기물을 모두 <b>내가 직접</b> 둡니다. 기억을 떠올려 첫 수부터 두어 보세요.','ch.fbOff':'(즉시 피드백 꺼짐 — 틀려도 알려주지 않아요!)','ch.mylist':'내가 둔 수','ch.empty':'아직 둔 수가 없어요','ch.progress':'{a}수 둠 · 목표 {b}수','ch.transpo':'우회 도달! 기보에 다시 합류했어요','ch.mode.normal':'일반 모드','ch.mode.extreme':'극한 모드','ch.cut':'엔드게임 {n}수까지','ch.daily':'오늘의 게임',
  'ch.reason.mate':'체크메이트!','ch.reason.stalemate':'스테일메이트','ch.reason.draw':'무승부 (규칙 종료)','ch.reason.cutoff':'엔드게임 컷오프 도달','ch.reason.complete':'기보의 마지막 수 도달','ch.reason.manual':'직접 종료',
  'res.newbest':'신기록!','res.hintUsed':'힌트 사용','res.used':'사용함','res.time':'걸린 시간','res.streak':'연속 일치','res.streakPerfect':'처음부터 끝까지 완벽 일치!','res.streakFirst':'첫 수부터 어긋났어요','res.streakN':'{n}수까지 일치했습니다','res.played':'총 둔 수','res.accline':'정확도 — {a}/{b}수 일치','res.cutNote':' (엔드게임 제외 · 전체 {n}수)','res.closeTitle':'기보 검토로 넘어가기','ch.hintGrade':'힌트 사용 — P 등급은 힌트 없이 100%일 때만 부여돼요',
 },
@@ -5804,6 +5807,27 @@ Object.assign(I18N.ko, {'ch.end':'포기','ch.quitSave':'지금 나가도 지금
 Object.assign(I18N.en, {'ch.end':'Give up','ch.quitSave':'Your progress so far is saved even if you leave.','home.streakTitle':'Challenge streak','home.streakHint':'A day counts when you finish a challenge with grade S or better','home.streakZero':'Finish a challenge with S or better to start'});
 Object.assign(I18N.ko, {'ch.quitQ':'정말 포기하시겠습니까?','home.streakZero':'오늘부터 시작','home.streakNote':'S 등급 이상 달성 시 체크','toast.resetSync':'다른 기기의 기록도 함께 초기화되었습니다'});
 Object.assign(I18N.en, {'ch.quitQ':'Give up this challenge?','home.streakZero':'Start today','home.streakNote':'Checked when you reach grade S or better','toast.resetSync':'Records on your other devices were reset too'});
+Object.assign(I18N.ko, {
+ 'ch.introTitle':'첫 도전',
+ 'ch.introHead':'어떻게 도전할까요?',
+ 'ch.introDesc':'도전은 기보를 처음부터 직접 두며 기억을 확인하는 모드입니다. 아래에서 방식을 고르면 계정에 저장됩니다.',
+ 'ch.modeNormalDesc':'힌트 3개 사용 가능 · 랭킹 미등재',
+ 'ch.modeExtremeDesc':'힌트 없음 · 100% 완주 시 랭킹 등재',
+ 'ch.introGo':'이 설정으로 도전 시작',
+ 'ch.collect':'정확도 100% 달성 시 컬렉션 획득',
+ 'lib.collect':'정확도 100% 달성 시 컬렉션 획득 · 등급 기준 보기',
+ 'gal.close':'닫기'
+});
+Object.assign(I18N.en, {
+ 'ch.introTitle':'First challenge',
+ 'ch.introHead':'How do you want to play?',
+ 'ch.introDesc':'A challenge asks you to replay the game yourself from move one. Your choice is saved to your account.',
+ 'ch.modeNormalDesc':'3 hints available · not ranked',
+ 'ch.modeExtremeDesc':'No hints · 100% runs are ranked',
+ 'ch.introGo':'Start with these settings',
+ 'ch.collect':'Reach 100% accuracy to add it to your collection',
+ 'lib.collect':'Reach 100% accuracy to collect it · see grade thresholds'
+});
 function t(k, vars){
   let s = (I18N[LANG] && I18N[LANG][k] !== undefined) ? I18N[LANG][k] : (I18N.ko[k] !== undefined ? I18N.ko[k] : k);
   if(vars) for(const kk in vars) s = s.split('{'+kk+'}').join(String(vars[kk]));
@@ -6127,11 +6151,15 @@ Object.assign(Cloud, {
       const rem=(rows && rows[0] && rows[0].data) || null;
       if(!rem) return false;
       if(rem.wipeAt && rem.wipeAt > (store.data.wipeAt||0)){
+        const hasLocal=!!((store.data.records&&Object.keys(store.data.records).length) ||
+                          (store.data.bookmarks&&Object.keys(store.data.bookmarks).length) ||
+                          (store.data.streak&&Object.keys(store.data.streak).length) ||
+                          (store.data.study&&Object.keys(store.data.study).length));
         store.data.records={}; store.data.bookmarks={}; store.data.streak={}; store.data.study={};
         store.data.daily={streak:0,lastDone:null}; store.data.puzzle={streak:0,done:0}; store.data.stats={challenges:0};
         if(rem.settings) store.data.settings=Object.assign({}, store.data.settings, rem.settings);
         store.data.wipeAt=rem.wipeAt; store.data.profileAt=rem.at||0; store.save();
-        try{ toast(t('toast.resetSync')); }catch(e){}
+        if(hasLocal){ try{ toast(t('toast.resetSync')); }catch(e){} }
         return true;
       }
       const localAt=store.data.profileAt||0;
@@ -6984,7 +7012,61 @@ function viewStudy(gidRaw){
   else if(side==='b') scheduleAuto();
 }
 // ---- 도전 모드 ----
+function openGrades(){
+  const G=['P+','P','S','A','B','C','D'];
+  const C={'P+':'var(--gold)','P':'var(--gold)','S':'var(--green)','A':'var(--blue)','B':'var(--purple)','C':'var(--orange)','D':'var(--text-dim)'};
+  const desc=c=>{ try{ return (typeof gradeDesc==='function')?gradeDesc(c):''; }catch(e){ return ''; } };
+  v2Overlay('<div class="v2-modal">'+
+    '<div class="gal-eyebrow">'+t('set.grades')+'</div>'+
+    '<table class="rank-table" style="margin-top:8px"><tr><th>'+t('th.grade')+'</th><th>'+t('set.condition')+'</th></tr>'+
+    G.map(c=>'<tr><td><span class="badge" style="background:'+C[c]+'22;color:'+C[c]+'">'+c+'</span></td><td>'+desc(c)+'</td></tr>').join('')+
+    '</table>'+
+    '<div class="dim" style="margin-top:8px">'+t('set.gradeNote')+'</div>'+
+    '<button class="btn" data-ov-close style="width:100%;margin-top:14px">'+t('btn.close')+'</button>'+
+  '</div>');
+}
+document.addEventListener('click', function(e){
+  const el=e.target && e.target.closest ? e.target.closest('[data-grades-open]') : null;
+  if(el){ e.preventDefault(); e.stopPropagation(); openGrades(); }
+}, true);
+
+function challengeIntro(gid, opts){
+  const st=store.data.settings;
+  let mode = st.extreme? 'extreme' : 'normal';
+  let fb = st.instantFeedback!==false;
+  const el=v2Overlay(
+    '<div class="v2-modal">'+
+      '<div class="gal-eyebrow">'+t('ch.introTitle')+'</div>'+
+      '<h2 class="gal-title">'+t('ch.introHead')+'</h2>'+
+      '<div class="gal-sub2">'+t('ch.introDesc')+'</div>'+
+      '<div class="sc-opts" style="margin-top:14px">'+
+        '<button class="sc-opt" data-m="normal"><b>'+t('ch.mode.normal')+'</b><span>'+t('ch.modeNormalDesc')+'</span></button>'+
+        '<button class="sc-opt" data-m="extreme"><b>'+t('ch.mode.extreme')+'</b><span>'+t('ch.modeExtremeDesc')+'</span></button>'+
+      '</div>'+
+      '<div class="set-row" style="margin-top:12px"><div><div class="t">'+t('set.fb')+'</div><div class="d">'+t('set.fbD')+'</div></div>'+
+        '<label class="switch"><input type="checkbox" id="ci-fb"><span class="slider"></span></label></div>'+
+      '<button class="btn" id="ci-go" style="width:100%;margin-top:14px">'+t('ch.introGo')+'</button>'+
+      '<button class="btn ghost" data-ov-close style="width:100%;margin-top:8px">'+t('btn.close')+'</button>'+
+    '</div>');
+  const mBtns=el.querySelectorAll('[data-m]');
+  const paint=()=>mBtns.forEach(b=>b.classList.toggle('sel', b.dataset.m===mode));
+  mBtns.forEach(b=>b.onclick=()=>{ mode=b.dataset.m; paint(); });
+  paint();
+  const fbEl=el.querySelector('#ci-fb'); if(fbEl) fbEl.checked=fb;
+  el.querySelector('#ci-go').onclick=()=>{
+    if(fbEl) fb=!!fbEl.checked;
+    st.extreme = mode==='extreme';
+    st.instantFeedback = fb;
+    st.modeAsked = true;
+    store.save();
+    try{ Cloud.pushSoon(); }catch(e){}
+    v2CloseOverlay();
+    viewChallenge(gid, Object.assign({}, opts, {_skipAsk:true}));
+  };
+}
+
 function viewChallenge(gid, opts={}){
+  if(!opts._skipAsk && !store.data.settings.modeAsked){ challengeIntro(gid, opts); return; }
   cleanupView();
   const g=gById(gid); const d=gameData(g);
   const extreme=store.data.settings.extreme;
@@ -7016,6 +7098,7 @@ function viewChallenge(gid, opts={}){
         <div class="card">
           <h3>${gWhite(g)} vs ${gBlack(g)}</h3>
           <div class="muted">${t('ch.desc')} ${store.data.settings.instantFeedback? '':t('ch.fbOff')}</div>
+          <div class="grades-link" data-grades-open>${t('ch.collect')}</div>
           <div class="pbar" style="margin-top:10px"><div id="ch-pbar" style="width:0%"></div></div>
         </div>
         <div class="card">
@@ -7034,7 +7117,7 @@ function viewChallenge(gid, opts={}){
   function progress(){
     const p=Math.round(state.playedBoards.length/cut*100);
     document.getElementById('ch-pbar').style.width=Math.min(100,p)+'%';
-    document.getElementById('ch-progress').textContent=t('ch.progress',{a:state.played.length, b:cut});
+    document.getElementById('ch-progress').textContent=t('ch.progress',{a:Math.ceil(state.played.length/2), b:Math.ceil(cut/2)});
   }
   function playedListHTML(){
     const hist=chess.history();
@@ -7685,6 +7768,7 @@ function viewLibrary(){
           ${v21Stars(g)}
         </div></div>
       </div>
+      <div class="grades-link" data-grades-open>${t('lib.collect')}</div>
       <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">${bestBadge(g.id)}
         ${bookmarksOf(g.id).length?`<span class="badge gray">${t('lib.marks',{n:bookmarksOf(g.id).length})}</span>`:''}
       </div>
