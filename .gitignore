@@ -1,0 +1,7 @@
+# backups / work artifacts
+index.html.v*bak
+*.bak
+patch/
+.tmp*
+Thumbs.db
+.DS_Store
