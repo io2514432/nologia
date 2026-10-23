@@ -387,6 +387,53 @@ textarea.adm-in{min-height:150px; resize:vertical; font-family:ui-monospace,SFMo
 .adm-game{flex-wrap:wrap;}
 .adm-sel{width:118px;padding:6px 8px;font-size:12px;flex-shrink:0;}
 
+
+/* ===== v2.1 · 별 난이도 · 게임 팝업 · 퍼즐 · 화살표 ===== */
+.draw-layer{position:absolute; inset:0; width:100%; height:100%; z-index:6; pointer-events:none; overflow:visible;}
+.stars{display:inline-flex; gap:2px; align-items:center;}
+.stars svg{width:13px; height:13px;}
+.stars svg.on{fill:var(--gold); stroke:var(--gold);}
+.stars svg.off{fill:none; stroke:var(--border2);}
+.badge.gold-soft{background:rgba(232,184,58,.14); color:var(--gold);}
+
+.vm-x{position:absolute; top:10px; right:10px; width:32px; height:32px; border-radius:9px; background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.08); color:#cfc6b6; font-size:19px; line-height:1; display:flex; align-items:center; justify-content:center; z-index:2;}
+.vm-x:hover{background:rgba(255,255,255,.12); color:#fff;}
+.gm-board{width:150px; margin:0 auto; padding:5px; background:#0d0c0b; border:1px solid rgba(232,184,58,.28); border-radius:3px;}
+.gm-eyebrow{margin-top:14px; font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:rgba(232,184,58,.7); text-align:center;}
+.gm-meta{display:flex; align-items:center; justify-content:center; gap:10px; margin-top:12px; font-size:11px; color:#9c9484;}
+.gm-moves{font-size:12px; color:#cfc6b6;}
+.gm-moves b{font-size:17px; color:var(--gold); margin-right:2px;}
+.gm-tags{display:flex; gap:6px; justify-content:center; flex-wrap:wrap; margin-top:10px;}
+.gm-blurb{font-size:12.5px; line-height:1.6; color:#a8a08f; text-align:center; margin-top:12px;}
+.gm-actions{display:flex; gap:8px; margin-top:16px;}
+.gm-actions .btn{flex:1;}
+
+.study-choose{text-align:center;}
+.sc-game{font-size:17px; font-weight:900; color:#f4ecdc; margin-top:10px; line-height:1.35;}
+.sc-result{display:inline-flex; align-items:center; gap:8px; margin-top:12px; padding:6px 12px; border-radius:999px;
+  background:rgba(232,184,58,.1); border:1px solid rgba(232,184,58,.25); font-size:11px; color:#b9ae97;}
+.sc-result b{color:var(--gold); font-size:12px;}
+.sc-opts{display:grid; gap:8px; margin-top:16px; text-align:left;}
+.sc-opt{display:block; width:100%; padding:12px 14px; border-radius:11px; background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.09); color:#e7dfd0; transition:.15s;}
+.sc-opt:hover{border-color:rgba(232,184,58,.55); background:rgba(232,184,58,.08);}
+.sc-opt b{display:block; font-size:14px; color:#f4ecdc;}
+.sc-opt span{display:block; font-size:11px; color:#948c7c; margin-top:3px; line-height:1.45;}
+
+.daily-len{display:flex; align-items:baseline; gap:6px; margin-top:10px;}
+.daily-len b{font-size:24px; font-weight:900; color:var(--gold); line-height:1;}
+.daily-len span{font-size:11px; color:var(--text-sub);}
+.daily-len i{margin-left:auto; font-style:normal; font-size:11px; color:var(--text-dim);}
+
+.pz-soon{text-align:center; padding:26px 18px;}
+.pz-soon-ico{width:48px; height:48px; margin:0 auto 10px; border-radius:14px; background:var(--bg-deep); border:1px solid var(--border);
+  display:flex; align-items:center; justify-content:center;}
+.pz-soon-ico svg{width:24px; height:24px; stroke:var(--gold); fill:none;}
+.pz-bar{display:flex; align-items:center; gap:10px; margin-top:10px;}
+.pz-count{font-size:12px; font-weight:800; color:var(--gold);}
+.pz-range{font-size:11px; color:var(--text-dim); margin-top:10px; letter-spacing:.04em;}
+
 </style>
 </head>
 <body data-board="green">
@@ -5224,7 +5271,7 @@ const QUOTE_AUTHOR_EN=['Garry Kasparov','Robert Fischer','Savielly Tartakower','
 // ============================================================
 // app1.js — 상태 · 저장 · 사운드 · 보드 컴포넌트
 // ============================================================
-const APP_VERSION='2.0.0';
+const APP_VERSION='2.1.0';
 const DEFAULT_SETTINGS = {
   extreme:false, boardTheme:'green', theme:'dark', coords:true, sound:true,
   studyHint:true, instantFeedback:false, showTimer:true, lang:'ko',
@@ -5372,6 +5419,7 @@ function createBoard(container, opts={}){
       cell.addEventListener('click', ()=>click(sq,p));
       board.appendChild(cell);
     }
+    if(typeof drawRender==='function') drawRender();
   }
   function sqFromEvent(e){
     const rect=board.getBoundingClientRect();
@@ -5453,6 +5501,64 @@ function createBoard(container, opts={}){
     render();
   }
   board.addEventListener('contextmenu', e=>e.preventDefault());
+  // 우클릭 드래그: 화살표 / 칸 색칠
+  const DRAW_COLORS=['rgba(129,182,76,.8)','rgba(231,111,81,.8)','rgba(86,156,214,.8)'];
+  const drawMarks=[];
+  const drawSvg=document.createElementNS('http://www.w3.org/2000/svg','svg');
+  drawSvg.setAttribute('class','draw-layer');
+  drawSvg.setAttribute('viewBox','0 0 8 8');
+  drawSvg.setAttribute('preserveAspectRatio','none');
+  root.appendChild(drawSvg);
+  function drawXY(sq){
+    let fi=FILES.indexOf(sq[0]), ri=RANKS.indexOf(sq[1]);
+    if(fi<0||ri<0) return null;
+    if(st.flipped){ fi=7-fi; ri=7-ri; }
+    return {x:fi+0.5, y:ri+0.5};
+  }
+  function drawRender(){
+    let html='';
+    for(const m of drawMarks){
+      const p=drawXY(m.a); if(!p) continue;
+      if(m.type==='sq'){
+        html+='<rect x="'+(p.x-0.5)+'" y="'+(p.y-0.5)+'" width="1" height="1" fill="'+m.color+'"/>';
+      } else {
+        const q=drawXY(m.b); if(!q) continue;
+        const dx=q.x-p.x, dy=q.y-p.y, len=Math.sqrt(dx*dx+dy*dy)||1;
+        const ux=dx/len, uy=dy/len;
+        const ex=q.x-ux*0.34, ey=q.y-uy*0.34;
+        const head='<polygon points="'+q.x+','+q.y+' '+(q.x-ux*0.42-uy*0.24)+','+(q.y-uy*0.42+ux*0.24)+' '+(q.x-ux*0.42+uy*0.24)+','+(q.y-uy*0.42-ux*0.24)+'" fill="'+m.color+'"/>';
+        html+='<line x1="'+p.x+'" y1="'+p.y+'" x2="'+ex+'" y2="'+ey+'" stroke="'+m.color+'" stroke-width="0.16" stroke-linecap="round"/>'+head;
+      }
+    }
+    drawSvg.innerHTML=html;
+  }
+  function drawToggle(sq){
+    const i=drawMarks.findIndex(m=>m.type==='sq'&&m.a===sq);
+    if(i<0){ drawMarks.push({type:'sq',a:sq,color:DRAW_COLORS[0]}); }
+    else {
+      const ci=DRAW_COLORS.indexOf(drawMarks[i].color);
+      if(ci>=DRAW_COLORS.length-1) drawMarks.splice(i,1);
+      else drawMarks[i].color=DRAW_COLORS[ci+1];
+    }
+    drawRender();
+  }
+  let drawDown=null;
+  board.addEventListener('pointerdown', e=>{
+    if(e.button!==2) return;
+    e.preventDefault(); e.stopPropagation();
+    const sq=sqFromEvent(e);
+    if(!sq) return;
+    drawDown={sq, x:e.clientX, y:e.clientY};
+    window.addEventListener('pointerup', drawUp, {once:true});
+  }, true);
+  function drawUp(e){
+    if(!drawDown) return;
+    const a=drawDown.sq, b=sqFromEvent(e)||a;
+    const far=Math.hypot(e.clientX-drawDown.x, e.clientY-drawDown.y)>16;
+    drawDown=null;
+    if(!far||a===b){ drawToggle(a); }
+    else if(drawMarks.length<12){ drawMarks.push({type:'arrow',a:a,b:b,color:DRAW_COLORS[0]}); drawRender(); }
+  }
   render();
   return {
     setFen(fen, info={}){ st.fen=fen; st.lastMove=info.lastMove||null; st.checkSq=info.checkSq||null; if(info.hintSqs) st.hintSqs=info.hintSqs; st.selected=null; st.legal=[]; render(); },
@@ -5949,7 +6055,7 @@ Object.assign(Cloud, {
   async loadServerGames(){
     if(!this.enabled()) return 0;
     try{
-      const rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn&active=eq.true&order=created_at.asc');
+      const rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn,puzzle_start,puzzle_end&active=eq.true&order=created_at.asc');
       let n=0;
       (rows||[]).forEach(r=>{
         if(!r.pgn) return;
@@ -6188,6 +6294,7 @@ function v2OpenGallery(it){
   var meta=[g.year, gOpening(g)].filter(Boolean).join(' \u00b7 ');
   v2Overlay(
     '<div class="v2-modal gal-modal">'+
+      '<button class="vm-x" data-ov-close aria-label="close">\u00d7</button>'+
       '<div class="gal-eyebrow">'+t('col.title')+'</div>'+
       '<h2 class="gal-title">'+gTitle(g)+'</h2>'+
       '<div class="gal-sub2">'+gWhite(g)+' '+t('side.vs')+' '+gBlack(g)+'</div>'+
@@ -6196,14 +6303,12 @@ function v2OpenGallery(it){
       '<div class="gal-grid2">'+
         '<div><div class="gk">'+t('gal.doneOn')+'</div><div class="gv">'+v2Date(it.first.ts)+'</div></div>'+
         '<div><div class="gk">'+t('gal.runs')+'</div><div class="gv">'+it.count+'</div></div>'+
-        '<div><div class="gk">'+t('gal.bestAcc')+'</div><div class="gv">'+it.best.acc+'%</div></div>'+
         '<div><div class="gk">'+t('gal.bestTime')+'</div><div class="gv">'+fmtTime(it.best.ms)+'</div></div>'+
       '</div>'+
       '<div class="gal-note">'+t('gal.final')+'</div>'+
       '<button class="btn" data-ov-close style="width:100%;margin-top:14px">'+t('gal.close')+'</button>'+
     '</div>');
 }
-
 // --- 서버: game_meta(폴더·숨김) · 게임별 극한 랭킹 ---
 Object.assign(Cloud, {
   meta:{},
@@ -6266,14 +6371,15 @@ Object.assign(Cloud, {
   async loadServerGames(){
     if(!this.enabled()) return 0;
     try{
-      var rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn&active=eq.true&order=created_at.asc');
+      var rows=await this._rest('games?select=id,title,white,black,blurb,year,event,opening,eco,result,pgn,puzzle_start,puzzle_end&active=eq.true&order=created_at.asc');
       var self=this, n=0;
       (rows||[]).forEach(function(r){
         if(!r.pgn) return;
         if(self.serverGameIds.indexOf(r.id)<0) self.serverGameIds.push(r.id);
         var g={ id:r.id, title:r.title, white:r.white, black:r.black, whiteEn:r.white, blackEn:r.black,
           year:r.year||'', event:r.event||'', blurb:r.blurb||'', opening:r.opening||'', eco:r.eco||'',
-          result:r.result||'*', plies:0, endgamePly:null, pgn:r.pgn, server:true };
+          result:r.result||'*', plies:0, endgamePly:null, pgn:r.pgn,
+          puzzle_start:r.puzzle_start||null, puzzle_end:r.puzzle_end||null, server:true };
         var ex=null;
         for(var i=0;i<SERVER_GAMES.length;i++) if(SERVER_GAMES[i].id===r.id) ex=SERVER_GAMES[i];
         if(ex){ Object.assign(ex, g); return; }
@@ -6340,6 +6446,121 @@ Object.assign(I18N.en, {
   'adm.savedFolder':'Folder saved','adm.metaFail':'Save failed — check the server and run supabase/v2.0.sql',
   'adm.metaNote':'Folders and hidden flags live in game_meta. Run supabase/v2.0.sql in the Supabase SQL Editor first.',
   'btn.ok':'OK'
+});
+
+// === v2.1 === 난이도 별 · 게임 정보 팝업 · 일일게임 캐시 · 문구 ===
+Object.assign(I18N.ko, {
+  'tab.library':'라이브러리','dash.title':'라이브러리',
+  'col.desc':'내가 완성한 기보들을 한 눈에 확인하세요.',
+  'lib.trySuccess':'{a}명 시도 · {b}명 성공',
+  'lib.movesStrong':'{n}수',
+  'study.modeTitle':'학습 방법을 선택해주세요.',
+  'study.modeDesc':'내 차례만 맞추면 상대 수는 0.3초 만에 자동으로 진행됩니다.',
+  'study.side.both':'양쪽 다 두기','study.side.w':'백만 두기','study.side.b':'흑만 두기',
+  'study.resultLabel':'경기 결과','study.result.win':'백 승','study.result.loss':'흑 승','study.result.draw':'무승부',
+  'study.changeMode':'모드 변경',
+  'study.hint.both':'힌트: 출발·도착','study.hint.from':'힌트: 출발만','study.hint.off':'힌트 끔',
+  'study.status2':'{a}/{b}수 · {turn}','study.statusStart2':'시작 위치 · {turn}','study.statusDone':'완료 · 마지막 국면',
+  'turn.white':'백 차례','turn.black':'흑 차례',
+  'pz.soon':'준비 중입니다',
+  'pz.soonDesc':'아직 이 기보의 퍼즐 구간이 지정되지 않았습니다. 곧 하이라이트 국면이 열립니다.',
+  'pz.progress2':'{a} / {b}수','pz.reset':'처음부터','pz.studyGame':'이 경기 학습하기',
+  'pz.wrong2':'기보와 다른 수예요 — 처음으로 돌아갑니다','pz.done':'퍼즐 완료!',
+  'pz.doneDesc':'하이라이트 국면을 모두 맞췄어요. 이 감각을 그대로 학습으로.',
+  'pz.free':'지금은 어떤 기보에도 퍼즐 구간이 설정되어 있지 않습니다.',
+  'app.loading':'불러오는 중\u2026',
+  'adm.pzStart':'퍼즐 시작 수','adm.pzEnd':'퍼즐 종료 수','adm.pzHint':'비워두면 퍼즐에서 제외됩니다',
+  'gal.doneOn':'완료일','gal.runs':'도전 횟수','gal.bestTime':'최고 기록'
+});
+Object.assign(I18N.en, {
+  'tab.library':'Library','dash.title':'Library',
+  'col.desc':'All the games you completed, at a glance.',
+  'lib.trySuccess':'{a} attempts · {b} success',
+  'lib.movesStrong':'{n} moves',
+  'study.modeTitle':'Choose how to study',
+  'study.modeDesc':'You only play your side — the opponent moves automatically after 0.3s.',
+  'study.side.both':'Play both sides','study.side.w':'White only','study.side.b':'Black only',
+  'study.resultLabel':'Result','study.result.win':'White win','study.result.loss':'Black win','study.result.draw':'Draw',
+  'study.changeMode':'Change mode',
+  'study.hint.both':'Hint: from + to','study.hint.from':'Hint: from only','study.hint.off':'Hints off',
+  'study.status2':'{a}/{b} moves · {turn}','study.statusStart2':'Start · {turn}','study.statusDone':'Done · final position',
+  'turn.white':'White to move','turn.black':'Black to move',
+  'pz.soon':'Coming soon',
+  'pz.soonDesc':'No puzzle range has been set for this game yet. Highlight positions are on the way.',
+  'pz.progress2':'{a} / {b} moves','pz.reset':'Restart','pz.studyGame':'Study this game',
+  'pz.wrong2':'Not the game move — back to the start','pz.done':'Puzzle solved!',
+  'pz.doneDesc':'You played the whole highlight sequence. Take it into study mode.',
+  'pz.free':'No game has a puzzle range yet.',
+  'app.loading':'Loading\u2026',
+  'adm.pzStart':'Puzzle start','adm.pzEnd':'Puzzle end','adm.pzHint':'Leave empty to exclude from puzzles',
+  'gal.doneOn':'Completed','gal.runs':'Runs','gal.bestTime':'Best time'
+});
+
+// --- 난이도(별 1~3): 현재 기보 길이 분포의 3분위 ---
+var V21_DIFF=null;
+function v21Diff(){
+  if(V21_DIFF) return V21_DIFF;
+  var arr=gameRegistry().map(function(g){ try{ return Math.ceil(gameData(g).N/2); }catch(e){ return 0; } })
+    .filter(function(n){ return n>0; }).sort(function(a,b){ return a-b; });
+  var t1=arr[Math.floor(arr.length/3)]||40, t2=arr[Math.floor(arr.length*2/3)]||70;
+  V21_DIFF={t1:t1,t2:t2,min:arr[0]||0,max:arr[arr.length-1]||0,n:arr.length};
+  return V21_DIFF;
+}
+function v21StarCount(g){
+  var mv=0; try{ mv=Math.ceil(gameData(g).N/2); }catch(e){ return 1; }
+  var T=v21Diff();
+  return mv<=T.t1?1:(mv<=T.t2?2:3);
+}
+function v21Stars(g){
+  var n=v21StarCount(g), out='<span class="stars" aria-label="difficulty">';
+  for(var i=0;i<3;i++){
+    out+='<svg viewBox="0 0 24 24" class="'+(i<n?'on':'off')+'"><path d="M12 3.6l2.6 5.3 5.8.8-4.2 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.6 9.7l5.8-.8z"/></svg>';
+  }
+  return out+'</span>';
+}
+
+// --- 라이브러리 게임 정보 팝업 ---
+function v21GameModal(g){
+  if(!g) return;
+  var d=gameData(g);
+  var mv=Math.ceil(d.N/2);
+  var res=g.result==='1-0'?t('study.result.win'):(g.result==='0-1'?t('study.result.loss'):(g.result==='1/2-1/2'?t('study.result.draw'):(g.result||'-')));
+  var el=v2Overlay(
+    '<div class="v2-modal game-modal">'+
+      '<button class="vm-x" data-ov-close aria-label="close">\u00d7</button>'+
+      '<div class="gm-board">'+v2FenBoard(d.fens[Math.min(6,d.N)])+'</div>'+
+      '<div class="gm-eyebrow">'+t('tab.library')+'</div>'+
+      '<h2 class="gal-title">'+gTitle(g)+'</h2>'+
+      '<div class="gal-sub2">'+gWhite(g)+' '+t('side.vs')+' '+gBlack(g)+'</div>'+
+      '<div class="gm-meta"><span class="gm-moves"><b>'+mv+'</b> '+t('unit.moves')+'</span>'+v21Stars(g)+'<span class="badge gray">'+(g.year||'')+'</span></div>'+
+      '<div class="gm-tags">'+(gOpening(g)?'<span class="badge gray">'+gOpening(g)+'</span>':'')+'<span class="badge gray">'+res+'</span>'+(g.event?'<span class="badge gray">'+g.event+'</span>':'')+'</div>'+
+      '<p class="gm-blurb">'+gBlurb(g)+'</p>'+
+      '<div class="gm-actions">'+
+        '<button class="btn" id="gm-study">'+t('btn.study')+'</button>'+
+        '<button class="btn challenge" id="gm-ch">\u2694 '+t('btn.challenge')+'</button>'+
+      '</div>'+
+    '</div>');
+  el.querySelector('#gm-study').onclick=function(){ v2CloseOverlay(); location.hash='#/study/'+g.id+'?side=both'; };
+  el.querySelector('#gm-ch').onclick=function(){ v2CloseOverlay(); location.hash='#/challenge/'+g.id; };
+}
+
+// --- 일일게임 캐시: 새로고침 시 다른 게임이 잠깐 보이는 현상 방지 ---
+Object.assign(Cloud, {
+  dailyCacheLoad(){
+    try{
+      var o=JSON.parse(localStorage.getItem('chessnologia.daily')||'null');
+      if(o && o.day===todayKey() && o.id) this.dailyId=o.id;
+    }catch(e){}
+  },
+  async loadDailyPick(){
+    if(!this.enabled()) return null;
+    try{
+      var rows=await this._rest('daily_picks?select=day,game_id&day=eq.'+todayKey());
+      this.dailyId=(rows&&rows[0]&&rows[0].game_id)||null;
+      try{ localStorage.setItem('chessnologia.daily', JSON.stringify({day:todayKey(), id:this.dailyId||''})); }catch(e){}
+      return this.dailyId;
+    }catch(e){ console.warn('daily load fail:', e.message); return null; }
+  }
 });
 
 function cleanupView(){ if(viewCleanup){ try{viewCleanup();}catch(e){} viewCleanup=null; } }
@@ -6413,26 +6634,34 @@ function studyMovelistHTML(d, curPly, gid){
 }
 
 // ---- 학습 모드 ----
-function viewStudy(gid){
+// ---- 학습 모드 (v2.1: 백/흑 선택 · 힌트 3단계) ----
+function viewStudy(gidRaw){
   cleanupView();
+  const qp=(gidRaw||'').split('?');
+  const gid=qp[0];
+  const mm=(qp[1]||'').match(/(?:^|&)side=(both|w|b)/);
+  const side=mm?mm[1]:null;
   const g=gById(gid); const d=gameData(g);
   const resume=(liveRun && liveRun.type==='study' && liveRun.gid===gid)? liveRun : null;
   let idx=resume? (resume.idx||0):0, flipped=false, doneShown=resume? !!resume.doneShown : false, prevIdx=-1;
-  liveRun={type:'study', gid, hash:'#/study/'+gid, isLive:()=>true, idx, doneShown};
+  let autoT=null;
+  liveRun={type:'study', gid, hash:location.hash, isLive:()=>true, idx, doneShown};
   updateLiveTab();
   appEl.innerHTML=`
     <div class="section-title">${gTitle(g)} <span class="badge blue">${t('study.badge')}</span>
-      <button class="btn challenge sm" id="st-go-challenge" style="margin-left:auto">⚔ ${t('btn.challenge')}</button></div>
+      ${side?`<span class="badge gold">${t('study.side.'+side)}</span>`:''}
+      <button class="btn sm ghost" id="st-mode" style="margin-left:auto">${t('study.changeMode')}</button>
+      <button class="btn challenge sm" id="st-go-challenge">\u2694 ${t('btn.challenge')}</button></div>
     <div class="board-layout">
       <div>
         <div id="st-board"></div>
         <div class="ctrl-row">
-          <button class="ctrl-btn" id="st-first" title="«">«</button>
-          <button class="ctrl-btn" id="st-prev" title="‹">‹</button>
-          <button class="ctrl-btn" id="st-next" title="›">›</button>
-          <button class="ctrl-btn" id="st-last" title="»">»</button>
-          <button class="ctrl-btn" id="st-flip" title="↕">↕</button>
-          <button class="btn sm hint-toggle" id="st-hint">${t('study.hintOff')}</button>
+          <button class="ctrl-btn" id="st-first" title="\u00ab">\u00ab</button>
+          <button class="ctrl-btn" id="st-prev" title="\u2039">\u2039</button>
+          <button class="ctrl-btn" id="st-next" title="\u203a">\u203a</button>
+          <button class="ctrl-btn" id="st-last" title="\u00bb">\u00bb</button>
+          <button class="ctrl-btn" id="st-flip" title="\u2195">\u2195</button>
+          <button class="btn sm hint-toggle" id="st-hint"></button>
         </div>
         <div class="muted" style="text-align:center;margin-top:8px" id="st-status"></div>
       </div>
@@ -6442,7 +6671,8 @@ function viewStudy(gid){
           <div class="gc-meta">
             <span class="badge gray">${g.event} ${g.year}</span>
             <span class="badge gray">${gOpening(g)}</span>
-            <span class="badge gray">${Math.ceil(d.N/2)} ${t('unit.moves')} · ${g.result}</span>
+            <span class="badge gray">${Math.ceil(d.N/2)} ${t('unit.moves')} \u00b7 ${g.result}</span>
+            ${v21Stars(g)}
           </div>
           <p class="muted" style="margin-top:8px">${gBlurb(g)}</p>
           <div class="dim" style="margin-top:8px">${t('study.desc')}</div>
@@ -6460,12 +6690,26 @@ function viewStudy(gid){
     for(let i2=0;i2<k;i2++) c.move({from:d.uci[i2].slice(0,2), to:d.uci[i2].slice(2,4), promotion:d.uci[i2][4]||undefined});
     stChess=c; stChessIdx=k; return c;
   }
+  function turnSide(k){ return k%2===0?'w':'b'; }
+  function myTurn(){ return !side || side==='both' || turnSide(idx)===side; }
+  function hintMode(){
+    const s=store.data.settings;
+    let m=s.studyHintMode;
+    if(m!=='both'&&m!=='from'&&m!=='off') m=s.studyHint?'both':'off';
+    return m;
+  }
+  function hintSqs(){
+    const m=hintMode();
+    if(m==='off' || idx>=d.N) return [];
+    if(m==='from') return [d.uci[idx].slice(0,2)];
+    return [d.uci[idx].slice(0,2), d.uci[idx].slice(2,4)];
+  }
   let lastErrToast=0;
   const board=createBoard(document.getElementById('st-board'), {
     enabled:true, flipped,
-    getMoves:(sq)=> idx<d.N ? chessAt(idx).moves({square:sq, verbose:true}) : [],
+    getMoves:(sq)=> (idx<d.N && myTurn()) ? chessAt(idx).moves({square:sq, verbose:true}) : [],
     onMove:(mv)=>{
-      if(idx>=d.N){ render(); return; }
+      if(idx>=d.N || !myTurn()){ render(); return; }
       const c=chessAt(idx);
       let promo=null; const pc=c.get(mv.from);
       if(pc && pc.type==='p' && (mv.to[1]==='8'||mv.to[1]==='1')) promo='q';
@@ -6478,6 +6722,7 @@ function viewStudy(gid){
         idx++;
         render();
         if(idx===d.N) fxBurstAt(document.querySelector('#st-board [data-sq="'+mv.to+'"]'), {count:12, small:true});
+        else scheduleAuto();
       } else {
         Sfx.play('err');
         const now=Date.now();
@@ -6486,20 +6731,40 @@ function viewStudy(gid){
       }
     }
   });
+  function scheduleAuto(){
+    clearTimeout(autoT);
+    if(!side || side==='both' || idx>=d.N) return;
+    if(turnSide(idx)===side) return;
+    autoT=setTimeout(()=>{
+      if(!document.getElementById('st-board')) return;
+      if(idx>=d.N || !side || turnSide(idx)===side) return;
+      idx++;
+      Sfx.play('move');
+      render();
+      if(idx<d.N && turnSide(idx)!==side) scheduleAuto();
+    }, 300);
+  }
   function checkSqAt(ply){
     try{ return kingSqIfCheck(new Chess(d.fens[ply])); }catch(e){ return null; }
+  }
+  function statusText(){
+    if(idx>=d.N) return t('study.statusDone');
+    const turn=turnSide(idx)==='w'? t('turn.white'):t('turn.black');
+    if(idx===0) return t('study.statusStart2',{turn:turn});
+    return t('study.status2',{a:Math.ceil(idx/2), b:Math.ceil(d.N/2), turn:turn});
   }
   function render(){
     board.setFen(idx===0? d.startFen : d.fens[idx], {
       lastMove: idx>0? [d.uci[idx-1].slice(0,2), d.uci[idx-1].slice(2,4)] : null,
       checkSq: idx>0? checkSqAt(idx):null,
-      hintSqs: (store.data.settings.studyHint && idx<d.N) ? [d.uci[idx].slice(0,2), d.uci[idx].slice(2,4)] : []
+      hintSqs: hintSqs()
     });
+    board.setEnabled(idx<d.N && myTurn());
     document.getElementById('st-moves').innerHTML=studyMovelistHTML(d, idx, g.id);
-    document.getElementById('st-status').textContent = idx===0? t('study.status0') : t('study.status',{a:idx, b:d.N, c:Math.ceil(idx/2)});
-    document.getElementById('st-bmcount').textContent = bookmarksOf(g.id).length? `⚑ ${bookmarksOf(g.id).length}`:'';
+    document.getElementById('st-status').textContent=statusText();
+    document.getElementById('st-bmcount').textContent = bookmarksOf(g.id).length? `\u2691 ${bookmarksOf(g.id).length}`:'';
     const hb=document.getElementById('st-hint');
-    if(hb){ hb.textContent=store.data.settings.studyHint? t('study.hintOn') : t('study.hintOff'); hb.classList.toggle('ghost', !store.data.settings.studyHint); }
+    if(hb){ hb.textContent=t('study.hint.'+hintMode()); hb.classList.toggle('ghost', hintMode()==='off'); }
     const list=document.getElementById('st-moves');
     scrollToEl(list, list.querySelector('.ml-move.cur'));
     list.querySelectorAll('.ml-move[data-ply]').forEach(el=>el.addEventListener('click',()=>{ idx=+el.dataset.ply; render(); }));
@@ -6513,8 +6778,16 @@ function viewStudy(gid){
   document.getElementById('st-last').onclick=()=>{ idx=d.N; render(); };
   document.getElementById('st-flip').onclick=()=>{ flipped=!flipped; board.setFlipped(flipped); };
   document.getElementById('st-hint').onclick=()=>{
-    store.data.settings.studyHint=!store.data.settings.studyHint; store.save();
-    render();
+    const order=['both','from','off'];
+    const next=order[(order.indexOf(hintMode())+1)%3];
+    store.data.settings.studyHintMode=next;
+    store.data.settings.studyHint = next!=='off';
+    store.save(); render(); Cloud.pushSoon();
+  };
+  document.getElementById('st-mode').onclick=()=>{
+    liveRun=null;
+    if(location.hash.indexOf('?side=')>=0) location.hash='#/study/'+gid;
+    else showChooser();
   };
   document.getElementById('st-go-challenge').onclick=()=>{ location.hash=`#/challenge/${g.id}`; };
   const kh=(e)=>{
@@ -6525,10 +6798,36 @@ function viewStudy(gid){
     else if(e.key==='f'||e.key==='F'){ flipped=!flipped; board.setFlipped(flipped); }
   };
   document.addEventListener('keydown', kh);
-  viewCleanup=()=>document.removeEventListener('keydown', kh);
-  render();
-}
+  viewCleanup=()=>{ document.removeEventListener('keydown', kh); clearTimeout(autoT); };
 
+  function showChooser(){
+    const res=g.result==='1-0'?t('study.result.win'):(g.result==='0-1'?t('study.result.loss'):(g.result==='1/2-1/2'?t('study.result.draw'):'-'));
+    const el=v2Overlay(
+      '<div class="v2-modal study-choose">'+
+        '<div class="gal-eyebrow">'+t('study.modeTitle')+'</div>'+
+        '<div class="sc-game">'+gTitle(g)+'</div>'+
+        '<div class="gal-sub2">'+gWhite(g)+' '+t('side.vs')+' '+gBlack(g)+'</div>'+
+        '<div class="sc-result"><span>'+t('study.resultLabel')+'</span><b>'+res+'</b></div>'+
+        '<div class="sc-opts">'+
+          '<button class="sc-opt" data-sc="both"><b>'+t('study.side.both')+'</b><span>'+t('ch.desc').replace(/<[^>]+>/g,'')+'</span></button>'+
+          '<button class="sc-opt" data-sc="w"><b>'+t('study.side.w')+'</b><span>'+t('study.modeDesc')+'</span></button>'+
+          '<button class="sc-opt" data-sc="b"><b>'+t('study.side.b')+'</b><span>'+t('study.modeDesc')+'</span></button>'+
+        '</div>'+
+        '<button class="btn ghost" data-ov-close style="width:100%;margin-top:10px">'+t('btn.close')+'</button>'+
+      '</div>');
+    el.querySelectorAll('[data-sc]').forEach(b=>b.onclick=()=>{
+      const v=b.dataset.sc;
+      v2CloseOverlay();
+      liveRun=null;
+      const h='#/study/'+gid+'?side='+v;
+      if(location.hash===h) viewStudy(gid+'?side='+v); else location.hash=h;
+    });
+  }
+
+  render();
+  if(!side) showChooser();
+  else if(side==='b') scheduleAuto();
+}
 // ---- 도전 모드 ----
 function viewChallenge(gid, opts={}){
   cleanupView();
@@ -6961,8 +7260,9 @@ function bestBadge(gid){
 function successRateBadge(gid){
   const rs=recs(gid);
   if(!rs.length) return `<span class="badge gray">${t('lib.noRecord')}</span>`;
-  const pct=Math.round(100*rs.filter(r=>r.acc>=100).length/rs.length);
-  return `<span class="badge ${pct>=50?'green':'gray'}" data-sr="${gid}" title="${t('lib.successTip')}">${t('lib.success',{n:pct})}</span>`;
+  const ok=rs.filter(r=>r.acc>=100).length;
+  const pct=Math.round(100*ok/rs.length);
+  return `<span class="badge ${pct>=50?'green':'gray'}" data-sr="${gid}" title="${t('lib.successTip')}">${t('lib.trySuccess',{a:rs.length,b:ok})}</span>`;
 }
 
 // ---- 홈 ----
@@ -6987,11 +7287,11 @@ function relTime(ts){
 }
 function weekDays(){
   const now=new Date(); now.setHours(12,0,0,0);
-  const mon=new Date(now); mon.setDate(now.getDate()-((now.getDay()+6)%7));
-  const keys=['wk.mon','wk.tue','wk.wed','wk.thu','wk.fri','wk.sat','wk.sun'];
+  const sun=new Date(now); sun.setDate(now.getDate()-now.getDay());
+  const keys=['wk.sun','wk.mon','wk.tue','wk.wed','wk.thu','wk.fri','wk.sat'];
   const out=[];
   for(let i=0;i<7;i++){
-    const d=new Date(mon); d.setDate(mon.getDate()+i);
+    const d=new Date(sun); d.setDate(sun.getDate()+i);
     out.push({ key:todayKey(d), label:t(keys[i]), date:d, n:d.getDate(),
       today:d.toDateString()===now.toDateString(), future:d>now });
   }
@@ -7094,7 +7394,7 @@ function viewHome(){
               <span class="dp-vs">${t('side.vs')}</span>
               <span><span class="dp-side">${t('side.black')}</span>${gBlack(g)}</span>
             </div>
-            <div class="daily-year">${g.year||''}${gOpening(g)?' · '+gOpening(g):''} · ${Math.ceil(dd.N/2)} ${t('unit.moves')}</div>
+            <div class="daily-len"><b>${Math.ceil(dd.N/2)}</b><span>${t('unit.moves')}</span>${gOpening(g)?`<i>${gOpening(g)}</i>`:''}</div>
             <div class="gc-meta" style="margin:12px 0 14px">
               ${doneToday?`<span class="badge green">${t('home.doneToday')}</span>`:''}
               ${successRateBadge(g.id)}
@@ -7139,6 +7439,7 @@ function viewHome(){
 
 
 // ---- 대쉬보드 (v2.0: 폴더별 기보) ----
+// ---- 라이브러리 (v2.1: 별 난이도 · 정보 팝업) ----
 let libQuery='';
 function viewLibrary(){
   cleanupView();
@@ -7151,13 +7452,14 @@ function viewLibrary(){
     <div id="lib-grid"></div>`;
   const grid=document.getElementById('lib-grid');
   function gameCard(g){
-    return `<div class="game-card">
+    return `<div class="game-card" data-open="${g.id}">
       <div style="display:flex;gap:12px">${miniBoardHTML(g)}
         <div><div class="gc-title">${gTitle(g)}</div>
         <div class="gc-players">${gWhite(g)} vs ${gBlack(g)}</div>
         <div class="gc-meta" style="margin-top:6px">
           <span class="badge gray">${g.year||''}</span>
-          <span class="badge gray">${Math.ceil(gameData(g).N/2)} ${t('unit.moves')}</span>
+          <span class="badge gold-soft">${t('lib.movesStrong',{n:Math.ceil(gameData(g).N/2)})}</span>
+          ${v21Stars(g)}
           ${successRateBadge(g.id)}
         </div></div>
       </div>
@@ -7196,6 +7498,10 @@ function viewLibrary(){
       </div>`).join('');
     grid.querySelectorAll('[data-ch]').forEach(b=>b.onclick=()=>{ location.hash=`#/challenge/${b.dataset.ch}`; });
     grid.querySelectorAll('[data-st]').forEach(b=>b.onclick=()=>{ location.hash=`#/study/${b.dataset.st}`; });
+    grid.querySelectorAll('[data-open]').forEach(el=>el.onclick=(e)=>{
+      if(e.target.closest('button')) return;
+      v21GameModal(gameByIdAny(el.dataset.open));
+    });
   }
   document.getElementById('lib-q').addEventListener('input', e=>{ libQuery=e.target.value; renderGrid(); });
   renderGrid();
@@ -7205,7 +7511,8 @@ function viewLibrary(){
       document.querySelectorAll('[data-sr]').forEach(el=>{
         const gs=map[el.dataset.sr];
         if(gs && gs.attempts>0){
-          el.textContent=`${t('set.global')} ${gs.success_pct}% \u00b7 ${gs.attempts}`;
+          const okN=Math.round(gs.attempts*(gs.success_pct||0)/100);
+          el.textContent=t('lib.trySuccess',{a:gs.attempts,b:okN});
           el.classList.add('green');
           el.title=t('set.based');
         }
@@ -7213,8 +7520,6 @@ function viewLibrary(){
     });
   }
 }
-
-// ---- 나의 컬렉션 (v2.0: 갤러리) ----
 function viewCollection(){
   cleanupView();
   const items=gameRegistry().filter(g=>!v2IsHidden(g.id)).map(v2Entry).filter(Boolean);
@@ -7293,110 +7598,110 @@ function viewRanking(){
   }
 }
 // ---- 나만의 퍼즐 ----
+// ---- 퍼즐 (v2.1: 하이라이트 국면) ----
 function viewPuzzle(){
   cleanupView();
-  const elig=perfectGames();
-  if(elig.length<3){
+  const pool=GAMES.filter(g=>Number(g.puzzle_start)>0 && Number(g.puzzle_end)>Number(g.puzzle_start));
+  if(!pool.length){
     appEl.innerHTML=`
       <div class="section-title">${t('pz.title')}</div>
-      <div class="card">
-        <h3>${t('pz.locked')}</h3>
-        <p class="muted">${t('pz.lockedDesc')}</p>
-        <div class="pbar" style="margin:14px 0 6px"><div style="width:${elig.length/3*100}%"></div></div>
-        <div class="muted">${t('pz.progress',{n:elig.length})}</div>
+      <div class="card pz-soon">
+        <div class="pz-soon-ico">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18h6"/><path d="M10 21h4"/><path d="M12 3a6 6 0 0 0-4 10.5c.8.7 1.3 1.5 1.4 2.5h5.2c.1-1 .6-1.8 1.4-2.5A6 6 0 0 0 12 3z"/></svg>
+        </div>
+        <h3>${t('pz.soon')}</h3>
+        <p class="muted">${t('pz.soonDesc')}</p>
+        <div class="dim" style="margin-top:10px">${t('pz.free')}</div>
         <div style="margin-top:14px"><button class="btn" id="pz-golib">${t('pz.go')}</button></div>
       </div>`;
     document.getElementById('pz-golib').onclick=()=>{ location.hash='#/library'; };
     return;
   }
-  startPuzzle();
+  startPuzzle(pool[Math.floor(Math.random()*pool.length)]);
 }
-function startPuzzle(){
+
+function startPuzzle(g){
   cleanupView();
-  const elig=perfectGames();
-  const g=elig[Math.floor(Math.random()*elig.length)];
   const d=gameData(g);
-  const minK=Math.max(3, Math.floor(d.N*0.2));
-  const k=minK+Math.floor(Math.random()*(d.N-minK));
-  let q1=null, q2=null;
-  const distract=GAMES.filter(x=>x.id!==g.id).sort(()=>Math.random()-.5).slice(0,3);
-  const opts=[g,...distract].sort(()=>Math.random()-.5);
+  const a=Math.max(0, Math.min(Number(g.puzzle_start)||0, d.N-2));
+  const b=Math.max(a+1, Math.min(Number(g.puzzle_end)||a+1, d.N));
+  let k=a, done=false;
+  const total=b-a;
   appEl.innerHTML=`
     <div class="section-title">${t('pz.title')} <span class="badge green">${t('pz.streak',{n:store.data.puzzle.streak})}</span></div>
     <div class="board-layout">
       <div>
         <div id="pz-board"></div>
-        <div class="muted" style="margin-top:8px">${t('pz.desc')}</div>
+        <div class="pz-bar"><span id="pz-progress" class="pz-count">${t('pz.progress2',{a:0,b:total})}</span>
+          <button class="btn sm ghost" id="pz-reset">${t('pz.reset')}</button></div>
+        <div class="muted" id="pz-status" style="margin-top:8px">${t('pz.desc')}</div>
       </div>
       <div>
         <div class="card">
-          <h3>${t('pz.q1')}</h3>
-          ${opts.map(o=>`<button class="quiz-opt" data-pz="${o.id}">${gTitle(o)}</button>`).join('')}
+          <h3>${gTitle(g)}</h3>
+          <div class="gc-players">${gWhite(g)} vs ${gBlack(g)}</div>
+          <div class="gc-meta" style="margin-top:8px">
+            <span class="badge gray">${g.year||''}</span>
+            <span class="badge gold-soft">${t('lib.movesStrong',{n:Math.ceil(d.N/2)})}</span>
+            ${v21Stars(g)}
+          </div>
+          <p class="muted" style="margin-top:8px">${gBlurb(g)}</p>
+          <div class="pz-range">${t('adm.pzStart')} ${a+1} \u2013 ${b}</div>
+          <button class="btn" id="pz-study" style="width:100%;margin-top:12px">${t('pz.studyGame')}</button>
         </div>
-        <div class="card">
-          <h3>${t('pz.q2')}</h3>
-          <div class="muted" id="pz-status">${t('pz.q2wait')}</div>
+        <div class="card" id="pz-done" style="display:none">
+          <h3 style="color:var(--gold)">${t('pz.done')}</h3>
+          <p class="muted">${t('pz.doneDesc')}</p>
+          <button class="btn" id="pz-study2" style="width:100%">${t('pz.studyGame')}</button>
         </div>
-        <button class="btn ghost" id="pz-new">${t('pz.pick')}</button>
       </div>
     </div>`;
-  const fen=d.fens[k];
-  const puzzleChess=new Chess(fen);
-  const board=createBoard(document.getElementById('pz-board'), {
-    enabled:true, fen,
+  const boardEl=document.getElementById('pz-board');
+  const puzzleChess=new Chess(d.fens[a]);
+  const board=createBoard(boardEl, {
+    enabled:true, fen:d.fens[a],
     getMoves:sq=>puzzleChess.moves({square:sq, verbose:true}),
     onMove:(mv)=>{
-      if(q2!==null) return;
+      if(done) return;
       let promo=null; const pc=puzzleChess.get(mv.from);
       if(pc && pc.type==='p' && (mv.to[1]==='8'||mv.to[1]==='1')) promo='q';
-      const res=puzzleChess.move({from:mv.from,to:mv.to,promotion:promo||undefined});
-      if(!res) return;
-      q2=(mv.from+mv.to+(promo||''))===d.uci[k];
+      const u=mv.from+mv.to+(promo||'');
+      if(u!==d.uci[k]){
+        Sfx.play('err'); toast(t('pz.wrong2'));
+        resetPuzzle();
+        return;
+      }
+      puzzleChess.move({from:mv.from,to:mv.to,promotion:promo||undefined});
+      Sfx.play('move');
+      k++;
       board.setFen(puzzleChess.fen(), {lastMove:[mv.from,mv.to], checkSq:kingSqIfCheck(puzzleChess)});
-      document.getElementById('pz-status').innerHTML=q2
-        ? `<span style="color:var(--green);font-weight:800">${t('pz.q2okMsg')}</span>`
-        : `<span style="color:var(--red-soft);font-weight:800">${t('pz.q2badMsg',{m:d.sans[k]})}</span>`;
-      Sfx.play(q2?'good':'err');
-      maybeFinish();
+      document.getElementById('pz-progress').textContent=t('pz.progress2',{a:k-a,b:total});
+      if(k>=b) finishPuzzle();
     }
   });
-  appEl.querySelectorAll('[data-pz]').forEach(b=>b.onclick=()=>{
-    if(q1!==null) return;
-    q1 = b.dataset.pz===g.id;
-    appEl.querySelectorAll('[data-pz]').forEach(x=>{
-      x.disabled=true;
-      if(x.dataset.pz===g.id) x.classList.add('right');
-      else if(x===b && !q1) x.classList.add('wrong');
-    });
-    Sfx.play(q1?'good':'err');
-    maybeFinish();
-  });
-  document.getElementById('pz-new').onclick=()=>startPuzzle();
-  function maybeFinish(){
-    if(q1===null || q2===null) return;
-    const score=(q1?50:0)+(q2?50:0);
-    const perfectHit=score===100;
-    store.data.puzzle.done++;
-    store.data.puzzle.streak = perfectHit? store.data.puzzle.streak+1 : 0;
-    store.save(); updateChip();
-    Sfx.play(perfectHit?'finish':'fail');
-    setTimeout(()=>{
-      showModal(`
-        <div style="text-align:center">
-          <div class="grade-badge" style="background:${perfectHit?'var(--gold)':'var(--blue)'};min-width:64px;height:64px;font-size:26px;margin:0 auto 10px">${t('pz.score',{n:score})}</div>
-          <h3 style="justify-content:center">${q1? t('pz.q1ok'):t('pz.q1bad')} · ${q2? t('pz.q2ok'):t('pz.q2bad')}</h3>
-          <p class="muted" style="margin-top:8px">${gTitle(g)} — ${t('pz.answer',{m:d.sans[k]})}</p>
-          <div style="margin-top:16px;display:flex;gap:8px;justify-content:center">
-            <button class="btn" id="pz-again">${t('pz.next')}</button>
-            <button class="btn outline" id="pz-close">${t('btn.close')}</button>
-          </div>
-        </div>`);
-      document.getElementById('pz-again').onclick=()=>{ closeModal(); startPuzzle(); };
-      document.getElementById('pz-close').onclick=closeModal;
-    }, 600);
+  function resetPuzzle(){
+    k=a; puzzleChess.load(d.fens[a]);
+    board.setFen(d.fens[a], {});
+    document.getElementById('pz-progress').textContent=t('pz.progress2',{a:0,b:total});
   }
+  function finishPuzzle(){
+    if(done) return;
+    done=true;
+    board.setEnabled(false);
+    store.data.puzzle.done++;
+    store.data.puzzle.streak++;
+    store.save(); updateChip(); Cloud.pushSoon();
+    Sfx.play('finish');
+    fxBurstAt(boardEl, {count:22});
+    showDonePop();
+    const card=document.getElementById('pz-done');
+    if(card) card.style.display='block';
+  }
+  const goStudy=()=>{ location.hash='#/study/'+g.id+'?side=both'; };
+  document.getElementById('pz-study').onclick=goStudy;
+  document.getElementById('pz-study2').onclick=goStudy;
+  document.getElementById('pz-reset').onclick=resetPuzzle;
 }
-
 // ---- 설정 ----
 const SETTING_DEFS={
   challenge:[
@@ -7459,6 +7764,12 @@ function viewAdmin(){
           <input class="adm-in" id="adm-opening" placeholder="${t('adm.fOpening')}">
           <input class="adm-in" id="adm-result" placeholder="${t('adm.fResult')}">
         </div>
+<div class="adm-grid">
+          <input class="adm-in" id="adm-pz-start" type="number" min="1" placeholder="${t('adm.pzStart')}">
+          <input class="adm-in" id="adm-pz-end" type="number" min="2" placeholder="${t('adm.pzEnd')}">
+        </div>
+        <div class="dim" style="font-size:11px">${t('adm.pzHint')}</div>
+
         <div class="adm-row"><button class="btn" id="adm-save">${t('adm.validate')}</button></div>
       </div>
     </div>
@@ -7618,6 +7929,8 @@ function viewAdmin(){
     const year=document.getElementById('adm-year').value.trim();
     const opening=document.getElementById('adm-opening').value.trim();
     const result=document.getElementById('adm-result').value.trim();
+    const pzStart=parseInt((document.getElementById('adm-pz-start')||{}).value||'0',10)||0;
+    const pzEnd=parseInt((document.getElementById('adm-pz-end')||{}).value||'0',10)||0;
     if(!title||!white||!black){ toast(t('adm.needFields')); return; }
     if(!pgn){ toast(t('adm.invalid',{m:'PGN'})); return; }
     let hd={}, plies=0;
@@ -7632,7 +7945,7 @@ function viewAdmin(){
       id: admSlug(title, year||(hd.Date||'').slice(0,4)),
       title, white, black, blurb: blurb||'', year: year||(hd.Date||'').slice(0,4),
       event: hd.Event||'', opening: opening||'', eco: hd.ECO||'', result: result||hd.Result||'*',
-      pgn, plies, created_by: (Cloud.session()||{}).user_id
+      pgn, plies, puzzle_start: pzStart||null, puzzle_end: pzEnd||null, created_by: (Cloud.session()||{}).user_id
     };
     try{
       await Cloud.adminAddGame(row);
@@ -7947,16 +8260,18 @@ Cloud.fetchMyAttempts = async function(incremental){
 store.load();
 try{
   applySettings();
-  try{ Cloud.metaLoadLocal(); v2ApplyMeta(); }catch(e){}
+  try{ Cloud.metaLoadLocal(); if(Cloud.dailyCacheLoad) Cloud.dailyCacheLoad(); v2ApplyMeta(); }catch(e){}
   updateChip();
   applyStaticI18n();
-  route();
+  if(Cloud.enabled() && Cloud.loggedIn()){
+    appEl.innerHTML='<div class="card muted" style="margin-top:16px">'+t('app.loading')+'</div>';
+    Cloud.afterLogin().then(()=>{ try{ updateChip(); route(); }catch(e){} }).catch(()=>{ try{ route(); }catch(e){} });
+  } else {
+    route();
+  }
 }catch(e){
   console.error(e);
   appEl.innerHTML='<div class="card"><h3>Error</h3><p class="muted">'+e.message+'</p></div>';
-}
-if(Cloud.enabled() && Cloud.loggedIn()){
-  Cloud.afterLogin().then(()=>{ try{ updateChip(); route(); }catch(e){} }).catch(()=>{});
 }
 window.addEventListener('error', e=>console.error('window error:', e.message));
 
